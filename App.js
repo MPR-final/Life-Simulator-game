@@ -11,6 +11,7 @@ import InstructionScreen from "./src/screens/InstructionScreen.js"
 import LoginScreen from "./src/screens/LoginScreen.js"
 import MainScreen from "./src/screens/MainScreen.js"
 import SignupScreen from "./src/screens/SignupScreen.js"
+import LoadingOverLay from "./src/components/LoadingOverLay.js";
 
 const Stack = createNativeStackNavigator();
 
