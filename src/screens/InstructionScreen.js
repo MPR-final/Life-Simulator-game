@@ -15,7 +15,7 @@ import characterData from "../data/characterData";
 import ProgressBar from "../components/progressBar.js";
 import { set } from "firebase/database";
 
-export default function InstructionScreen() {
+export default function InstructionScreen({navigation}) {
   const windowDimensions = useWindowDimensions();
   const width = windowDimensions.width;
   const height = windowDimensions.height;
@@ -37,14 +37,16 @@ export default function InstructionScreen() {
           <TouchableOpacity
             style={styles.exitBox}
             activeOpacity={0.8}
-            onPress={() => {setShowPause(false),
-              setShowAge(false),
-              setShowCharacter(false),
-              setShowHealth(false),
-              setShowIntell(false),
-              setShowMoney(false),
-              setShowRelate(false),
-              setShowTime(false)}}
+            onPress={() => {
+              setShowPause(false),
+                setShowAge(false),
+                setShowCharacter(false),
+                setShowHealth(false),
+                setShowIntell(false),
+                setShowMoney(false),
+                setShowRelate(false),
+                setShowTime(false);
+            }}
           >
             <Image
               style={styles.exit}
@@ -91,10 +93,12 @@ export default function InstructionScreen() {
       marginTop: 40,
     },
     pauseBox: {
-      width: "100%",
+      // borderWidth: 0.5,
+      width: "80%",
       alignItems: "flex-end",
       justifyContent: "flex-end",
       marginBottom: -20,
+      marginLeft: 75
     },
     pause: {
       width: 50,
@@ -240,6 +244,17 @@ export default function InstructionScreen() {
       {/** header */}
       <View style={styles.header}>
         <TouchableOpacity
+          style={{ marginBottom: -5 }}
+          activeOpacity={0.8}
+          onPress={() => {navigation.navigate('HomeScreen');}}
+        >
+          <Image
+            style={{ width: 30, height: 30, marginBottom: -40, marginTop: 5 }}
+            source={require("../assets/left-arrow.png")}
+          />
+        </TouchableOpacity>
+
+        <TouchableOpacity
           style={styles.pauseBox}
           activeOpacity={0.8}
           onPress={() => {
@@ -363,13 +378,60 @@ export default function InstructionScreen() {
           srcImg={require("../assets/pause.png")}
         />
       )}
-      {showAge && <InstructionBox message={"This is the current character's age."} srcImg={require("../assets/age.png")} />}
-      {showTime && <InstructionBox message={"This is the character's 1 year time bar. Each year corresponds to 12 minutes in real life."} srcImg={require("../assets/timeline.png")}/>}
-      {showCharacter && <InstructionBox message={"This is your character's image, which will change depending on age."} srcImg={require("../assets/baby.png")}/>}
-      {showHealth && <InstructionBox message={"This is the character's health stat, which will be affected depending on your choices."} srcImg={require("../assets/health.png")}/>}
-      {showIntell && <InstructionBox message={"This is the character's intelligence stat, which will be affected depending on your choices."} srcImg={require("../assets/intelligent.png")}/>}
-      {showRelate && <InstructionBox message={"This is the character's relationship stat, which will be affected depending on your choices"} srcImg={require("../assets/Relationship.png")}/>}
-      {showMoney && <InstructionBox message={"This is the character's money stat, which will be affected depending on your choices"} srcImg={require("../assets/salary.png")}/>}
+      {showAge && (
+        <InstructionBox
+          message={"This is the current character's age."}
+          srcImg={require("../assets/age.png")}
+        />
+      )}
+      {showTime && (
+        <InstructionBox
+          message={
+            "This is the character's 1 year time bar. Each year corresponds to 12 minutes in real life."
+          }
+          srcImg={require("../assets/timeline.png")}
+        />
+      )}
+      {showCharacter && (
+        <InstructionBox
+          message={
+            "This is your character's image, which will change depending on age."
+          }
+          srcImg={require("../assets/baby.png")}
+        />
+      )}
+      {showHealth && (
+        <InstructionBox
+          message={
+            "This is the character's health stat, which will be affected depending on your choices."
+          }
+          srcImg={require("../assets/health.png")}
+        />
+      )}
+      {showIntell && (
+        <InstructionBox
+          message={
+            "This is the character's intelligence stat, which will be affected depending on your choices."
+          }
+          srcImg={require("../assets/intelligent.png")}
+        />
+      )}
+      {showRelate && (
+        <InstructionBox
+          message={
+            "This is the character's relationship stat, which will be affected depending on your choices"
+          }
+          srcImg={require("../assets/Relationship.png")}
+        />
+      )}
+      {showMoney && (
+        <InstructionBox
+          message={
+            "This is the character's money stat, which will be affected depending on your choices"
+          }
+          srcImg={require("../assets/salary.png")}
+        />
+      )}
 
       <StatusBar style="auto" />
     </View>
