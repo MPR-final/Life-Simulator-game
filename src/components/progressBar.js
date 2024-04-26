@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   container: {
     borderWidth: 0.5,
     height: 10,
-    width: 150,
+    width: 250,
     borderRadius: 5,
     overflow: "hidden",
   

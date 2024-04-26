@@ -20,7 +20,7 @@ export default function FirstScreen({navigation}) {
       <TouchableOpacity
         style={styles.addExpenses}
         activeOpacity={0.8}
-        onPress={() => {navigation.navigate('MainScreen');}}
+        onPress={() => {navigation.navigate('InstructionScreen');}}
       >
         <Text style={styles.text}>click me!</Text>
       </TouchableOpacity>
