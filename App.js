@@ -13,8 +13,7 @@ import MainScreen from "./src/screens/MainScreen.js"
 import SignupScreen from "./src/screens/SignupScreen.js"
 
 const Stack = createNativeStackNavigator();
-{/** edit file */}
-
+const a= 0
 export default function App() {
   return (
     <NavigationContainer>
