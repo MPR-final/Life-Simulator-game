@@ -3,9 +3,9 @@ import { StyleSheet, View, Text, useWindowDimensions } from "react-native";
 export default function HomeScreen({ navigation }) {
   const { height } = useWindowDimensions();
 
-  // Function handle navigation to MainScreen
-  function handleMainScreen(){
-    navigation.navigate("MainScreen");
+   // Function handle navigation to InforLife component
+  function handleInforLife(){
+    navigation.navigate("InforLife");
   }
 
   // Function handle navigation to InstructionScreen
@@ -38,7 +38,7 @@ export default function HomeScreen({ navigation }) {
       >
         <Button
             title="Start"
-            onPress={handleMainScreen}
+            onPress={handleInforLife}
         />
         <Button
             title="Instruction"
