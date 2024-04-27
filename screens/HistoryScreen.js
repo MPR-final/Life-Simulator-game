@@ -10,7 +10,7 @@ const HistoryScreen = () => {
   const [players, setPlayers] = useState(importedPlayers);
 
   const sortByNewest = () => {
-    const sorted = [...players].sort((a, b) => parseInt(b.id) - parseInt(a.id));
+    const sorted = [...players].sort((a, b) => parseInt(b.Locaid) - parseInt(a.Localid));
     setPlayers(sorted);
   };
 
@@ -31,7 +31,7 @@ const HistoryScreen = () => {
         <Text style={styles.infoText}><Text style={styles.boldLabel}>Name:</Text> {item.name}</Text>
         <Text style={styles.infoText}><Text style={styles.boldLabel}>Age:</Text> {item.age}</Text>
         <Text style={styles.infoText}><Text style={styles.boldLabel}>Gender:</Text> {item.gender}</Text>
-        <Text style={styles.infoText}><Text style={styles.boldLabel}>Death by:</Text> {item.deathBy}</Text>
+        <Text style={styles.infoText}><Text style={styles.boldLabel}>Death by:</Text> {item.reasonofDeath}</Text>
         <Text style={styles.infoText}><Text style={styles.boldLabel}>Relationship:</Text> {item.relationship}</Text>
         <Text style={styles.infoText}><Text style={styles.boldLabel}>Intelligence:</Text> {item.intelligence}</Text>
         <Text style={styles.infoText}><Text style={styles.boldLabel}>Health:</Text> {item.health}</Text>
