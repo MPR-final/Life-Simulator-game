@@ -4,7 +4,7 @@ import { StyleSheet, Text, TouchableOpacity, View, Image, Dimensions, Animated, 
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import ProgressBar from "../components/progressBar.js";
 import CharacterData from "../components/getCharacterData.js";
-import PauseOverlay from "../components/PauseOverlay.js";
+// import PauseOverlay from "../components/PauseOverlay.js";
 
 const { width, height } = Dimensions.get("window");
 
@@ -137,7 +137,7 @@ export default function MainScreen({navigation}) {
       </View>
 
       <StatusBar style="auto" />
-      <PauseOverlay isVisible={isPaused} onContinue={handleContinue} onEndGame={handleEndGame} onHome ={handleHome}/>
+      {/* <PauseOverlay isVisible={isPaused} onContinue={handleContinue} onEndGame={handleEndGame} onHome ={handleHome}/> */}
     </View>
   );
 }
