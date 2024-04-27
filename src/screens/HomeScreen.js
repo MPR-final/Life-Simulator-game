@@ -1,10 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-export default function HomeScreen() {
+export default function HomeScreen({navigation}) {
   return (
     <View style={styles.container}>
       <Text>home</Text>
+      <TouchableOpacity onPress={() => {navigation.navigate('InstructionScreen')}}><Text>go to instruction screen!</Text></TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('HistoryScreen')}><Text>go to history screen!</Text></TouchableOpacity>
       <StatusBar style="auto" />
     </View>
   );
