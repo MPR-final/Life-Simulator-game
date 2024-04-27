@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { createContext } from "react";
 
+// localID is the id of specific account
+// localID is generated automatically by firebase auth rest API
+// isLogin is to check if the account is login or not
+
 export const AuthContext = createContext({
   localID: "",
   isLogin: false,
