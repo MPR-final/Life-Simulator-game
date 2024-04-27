@@ -8,3 +8,9 @@ export async function createUser(email, password) {
     { email: email, password: password, returnSecureToken: true }
   );
 }
+
+export async function login(email, password){
+  const response = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' + API_KEY,
+  { email: email, password: password, returnSecureToken: true });
+  return response;
+}

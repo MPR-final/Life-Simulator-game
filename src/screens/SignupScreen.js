@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, ScrollView } from "react-native";
+import { View, StyleSheet, Text, ScrollView, Alert } from "react-native";
 import InputCustom from "../components/InputCustom";
 import SubmitButton from "../components/SubmitButton";
 import { useNavigation } from "@react-navigation/native";
@@ -18,8 +18,6 @@ function SignupScreen() {
     confirmedPassword: false,
   });
 
-  console.log(credentialsInvalid);
-
   // function to navigate to Login Screen
   function handleLoginPress() {
     navigation.navigate("LoginScreen");
@@ -30,16 +28,28 @@ function SignupScreen() {
     switch (inputType) {
       case "email":
         setEnteredEmail(input);
-        setCredentialsInvalid({email: false, password: false, confirmedPassword: false})
+        setCredentialsInvalid({
+          email: false,
+          password: false,
+          confirmedPassword: false,
+        });
         break;
       case "password":
         setEnteredPassword(input);
-        setCredentialsInvalid({email: false, password: false, confirmedPassword: false})
+        setCredentialsInvalid({
+          email: false,
+          password: false,
+          confirmedPassword: false,
+        });
 
         break;
       case "confirmedPassword":
         setEnteredConfirmPassword(input);
-        setCredentialsInvalid({email: false, password: false, confirmedPassword: false})
+        setCredentialsInvalid({
+          email: false,
+          password: false,
+          confirmedPassword: false,
+        });
 
         break;
     }
@@ -63,13 +73,17 @@ function SignupScreen() {
       return;
     }
     setIsAuthenticating(true);
-    await createUser(email, password);
+    try {
+      await createUser(email, password);
+    } catch (error) {
+      Alert.alert('Sign Up Error', "Something went wrong, Please try again later.")
+    }
     setIsAuthenticating(false);
-    // navigation.navigate('LoginScreen');
+    navigation.navigate("LoginScreen");
   }
 
-  if(isAuthenticating){
-    return(<LoadingOverLay message="Creating User..."></LoadingOverLay>)
+  if (isAuthenticating) {
+    return <LoadingOverLay message="Creating User..."></LoadingOverLay>;
   }
 
   return (
@@ -87,7 +101,11 @@ function SignupScreen() {
               secureTextEntry={true}
               onChangeText={handleInput.bind(this, "email")}
             />
-            {credentialsInvalid.email ? <Text style={{color: 'red', marginBottom:5}}>* Invalid email</Text> : null}
+            {credentialsInvalid.email ? (
+              <Text style={{ color: "red", marginBottom: 5 }}>
+                * Invalid email
+              </Text>
+            ) : null}
 
             <Text style={styles.pageText}>Password</Text>
             <InputCustom
@@ -95,7 +113,9 @@ function SignupScreen() {
               secureTextEntry={true}
               onChangeText={handleInput.bind(this, "password")}
             />
-            {credentialsInvalid.password ? <Text style={{color: 'red'}}>* Invalid password</Text> : null}
+            {credentialsInvalid.password ? (
+              <Text style={{ color: "red" }}>* Invalid password</Text>
+            ) : null}
 
             <Text style={styles.pageText}>Confirm Password</Text>
             <InputCustom
@@ -103,7 +123,9 @@ function SignupScreen() {
               secureTextEntry={true}
               onChangeText={handleInput.bind(this, "confirmedPassword")}
             />
-            {credentialsInvalid.confirmedPassword ? <Text style={{color: 'red'}}>* Passwords don't match</Text> : null}
+            {credentialsInvalid.confirmedPassword ? (
+              <Text style={{ color: "red" }}>* Passwords don't match</Text>
+            ) : null}
           </View>
           <SubmitButton title="Sign Up" onPress={validateUserInput} />
         </View>
@@ -139,7 +161,7 @@ const styles = StyleSheet.create({
     paddingVertical: 45,
     marginBottom: 40,
     marginTop: 120,
-    elevation: 12
+    elevation: 12,
   },
   header: {
     fontSize: 42,

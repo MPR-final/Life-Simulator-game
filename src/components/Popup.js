@@ -52,9 +52,7 @@ const Popup = ({ message, srcImg, HandleClose, height }) => {
         <TouchableOpacity
           style={styles.exitBox}
           activeOpacity={0.8}
-          onPress={() => {
-            HandleClose;
-          }}
+          onPress={HandleClose}
         >
           <Image style={styles.exit} source={require("../assets/button.png")} />
         </TouchableOpacity>

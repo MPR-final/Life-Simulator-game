@@ -1,15 +1,70 @@
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Alert } from "react-native";
 import InputCustom from "../components/InputCustom";
 import SubmitButton from "../components/SubmitButton";
 import { useNavigation } from "@react-navigation/native";
+import { useContext, useState } from "react";
+import { login } from "../util/auth";
+import LoadingOverLay from "../components/LoadingOverLay";
+import Popup from "../components/Popup";
+import { AuthContext } from "../store/AuthContext";
 
 function LoginScreen() {
   const navigation = useNavigation();
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [enteredEmail, setEnteredEmail] = useState("");
+  const [enteredPassword, setEnteredPassword] = useState("");
+
+  const authCtx = useContext(AuthContext);
+
+  //function to handle user input
+  function handleUserInput(inputType, input) {
+    if (inputType === "email") {
+      setEnteredEmail(input);
+    }
+    if (inputType === "password") {
+      setEnteredPassword(input);
+    }
+  }
 
   // function to navigate to SignUp Screen
-  function handleSignUpPress(){
-    navigation.navigate('SignupScreen');
+  function handleSignUpPress() {
+    navigation.navigate("SignupScreen");
   }
+
+  // function to log user in
+  async function loginUser() {
+    setIsAuthenticating(true);
+    try {
+      const response = await login(enteredEmail, enteredPassword);
+      // console.log(response.data.localId);
+      authCtx.initializeAccount(response.data.localId);
+      setIsAuthenticating(false);
+      setEnteredEmail('');
+      setEnteredPassword('');
+    } catch (error) {
+      setIsError(true);
+      console.log('error')
+    }
+  }
+
+  if (isAuthenticating) {
+    if (isError) {
+      return (
+        <Popup
+          message="Fail to log you in - Please check your email or password again."
+          srcImg={require("../assets/error.png")}
+          height={850}
+          HandleClose={() => {
+            setIsAuthenticating(false);
+            setIsError(false)
+          }}
+        ></Popup>
+      );
+    }
+    return <LoadingOverLay message="Logging in..."></LoadingOverLay>;
+  }
+
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -23,14 +78,16 @@ function LoginScreen() {
               keyboardType="email-address"
               autoCapitalize="none"
               secureTextEntry={true}
+              onChangeText={handleUserInput.bind(this, "email")}
             />
             <Text style={styles.pageText}>Password</Text>
             <InputCustom
               placeholder="Enter password"
               secureTextEntry={true}
+              onChangeText={handleUserInput.bind(this, "password")}
             />
           </View>
-          <SubmitButton title="Login" />
+          <SubmitButton title="Login" onPress={loginUser} />
         </View>
         <View style={styles.questionContainer}>
           <Text style={styles.pageText}>
@@ -64,7 +121,7 @@ const styles = StyleSheet.create({
     paddingVertical: 50,
     marginBottom: 60,
     marginTop: 120,
-    elevation: 12
+    elevation: 12,
   },
   header: {
     fontSize: 42,
