@@ -2,10 +2,11 @@ import { View, Text, StyleSheet, ScrollView, Alert } from "react-native";
 import InputCustom from "../components/InputCustom";
 import SubmitButton from "../components/SubmitButton";
 import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { login } from "../util/auth";
 import LoadingOverLay from "../components/LoadingOverLay";
 import Popup from "../components/Popup";
+import { AuthContext } from "../store/AuthContext";
 
 function LoginScreen() {
   const navigation = useNavigation();
@@ -13,6 +14,8 @@ function LoginScreen() {
   const [isError, setIsError] = useState(false);
   const [enteredEmail, setEnteredEmail] = useState("");
   const [enteredPassword, setEnteredPassword] = useState("");
+
+  const authCtx = useContext(AuthContext);
 
   //function to handle user input
   function handleUserInput(inputType, input) {
@@ -34,7 +37,8 @@ function LoginScreen() {
     setIsAuthenticating(true);
     try {
       const response = await login(enteredEmail, enteredPassword);
-      console.log(response.data);
+      // console.log(response.data.localId);
+      authCtx.initializeAccount(response.data.localId);
       setIsAuthenticating(false);
       setEnteredEmail('');
       setEnteredPassword('');
