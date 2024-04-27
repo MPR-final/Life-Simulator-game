@@ -6,13 +6,11 @@ import {
   TouchableOpacity,
   View,
   Image,
-  ScrollView,
   useWindowDimensions,
-  ImageBackground,
 } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import characterData from "../data/characterData";
 import ProgressBar from "../components/progressBar.js";
+import CharacterData from "../components/getCharacterData.js";
 
 export default function MainScreen() {
   const windowDimensions = useWindowDimensions();
@@ -22,9 +20,14 @@ export default function MainScreen() {
   console.log("height: " + height + " width: " + width);
 
   {
-    /** set bg color for character */
+    /** set bg color & img for character */
   }
-  const bgCharacter = "#F5ACE1";
+  const characterAge = 6;
+  const gender = "female";
+  const characterInfo = CharacterData({ characterAge, gender });
+  console.log("character: " + characterInfo);
+  const bgCharacter = characterInfo[1];
+
 
   const styles = StyleSheet.create({
     container: {
@@ -85,6 +88,7 @@ export default function MainScreen() {
       backgroundColor: bgCharacter,
       position: "relative",
       marginTop: 30,
+      
     },
     circleAge: {
       // borderWidth: 0.5,
@@ -108,15 +112,16 @@ export default function MainScreen() {
     },
     characImg: {
       // borderWidth: 0.5,
-      width: "100%",
+      width: "67%",
       height: "100%",
       justifyContent: "center",
       alignItems: "center",
+      marginLeft: "17.5%"
     },
     img: {
       // borderWidth: 0.5,
-      width: "75%",
-      height: "75%",
+      width: "60%",
+      height: "60%",
     },
 
     progressBars: {
@@ -136,7 +141,7 @@ export default function MainScreen() {
     icon: {
       width: 40,
       height: 40,
-      marginRight: 25
+      marginRight: 25,
     },
     bar: {},
   });
@@ -166,10 +171,11 @@ export default function MainScreen() {
 
         <View style={styles.characterBox}>
           <View style={styles.circleAge}>
-            <Text style={styles.textAge}>2</Text>
+            <Text style={styles.textAge}>{characterAge}</Text>
           </View>
           <View style={styles.characImg}>
-            <Image style={styles.img} source={require("../assets/baby.png")} />
+            {/* <Image style={styles.img} source={require("../assets/baby.png")} /> */}
+            <Image style={styles.img} source={characterInfo[0]} />
           </View>
         </View>
       </View>
@@ -179,7 +185,11 @@ export default function MainScreen() {
         <View style={styles.Box}>
           <Image style={styles.icon} source={require("../assets/health.png")} />
           <View style={styles.bar}>
-            <ProgressBar percentage={50} bgColor={"#F5F5F3"} color={"#E15A6B"} />
+            <ProgressBar
+              percentage={50}
+              bgColor={"#F5F5F3"}
+              color={"#E15A6B"}
+            />
           </View>
         </View>
 
@@ -189,7 +199,11 @@ export default function MainScreen() {
             source={require("../assets/intelligent.png")}
           />
           <View style={styles.bar}>
-            <ProgressBar percentage={70} bgColor={"#F5F5F3"} color={"#F8CA72"} />
+            <ProgressBar
+              percentage={70}
+              bgColor={"#F5F5F3"}
+              color={"#F8CA72"}
+            />
           </View>
         </View>
 
@@ -199,14 +213,22 @@ export default function MainScreen() {
             source={require("../assets/Relationship.png")}
           />
           <View style={styles.bar}>
-            <ProgressBar percentage={60} bgColor={"#F5F5F3"} color={"#D394F9"} />
+            <ProgressBar
+              percentage={60}
+              bgColor={"#F5F5F3"}
+              color={"#D394F9"}
+            />
           </View>
         </View>
 
         <View style={styles.Box}>
           <Image style={styles.icon} source={require("../assets/salary.png")} />
           <View style={styles.bar}>
-            <ProgressBar percentage={20} bgColor={"#F5F5F3"} color={"#94E86C"} />
+            <ProgressBar
+              percentage={20}
+              bgColor={"#F5F5F3"}
+              color={"#94E86C"}
+            />
           </View>
         </View>
       </View>

@@ -6,15 +6,9 @@ import {
   TouchableOpacity,
   View,
   Image,
-  ScrollView,
   useWindowDimensions,
-  ImageBackground,
 } from "react-native";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import characterData from "../data/characterData";
 import ProgressBar from "../components/progressBar.js";
-import { set } from "firebase/database";
-import Popup from "../components/Popup.js";
 
 export default function InstructionScreen({navigation}) {
   const windowDimensions = useWindowDimensions();
@@ -22,8 +16,6 @@ export default function InstructionScreen({navigation}) {
   const height = windowDimensions.height;
   const isPortrait = height > width;
   console.log("height: " + height + " width: " + width);
-
-
 
   {
     /** set bg color for character */
