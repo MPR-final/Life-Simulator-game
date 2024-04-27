@@ -5,10 +5,12 @@ import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 import { login } from "../util/auth";
 import LoadingOverLay from "../components/LoadingOverLay";
+import Popup from "../components/Popup";
 
 function LoginScreen() {
   const navigation = useNavigation();
   const [isAuthenticating, setIsAuthenticating] = useState(false);
+  const [isError, setIsError] = useState(false);
   const [enteredEmail, setEnteredEmail] = useState("");
   const [enteredPassword, setEnteredPassword] = useState("");
 
@@ -33,13 +35,29 @@ function LoginScreen() {
     try {
       const response = await login(enteredEmail, enteredPassword);
       console.log(response.data);
+      setIsAuthenticating(false);
+      setEnteredEmail('');
+      setEnteredPassword('');
     } catch (error) {
-      Alert.alert("Invalid Input", "Please check your email or password again.")
+      setIsError(true);
+      console.log('error')
     }
-    setIsAuthenticating(false);
   }
 
   if (isAuthenticating) {
+    if (isError) {
+      return (
+        <Popup
+          message="Fail to log you in - Please check your email or password again."
+          srcImg={require("../assets/error.png")}
+          height={850}
+          HandleClose={() => {
+            setIsAuthenticating(false);
+            setIsError(false)
+          }}
+        ></Popup>
+      );
+    }
     return <LoadingOverLay message="Logging in..."></LoadingOverLay>;
   }
 

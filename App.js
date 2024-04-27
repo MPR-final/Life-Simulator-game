@@ -12,6 +12,7 @@ import LoginScreen from "./src/screens/LoginScreen.js"
 import MainScreen from "./src/screens/MainScreen.js"
 import SignupScreen from "./src/screens/SignupScreen.js"
 import LoadingOverLay from "./src/components/LoadingOverLay.js";
+import Popup from "./src/components/Popup.js";
 
 const Stack = createNativeStackNavigator();
 
@@ -32,5 +33,6 @@ export default function App() {
         <Stack.Screen name="EndgameScreen" component={EndgameScreen} />
       </Stack.Navigator>
     </NavigationContainer>
+
   );
 }
