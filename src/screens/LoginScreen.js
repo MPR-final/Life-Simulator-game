@@ -26,7 +26,7 @@ function LoginScreen() {
             />
             <Text style={styles.pageText}>Password</Text>
             <InputCustom
-              placeholder="Enter password again"
+              placeholder="Enter password"
               secureTextEntry={true}
             />
           </View>
@@ -62,8 +62,9 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     paddingHorizontal: 45,
     paddingVertical: 50,
-    marginBottom: 40,
+    marginBottom: 60,
     marginTop: 120,
+    elevation: 12
   },
   header: {
     fontSize: 42,
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
     top: -85,
   },
   questionContainer: {
-    marginBottom: 70,
+    marginBottom: 90,
   },
 });
 export default LoginScreen;
