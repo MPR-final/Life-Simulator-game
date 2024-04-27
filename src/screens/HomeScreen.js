@@ -5,6 +5,7 @@ export default function HomeScreen({navigation}) {
   return (
     <View style={styles.container}>
       <Text>home</Text>
+      <TouchableOpacity onPress={() => {navigation.navigate('MainScreen')}}><Text>go to main screen!</Text></TouchableOpacity>
       <TouchableOpacity onPress={() => {navigation.navigate('InstructionScreen')}}><Text>go to instruction screen!</Text></TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate('HistoryScreen')}><Text>go to history screen!</Text></TouchableOpacity>
       <StatusBar style="auto" />
