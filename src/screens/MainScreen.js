@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect, useContext, useRef } from "react";
-import { StyleSheet, Text, TouchableOpacity, View, Image, Dimensions, Animated, } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View, Image, Dimensions, } from "react-native";
 import ProgressBar from "../components/progressBar.js";
 import CharacterData from "../components/getCharacterData.js";
 import { AuthContext } from "../store/AuthContext.js";
@@ -20,9 +20,9 @@ export default function MainScreen({navigation}) {
     /** set bg color & img for character */
   }
   const [fetchedNormalEvents, setFetchedNormalEvents] = useState([]);
+  const [userData, setUserData] = useState([]);
   const [progress, setProgress] = useState(0);
   const [isPaused, setPaused] = useState(false);
-
   useEffect(() => {
     const interval = setInterval(() => {
       setProgress(prevProgress => prevProgress + 1);
@@ -40,7 +40,19 @@ export default function MainScreen({navigation}) {
     }
     getNormalEvents();
   }, []);
-  console.log(fetchedNormalEvents[0][0].choices[0].choiceDetail);
+  //console.log(fetchedNormalEvents[0][0].choices[0].choiceDetail);
+
+  useEffect(() => {
+    async function getUserData() {
+      const userDatas = await fetchUser('e3MKj3heMFNFDgckYMMLsEHRlzI2'); //test
+      const lifeNum = userDatas.length - 1;
+      const userData = userDatas[lifeNum]; //set user data to latest run only
+      setUserData(userData);
+      setProgress(progress);
+    }
+    getUserData();
+  }, []);
+  console.log(userData);
 
   const handleContinue = () => {
     setPaused(false);
@@ -145,7 +157,7 @@ export default function MainScreen({navigation}) {
       </View>
 
       <StatusBar style="auto" />
-      {/* <PauseOverlay isVisible={isPaused} onContinue={handleContinue} onEndGame={handleEndGame} onHome ={handleHome}/> */}
+      <PauseOverlay isVisible={isPaused} onContinue={handleContinue} onEndGame={handleEndGame} onHome ={handleHome}/>
     </View>
   );
 }

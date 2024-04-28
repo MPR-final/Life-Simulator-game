@@ -16,16 +16,20 @@ export async function login(email, password){
   return response;
 }
 
-export function storeUser (userData) {
-  axios.post(
-    BACKEND_URL + 'account.json',
-    userData
-  );
+export async function storeUser(userId, userData) {
+  try {
+    const response = await axios.put(BACKEND_URL + 'account.json', { [userId]: userData });
+    console.log('User data stored successfully:', response.data);
+    // You can handle the response or perform additional actions if needed
+  } catch (error) {
+    console.error('Error storing user data:', error);
+    throw error;
+  }
 }
 
 export async function fetchUser (userId) {
   try{
-    const response = axios.get(BACKEND_URL + 'account.json');
+    const response = await axios.get(BACKEND_URL + 'account.json');
     const userDatas = [];
     for (const life in response.data[userId]) {
       const lifeData = response.data[userId][life];
@@ -41,10 +45,10 @@ export async function fetchUser (userId) {
       };
       userDatas.push(lifeObj);
     }
+    return userDatas;
   } catch (error) {
     console.error('Error fetching user data', error);
   }
-
 }
 
 export async function fetchNormalEvent() {
