@@ -5,7 +5,6 @@ import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 
 const { width, height } = Dimensions.get('window');
-// const safeAreaOffset = Platform.OS === 'ios' ? 20 : 0;
 const EndgameScreen = () => {
   const [player, setPlayer] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -26,9 +25,9 @@ const EndgameScreen = () => {
             ...playerData.status,
           }));
 
-          // Sort players by id in descending order and take the first one (largest id)
+          
           loadedPlayers.sort((a, b) => b.id.localeCompare(a.id));
-          setPlayer(loadedPlayers[0]); // Store the player with the largest id
+          setPlayer(loadedPlayers[0]); 
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -40,7 +39,7 @@ const EndgameScreen = () => {
     fetchDataFromFirebase();
   }, []);
 
-  const navigateHome = () => navigation.navigate('Home');
+  const navigateHome = () => navigation.navigate('HomeScreen'); 
 
   if (loading) {
     return <ActivityIndicator size="large" />;
@@ -69,15 +68,14 @@ const EndgameScreen = () => {
       </TouchableOpacity>
       </View>
       <Text style={styles.playerInfor}>
-  {`Location: ${player.location}\n`}
-  {`Gender: ${player.gender}\n`}       
-  {`Relationship: ${player.relationship}%\n`}
-  {`Intelligence: ${player.intel}%\n`}
-  {`Health: ${player.health}%\n`}
-  {`Money: ${player.money}%`}
-</Text>
+        {`Location: ${player.location}\n`}
+        {`Gender: ${player.gender}\n`}       
+        {`Relationship: ${player.relationship}%\n`}
+        {`Intelligence: ${player.intel}%\n`}
+        {`Health: ${player.health}%\n`}
+        {`Money: ${player.money}%`}
+      </Text>
 
-      
       <Text style={[styles.age]}>Age: {player.age}</Text>
       <Text style={[styles.deathBy]}>
         Death by: {player.reasonOfDeath}
@@ -96,8 +94,6 @@ const EndgameScreen = () => {
 };
 
 const styles = StyleSheet.create({
- 
- 
   groupChildLayout: {
     height: 83,
     width: 270,
@@ -185,8 +181,7 @@ const styles = StyleSheet.create({
     width: '100%',
   
     textAlign:'center'
-  },
-  
+  }, 
   age: {
     top: width * 0.63,
     textAlign:'center',

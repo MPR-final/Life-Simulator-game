@@ -13,17 +13,16 @@ const HistoryScreen = () => {
   useEffect(() => {
     const fetchDataFromFirebase = async () => {
       try {
-        // Use the REST API endpoint for Firebase Realtime Database
+        
         const databaseUrl = 'https://mpr-final-project-c4ed7-default-rtdb.firebaseio.com/account/e3MKj3heMFNFDgckYMMLsEHRlzI2.json'; 
         const response = await axios.get(databaseUrl);
         const data = response.data;
         
         if (data) {
-          // Assuming data is an array of characters for a single account
+          
           const loadedPlayers = data.map((UserData, index) => ({
             ...UserData,
-            Localid: `UserData-${index}`,  // Assign a unique ID for key extractor
-            // Spread the status object into the character object
+            Localid: `UserData-${index}`,  
             ...UserData.status,
           }));
           setPlayers(loadedPlayers);
@@ -38,10 +37,10 @@ const HistoryScreen = () => {
 
   const sortByNewest = () => {
     const sorted = [...players].sort((a, b) => {
-      // Extract the numerical part of the Localid and convert it to a number
+      
       const numIdA = parseInt(a.Localid.split('-')[1], 10);
-      const numIdB = parseInt(b.Localid.split('-')[1], 100);
-      return numIdB - numIdA; // Sort in descending order
+      const numIdB = parseInt(b.Localid.split('-')[1], 10);
+      return numIdB - numIdA; 
     });
     setPlayers(sorted);
   };
@@ -77,7 +76,7 @@ const HistoryScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.Line} />
-      <TouchableOpacity onPress={() => navigation.navigate('Home')} style={styles.backButton}>
+      <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')} style={styles.backButton}>
         <Image style={styles.backIcon} source={require("../assets/leftchevron-1.png")} />
       </TouchableOpacity>
       <Text style={styles.header}>Game History</Text>
