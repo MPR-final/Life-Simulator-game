@@ -1,5 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
+import { useContext } from 'react';
 import { StyleSheet, Text, View,TouchableOpacity } from 'react-native';
+import { AuthContext } from '../store/AuthContext';
 
 export default function HistoryScreen({navigation}) {
   return (

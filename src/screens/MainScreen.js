@@ -1,16 +1,18 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { StyleSheet, Text, TouchableOpacity, View, Image, Dimensions, Animated, } from "react-native";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import ProgressBar from "../components/progressBar.js";
 import CharacterData from "../components/getCharacterData.js";
 import PauseOverlay from "../components/PauseOverlay.js";
 import { fetchNormalEvent } from "../util/auth.js";
+import { AuthContext } from "../store/AuthContext.js";
+
 
 const { width, height } = Dimensions.get("window");
 
 export default function MainScreen({navigation}) {
   const isPortrait = height > width;
+
 
 
   const characterAge = 7;
@@ -32,17 +34,6 @@ export default function MainScreen({navigation}) {
       clearInterval(interval);
     };
   }, []);
-
-  const [fetchedNormalEvents, setFetchedNormalEvents] = useState([]);
-
-  useEffect(() => {
-    async function getNormalEvents() {
-      const normalEvents = await fetchNormalEvent();
-      setFetchedNormalEvents(normalEvents);
-    }
-    getNormalEvents();
-  }, []);
-  console.log(fetchedNormalEvents[0][0].choices[0].choiceDetail);
 
   const [isPaused, setPaused] = useState(false);
 
@@ -149,7 +140,7 @@ export default function MainScreen({navigation}) {
       </View>
 
       <StatusBar style="auto" />
-      <PauseOverlay isVisible={isPaused} onContinue={handleContinue} onEndGame={handleEndGame} onHome ={handleHome}/>
+      {/* <PauseOverlay isVisible={isPaused} onContinue={handleContinue} onEndGame={handleEndGame} onHome ={handleHome}/> */}
     </View>
   );
 }

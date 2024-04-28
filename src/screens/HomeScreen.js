@@ -1,26 +1,48 @@
-import { StyleSheet, View, Text, useWindowDimensions } from "react-native";
-import SubmitButton from "../components/SubmitButton";
+import { useState } from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  useWindowDimensions,
+  Pressable,
+  Image,
+  TouchableOpacity,
+} from "react-native";
+import InforLife from "../components/InforLife";
 
 export default function HomeScreen({ navigation }) {
   const { height } = useWindowDimensions();
+  const [isCreatingPlayer, setIsCreatingPlayer] = useState(false);
 
-   // Function handle navigation to InforLife component
-  function handleInforLife(){
-    navigation.navigate("MainScreen");
+  // Function handle navigation to InforLife component
+  function handleInforLife() {
+    setIsCreatingPlayer(!isCreatingPlayer);
+  }
+
+  if (isCreatingPlayer) {
+    return <InforLife closePress={handleInforLife}></InforLife>;
   }
 
   // Function handle navigation to InstructionScreen
-  function handleInstruction(){
+  function handleInstruction() {
     navigation.navigate("InstructionScreen");
   }
 
   // Function handle navigation to HistoryScreen
-  function handleHistory(){
+  function handleHistory() {
     navigation.navigate("HistoryScreen");
   }
 
   return (
     <View style={styles.container}>
+      <View>
+        <TouchableOpacity style={styles.giftContainer}>
+          <Image
+            style={styles.img}
+            source={require("../assets/gift-box.png")}
+          ></Image>
+        </TouchableOpacity>
+      </View>
       <View style={styles.bigCir}></View>
       <View style={styles.mediumCir}></View>
       <View style={styles.botCir}></View>
@@ -37,18 +59,39 @@ export default function HomeScreen({ navigation }) {
             : null,
         ]}
       >
-        <SubmitButton
-            title="Start"
-            onPress={handleInforLife}
-        />
-        <SubmitButton
-            title="Instruction"
-            onPress={handleInstruction}
-        />
-        <SubmitButton
-            title="History"
-            onPress={handleHistory}
-        />
+        <Pressable
+          onPress={handleInforLife}
+          style={({ pressed }) => [
+            styles.startBtn,
+            pressed ? { opacity: 0.9 } : null,
+          ]}
+        >
+          <Text style={{ color: "white", fontSize: 40, fontWeight: "bold" }}>
+            Start
+          </Text>
+        </Pressable>
+        <Pressable
+          onPress={handleInstruction}
+          style={({ pressed }) => [
+            styles.subBtn,
+            pressed ? { opacity: 0.9 } : null,
+          ]}
+        >
+          <Text style={{ color: "white", fontSize: 17, fontWeight: "bold" }}>
+            INSTRUCTION
+          </Text>
+        </Pressable>
+        <Pressable
+          onPress={handleHistory}
+          style={({ pressed }) => [
+            styles.subBtn,
+            pressed ? { opacity: 0.9 } : null,
+          ]}
+        >
+          <Text style={{ color: "white", fontSize: 17, fontWeight: "bold" }}>
+            HISTORY
+          </Text>
+        </Pressable>
       </View>
     </View>
   );
@@ -66,9 +109,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   btnContainer: {
-    height: "20%",
+    height: "35%",
     width: "50%",
     justifyContent: "space-around",
+    alignItems: "center",
     // borderWidth: 1
   },
   header: {
@@ -102,13 +146,47 @@ const styles = StyleSheet.create({
     bottom: -90,
     left: -90,
   },
-  smallCir:{
+  smallCir: {
     backgroundColor: "#F2C167",
     width: 70,
     height: 70,
     borderRadius: 35,
     position: "absolute",
     top: 450,
-    left: 90
-  }
+    left: 90,
+  },
+  startBtn: {
+    justifyContent: "center",
+    alignItems: "center",
+    height: "33%",
+    backgroundColor: "#EDA41D",
+    borderRadius: 7,
+    borderBottomWidth: 5,
+    borderBottomColor: "#B27605",
+    elevation: 4,
+    marginBottom: 40,
+    width: "100%",
+  },
+  subBtn: {
+    height: "20%",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#EDA41D",
+    borderRadius: 7,
+    borderBottomWidth: 5,
+    borderBottomColor: "#B27605",
+    elevation: 4,
+    marginBottom: 30,
+    width: "90%",
+  },
+  giftContainer: {
+    position: "absolute",
+    top: 5,
+    right: -180,
+    zIndex: 99,
+  },
+  img: {
+    width: 60,
+    height: 60,
+  },
 });
