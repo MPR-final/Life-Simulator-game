@@ -27,6 +27,28 @@ export async function storeUser(userId, userData) {
   }
 }
 
+export async function changeProgress(userId, lifeIndex, newProgress) {
+  try {
+    const response = await axios.patch(BACKEND_URL + 'account.json', {
+      [`${userId}.${lifeIndex}.progress`]: newProgress
+    });
+  } catch (error) {
+    console.error('Error changing progress:', error);
+    throw error;
+  }
+}
+
+export async function changeStatus(userId, lifeIndex, newStatus) {
+  try {
+    const response = await axios.patch(BACKEND_URL + 'account.json', {
+      [`${userId}.${lifeIndex}.status`]: newStatus
+    });
+  } catch (error) {
+    console.error('Error changing status:', error);
+    throw error;
+  }
+}
+
 export async function fetchUser (userId) {
   try{
     const response = await axios.get(BACKEND_URL + 'account.json');

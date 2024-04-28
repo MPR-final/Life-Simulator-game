@@ -8,7 +8,6 @@ import PauseOverlay from "../components/PauseOverlay.js";
 import { fetchNormalEvent, fetchUser } from "../util/auth.js";
 import EventHaveChoice from "../components/EventHaveChoice.js";
 import LoadingOverLay from "../components/LoadingOverLay.js";
-import { update } from "firebase/database";
 
 
 const { width, height } = Dimensions.get("window");
@@ -20,6 +19,7 @@ export default function MainScreen({navigation}) {
   {
     /** set bg color & img for character */
   }
+  const userId = 'e3MKj3heMFNFDgckYMMLsEHRlzI2';
   const [isLoading, setLoading] = useState(true);
   const [fetchedNormalEvents, setFetchedNormalEvents] = useState([]);
   const [userData, setUserData] = useState([]);
@@ -27,13 +27,13 @@ export default function MainScreen({navigation}) {
   const [progress, setProgress] = useState(0);
   const [isPaused, setPaused] = useState(false);
   const [isEventChoice, setEventChoice] = useState(false);
-  const [ageEvent1, setAgeEvent1] = useState([]);
+  const [ageEvent, setAgeEvent] = useState([]);
 
   const gender = userData.gender;
   const characterAge = userData.age;
   useEffect(() => {
     const interval = setInterval(() => {
-      setProgress(prevProgress => prevProgress + 0.1);
+      setProgress(prevProgress => prevProgress + 1);
       setUpdateData(!updateData);
     }, 1000);
   
@@ -43,9 +43,19 @@ export default function MainScreen({navigation}) {
   }, []);
 
   useEffect(() => {
+    const interval = setInterval(() => {
+      setEventChoice(true);
+    }, 30000);
+  
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+  useEffect(() => {
     async function getUserData() {
       try {
-        const userDatas = await fetchUser('e3MKj3heMFNFDgckYMMLsEHRlzI2');
+        const userDatas = await fetchUser(userId);
         const lifeNum = userDatas.length - 1;
         const userData = userDatas[lifeNum];
         setUserData(userData);
@@ -61,10 +71,10 @@ export default function MainScreen({navigation}) {
       try {
         const normalEvents = await fetchNormalEvent();
         setFetchedNormalEvents(normalEvents);
-        setAgeEvent1(normalEvents[characterAge][0]);
+        setAgeEvent(normalEvents[characterAge][0]);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching normal events:', error);
+        
       }
     }
     getNormalEvents();
@@ -76,7 +86,6 @@ export default function MainScreen({navigation}) {
   };
   
   const handleEndGame = () => { //test EventHaveChoice
-    setEventChoice(true);
     setPaused(false); 
   };
   
@@ -151,7 +160,7 @@ export default function MainScreen({navigation}) {
           <Image style={styles.icon} source={require("../assets/health.png")} />
           <View style={styles.bar}>
             <ProgressBar
-              percentage={50}
+              percentage={userData.status.health}
               bgColor={"#F5F5F3"}
               color={"#E15A6B"}
             />
@@ -165,7 +174,7 @@ export default function MainScreen({navigation}) {
           />
           <View style={styles.bar}>
             <ProgressBar
-              percentage={70}
+              percentage={userData.status.intel}
               bgColor={"#F5F5F3"}
               color={"#F8CA72"}
             />
@@ -179,7 +188,7 @@ export default function MainScreen({navigation}) {
           />
           <View style={styles.bar}>
             <ProgressBar
-              percentage={60}
+              percentage={userData.status.money}
               bgColor={"#F5F5F3"}
               color={"#D394F9"}
             />
@@ -190,7 +199,7 @@ export default function MainScreen({navigation}) {
           <Image style={styles.icon} source={require("../assets/salary.png")} />
           <View style={styles.bar}>
             <ProgressBar
-              percentage={20}
+              percentage={userData.status.relationship}
               bgColor={"#F5F5F3"}
               color={"#94E86C"}
             />
@@ -207,11 +216,11 @@ export default function MainScreen({navigation}) {
           onChoice2={handleChoice2}
           onChoice3={handleChoice3}
           onChoice4={handleChoice4}
-          detail={ageEvent1.detail}
-          choice1={ageEvent1.choices[0]}
-          choice2={ageEvent1.choices[1]}
-          choice3={ageEvent1.choices[2]}
-          choice4={ageEvent1.choices[3]}
+          detail={ageEvent.detail}
+          choice1={ageEvent.choices[0]}
+          choice2={ageEvent.choices[1]}
+          choice3={ageEvent.choices[2]}
+          choice4={ageEvent.choices[3]}
         />
       )}
     </View>
