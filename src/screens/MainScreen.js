@@ -5,16 +5,13 @@ import ProgressBar from "../components/progressBar.js";
 import CharacterData from "../components/getCharacterData.js";
 import { AuthContext } from "../store/AuthContext.js";
 import PauseOverlay from "../components/PauseOverlay.js";
-import { fetchNormalEvent } from "../util/auth.js";
+import { fetchNormalEvent, fetchUser } from "../util/auth.js";
 
 
 const { width, height } = Dimensions.get("window");
 
 export default function MainScreen({navigation}) {
   const isPortrait = height > width;
-
-
-
   const characterAge = 7;
   const gender = "female";
   // const characterInfo = CharacterData({ characterAge, gender }); 
@@ -22,8 +19,9 @@ export default function MainScreen({navigation}) {
   {
     /** set bg color & img for character */
   }
-
+  const [fetchedNormalEvents, setFetchedNormalEvents] = useState([]);
   const [progress, setProgress] = useState(0);
+  const [isPaused, setPaused] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -35,9 +33,6 @@ export default function MainScreen({navigation}) {
     };
   }, []);
 
-
-  const [fetchedNormalEvents, setFetchedNormalEvents] = useState([]);
-
   useEffect(() => {
     async function getNormalEvents() {
       const normalEvents = await fetchNormalEvent();
@@ -46,9 +41,6 @@ export default function MainScreen({navigation}) {
     getNormalEvents();
   }, []);
   console.log(fetchedNormalEvents[0][0].choices[0].choiceDetail);
-
-
-  const [isPaused, setPaused] = useState(false);
 
   const handleContinue = () => {
     setPaused(false);

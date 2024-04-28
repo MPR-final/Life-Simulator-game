@@ -28,7 +28,7 @@ export async function fetchUser (userId) {
     const response = axios.get(BACKEND_URL + 'account.json');
     const userDatas = [];
     for (const life in response.data[userId]) {
-      const lifeData = response.data[userId];
+      const lifeData = response.data[userId][life];
       const lifeObj = {
         age: lifeData.age,
         gender: lifeData.gender,
