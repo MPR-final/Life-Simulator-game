@@ -35,9 +35,9 @@ export default function MainScreen({navigation}) {
   useEffect(() => {
     const interval = setInterval(() => {
       setProgress(prevProgress => prevProgress + 1);
-      setUpdateData(!updateData);
-    }, 100000);
-  
+      setUpdateData(prev => !prev);
+    }, 10000);
+
     return () => {
       clearInterval(interval);
     };
@@ -66,7 +66,7 @@ export default function MainScreen({navigation}) {
     }
     getUserData();
   }, [updateData]);
-  
+
   useEffect(() => {
     async function getNormalEvents() {
       try {
@@ -81,9 +81,9 @@ export default function MainScreen({navigation}) {
   //console.log(fetchedNormalEvents[0][0].choices[0].choiceDetail);
 
   useEffect(() => {
-    if (fetchedNormalEvents.length > 0 && userData.age !== undefined){
+    if (fetchedNormalEvents && userData){
       setAgeEvent(fetchedNormalEvents[userData.age][0]);
-      setLoading[false];
+      setLoading(false);
     }
   }, [fetchedNormalEvents, userData])
 
@@ -94,32 +94,35 @@ export default function MainScreen({navigation}) {
   const handleEndGame = () => { //test EventHaveChoice
     setPaused(false); 
   };
-  
+  print(ageEvent);
+  print(isLoading);
   const handleHome = () => {
     navigation.navigate('HomeScreen');
     setPaused(false);
   };
 
   const handleChoice = (choiceIndex) => {
-    setCurrentChoice(ageEvent.choices[choiceIndex]);
-    const status = userData.status;
-    const statusChanges = currentChoice.points;
-
-    const newHealth = status.health + statusChanges.health;
-    const newIntel = status.intel + statusChanges.intel;
-    const newMoney = status.money + statusChanges.money;
-    const newRelationship = status.relationship + statusChanges.relationship;
-    const newStatus = {
-      health: newHealth,
-      intel: newIntel,
-      money: newMoney,
-      relationship: newRelationship
-   }
-    changeStatus(userId, newStatus);
-
-    setResult(true);
-    setUpdateData(!updateData);
-    setEventChoice(false);
+    if (ageEvent && ageEvent.choices && ageEvent.choices[choiceIndex]) {
+      setCurrentChoice(ageEvent.choices[choiceIndex]);
+      const status = userData.status;
+      const statusChanges = ageEvent.choices[choiceIndex].points;
+  
+      const newHealth = status.health + statusChanges.health;
+      const newIntel = status.intel + statusChanges.intel;
+      const newMoney = status.money + statusChanges.money;
+      const newRelationship = status.relationship + statusChanges.relationship;
+      const newStatus = {
+        health: newHealth,
+        intel: newIntel,
+        money: newMoney,
+        relationship: newRelationship
+      };
+      changeStatus(userId, newStatus);
+  
+      setResult(true);
+      setUpdateData(!updateData);
+      setEventChoice(false);
+    }
   };
 
   const handleExit = () => {

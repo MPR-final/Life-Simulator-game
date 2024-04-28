@@ -4,6 +4,9 @@ import { StyleSheet, Text, View,TouchableOpacity } from 'react-native';
 import { AuthContext } from '../store/AuthContext';
 
 export default function HistoryScreen({navigation}) {
+  const mainContext = useContext(AuthContext);
+  console.log(mainContext.localID);
+  console.log(mainContext.player);
   return (
     <View style={styles.container}>
       <Text>history</Text>

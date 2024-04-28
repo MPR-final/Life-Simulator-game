@@ -14,6 +14,7 @@ import LoadingOverLay from "./src/components/LoadingOverLay.js";
 import Popup from "./src/components/Popup.js";
 import AuthContextProvider, { AuthContext } from "./src/store/AuthContext.js";
 import { useContext } from "react";
+import InforLife from "./src/components/InforLife.js";
 
 const Stack = createNativeStackNavigator();
 
@@ -30,6 +31,7 @@ function GameScreens() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
+      <Stack.Screen name="InforLife" component={InforLife} />
       <Stack.Screen name="InstructionScreen" component={InstructionScreen} />
       <Stack.Screen name="HistoryScreen" component={HistoryScreen} />
       <Stack.Screen name="MainScreen" component={MainScreen} />

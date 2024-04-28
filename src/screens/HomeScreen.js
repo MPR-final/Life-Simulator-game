@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -7,20 +7,86 @@ import {
   Pressable,
   Image,
   TouchableOpacity,
+  Alert,
 } from "react-native";
-import InforLife from "../components/InforLife";
+import { AuthContext } from "../store/AuthContext";
+import Popup from "../components/Popup";
 
 export default function HomeScreen({ navigation }) {
+  const mainContext = useContext(AuthContext);
   const { height } = useWindowDimensions();
-  const [isCreatingPlayer, setIsCreatingPlayer] = useState(false);
+  const [isGiftPress, setIsGiftPress] = useState(false);
 
-  // Function handle navigation to InforLife component
-  function handleInforLife() {
-    setIsCreatingPlayer(!isCreatingPlayer);
+  const [pickedStatus, setPickedStatus] = useState("");
+  const [bonusPoint, setBonusPoint] = useState(0);
+  const [photoSrc, setPhotoSrc] = useState();
+  const [isRevceiedGift, setIsReceiveGift] = useState(false);
+
+  console.log(mainContext.player);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsReceiveGift(false);
+    }, 24 * 60 * 60 * 1000);
+
+    return () => clearTimeout(timer);
+  }, [isGiftPress]);
+
+  useEffect(() => {
+    switch (pickedStatus) {
+      case "health":
+        setPhotoSrc(require("../assets/health.png"));
+        break;
+      case "intel":
+        setPhotoSrc(require("../assets/intelligent.png"));
+        break;
+      case "relationship":
+        setPhotoSrc(require("../assets/Relationship.png"));
+        break;
+      case "money":
+        setPhotoSrc(require("../assets/salary.png"));
+        break;
+    }
+  }, [pickedStatus]);
+
+  function closeGiftBox() {
+    setIsGiftPress(false);
+    setIsReceiveGift(true);
   }
 
-  if (isCreatingPlayer) {
-    return <InforLife closePress={handleInforLife}></InforLife>;
+
+  // function to handle present press
+  function handleGiftPress() {
+    if (Object.keys(mainContext.player).length === 0) {
+      Alert.alert("Gift Warning", "You have to create an user in game first.");
+    } else {
+      const options = ["health", "money", "relationship", "intel"];
+      const randomOption = options[Math.floor(Math.random() * options.length)];
+      const bonusScore = Math.floor(Math.random() * 101);
+      const updateObj = { ...mainContext.player };
+      const updatedSatus = { ...updateObj.status };
+
+      switch (randomOption) {
+        case "health":
+          updatedSatus.health += bonusScore;
+          break;
+        case "money":
+          updatedSatus.money += bonusScore;
+          break;
+        case "intel":
+          updatedSatus.intel += bonusScore;
+          break;
+        case "relationship":
+          updatedSatus.relationship += bonusScore;
+          break;
+      }
+
+      updateObj.status = updatedSatus;
+      mainContext.addPlayer(updateObj);
+      setPickedStatus(randomOption);
+      setBonusPoint(bonusScore);
+      setIsGiftPress(true);
+    }
   }
 
   // Function handle navigation to InstructionScreen
@@ -35,14 +101,27 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <View>
-        <TouchableOpacity style={styles.giftContainer}>
-          <Image
-            style={styles.img}
-            source={require("../assets/gift-box.png")}
-          ></Image>
-        </TouchableOpacity>
-      </View>
+      {!isRevceiedGift && (
+        <View>
+          <TouchableOpacity
+            style={styles.giftContainer}
+            onPress={handleGiftPress}
+          >
+            <Image
+              style={styles.img}
+              source={require("../assets/gift-box.png")}
+            ></Image>
+          </TouchableOpacity>
+        </View>
+      )}
+      {isGiftPress && (
+        <Popup
+          srcImg={photoSrc}
+          height={700}
+          HandleClose={closeGiftBox}
+          message={`You have ${bonusPoint} bonus points which is added to your "${pickedStatus}" status!!!`}
+        ></Popup>
+      )}
       <View style={styles.bigCir}></View>
       <View style={styles.mediumCir}></View>
       <View style={styles.botCir}></View>
@@ -59,17 +138,36 @@ export default function HomeScreen({ navigation }) {
             : null,
         ]}
       >
-        <Pressable
-          onPress={handleInforLife}
-          style={({ pressed }) => [
-            styles.startBtn,
-            pressed ? { opacity: 0.9 } : null,
-          ]}
-        >
-          <Text style={{ color: "white", fontSize: 40, fontWeight: "bold" }}>
-            Start
-          </Text>
-        </Pressable>
+        {Object.keys(mainContext.player).length === 0 ||
+        mainContext.player.reasonOfDeath.length !== 0 ? (
+          <Pressable
+            onPress={() => {
+              navigation.navigate("InforLife");
+            }}
+            style={({ pressed }) => [
+              styles.startBtn,
+              pressed ? { opacity: 0.9 } : null,
+            ]}
+          >
+            <Text style={{ color: "white", fontSize: 40, fontWeight: "bold" }}>
+              Start
+            </Text>
+          </Pressable>
+        ) : (
+          <Pressable
+            onPress={() => {
+              navigation.navigate("InstructionScreen");
+            }}
+            style={({ pressed }) => [
+              styles.startBtn,
+              pressed ? { opacity: 0.9 } : null,
+            ]}
+          >
+            <Text style={{ color: "white", fontSize: 40, fontWeight: "bold" }}>
+              Continue
+            </Text>
+          </Pressable>
+        )}
         <Pressable
           onPress={handleInstruction}
           style={({ pressed }) => [
@@ -103,17 +201,21 @@ const styles = StyleSheet.create({
     backgroundColor: "#F6F1E3",
     alignItems: "center",
     justifyContent: "space-around",
+    // borderWidth: 1
   },
   headerContainer: {
     alignItems: "center",
     justifyContent: "center",
+    // borderWidth: 1,
+    marginVertical: -70,
   },
   btnContainer: {
     height: "35%",
     width: "50%",
     justifyContent: "space-around",
     alignItems: "center",
-    // borderWidth: 1
+    // borderWidth: 1,
+    marginBottom: 80,
   },
   header: {
     fontSize: 70,
@@ -181,8 +283,9 @@ const styles = StyleSheet.create({
   },
   giftContainer: {
     position: "absolute",
-    top: 5,
+    top: -5,
     right: -180,
+    marginTop: -40,
     zIndex: 99,
   },
   img: {
