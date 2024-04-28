@@ -128,3 +128,37 @@ export async function fetchNormalEvent() {
     console.error('Error fetching normal events', error);
   }
 }
+
+export async function fetchRandomChoiceEvent() {
+  try {
+    const response = await axios.get(BACKEND_URL + 'randomEvent/withChoice.json');
+    const randomChoiceEvents = [];
+
+    for (const id of response.data) {
+
+      const choices = [];
+      for (const choiceKey in id.choice) {
+        const choice = ageEvent.choice[choiceKey];
+        const choiceDetail = choice.choiceDetail;
+        const choiceResult = choice.choiceResult;
+        const points = choice.points;
+
+        const newChoice = {
+          choiceDetail: choiceDetail,
+          choiceResult: choiceResult,
+          points: points,
+        };
+        choices.push(newChoice);
+      }
+      const randomEvent = {
+        choices: choices,
+        detail: id.detail,
+        time: id.time,
+      }
+      randomChoiceEvents.push(randomEvent);
+    }
+    return randomChoiceEvents;
+  } catch (error) {
+    console.error('Error fetching random choice events', error);
+  }
+}
