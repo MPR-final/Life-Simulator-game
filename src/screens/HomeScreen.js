@@ -4,11 +4,9 @@ import {
   View,
   Text,
   useWindowDimensions,
-  Button,
   Pressable,
-  StatusBar,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import InforLife from "../components/InforLife";
 
@@ -37,7 +35,14 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <View ><TouchableOpacity style={styles.giftContainer}><Image style={styles.img} source={require("../assets/gift-box.png")}></Image></TouchableOpacity></View>
+      <View>
+        <TouchableOpacity style={styles.giftContainer}>
+          <Image
+            style={styles.img}
+            source={require("../assets/gift-box.png")}
+          ></Image>
+        </TouchableOpacity>
+      </View>
       <View style={styles.bigCir}></View>
       <View style={styles.mediumCir}></View>
       <View style={styles.botCir}></View>
@@ -54,13 +59,39 @@ export default function HomeScreen({ navigation }) {
             : null,
         ]}
       >
-        <Pressable onPress={handleInforLife} style={({pressed})=>[styles.startBtn, pressed ? {opacity: 0.9} : null]}>
+        <Pressable
+          onPress={handleInforLife}
+          style={({ pressed }) => [
+            styles.startBtn,
+            pressed ? { opacity: 0.9 } : null,
+          ]}
+        >
           <Text style={{ color: "white", fontSize: 40, fontWeight: "bold" }}>
             Start
           </Text>
         </Pressable>
-        <Pressable onPress={handleInstruction} style={({pressed})=>[styles.subBtn, pressed ? {opacity: 0.9} : null]}><Text style={{ color: "white", fontSize: 17, fontWeight: "bold" }}>INSTRUCTION</Text></Pressable>
-        <Pressable onPress={handleHistory} style={({pressed})=>[styles.subBtn, pressed ? {opacity: 0.9} : null]}><Text style={{ color: "white", fontSize: 17, fontWeight: "bold" }}>HISTORY</Text></Pressable>
+        <Pressable
+          onPress={handleInstruction}
+          style={({ pressed }) => [
+            styles.subBtn,
+            pressed ? { opacity: 0.9 } : null,
+          ]}
+        >
+          <Text style={{ color: "white", fontSize: 17, fontWeight: "bold" }}>
+            INSTRUCTION
+          </Text>
+        </Pressable>
+        <Pressable
+          onPress={handleHistory}
+          style={({ pressed }) => [
+            styles.subBtn,
+            pressed ? { opacity: 0.9 } : null,
+          ]}
+        >
+          <Text style={{ color: "white", fontSize: 17, fontWeight: "bold" }}>
+            HISTORY
+          </Text>
+        </Pressable>
       </View>
     </View>
   );
@@ -81,7 +112,7 @@ const styles = StyleSheet.create({
     height: "35%",
     width: "50%",
     justifyContent: "space-around",
-    alignItems:'center'
+    alignItems: "center",
     // borderWidth: 1
   },
   header: {
@@ -134,28 +165,28 @@ const styles = StyleSheet.create({
     borderBottomColor: "#B27605",
     elevation: 4,
     marginBottom: 40,
-    width: "100%"
+    width: "100%",
   },
-  subBtn:{
-    height: '20%',
-    alignItems: 'center',
-    justifyContent: 'center',
+  subBtn: {
+    height: "20%",
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: "#EDA41D",
     borderRadius: 7,
     borderBottomWidth: 5,
     borderBottomColor: "#B27605",
     elevation: 4,
     marginBottom: 30,
-    width: '90%'
+    width: "90%",
   },
-  giftContainer:{
-    position: 'absolute',
+  giftContainer: {
+    position: "absolute",
     top: 5,
     right: -180,
-    zIndex: 99
+    zIndex: 99,
   },
-  img:{
+  img: {
     width: 60,
-    height: 60
-  }
+    height: 60,
+  },
 });

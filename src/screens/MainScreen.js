@@ -1,11 +1,10 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { StyleSheet, Text, TouchableOpacity, View, Image, Dimensions, Animated, } from "react-native";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import ProgressBar from "../components/progressBar.js";
 import CharacterData from "../components/getCharacterData.js";
 import { AuthContext } from "../store/AuthContext.js";
-// import PauseOverlay from "../components/PauseOverlay.js";
+
 
 const { width, height } = Dimensions.get("window");
 
