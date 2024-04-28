@@ -26,6 +26,7 @@ export function storeUser (userData) {
 export async function fetchUser () {
   try{
     const response = axios.get(BACKEND_URL + 'account.json');
+    return response;
   } catch (error) {
     console.error('Error fetching user data', error);
   }
