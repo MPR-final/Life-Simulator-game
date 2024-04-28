@@ -81,7 +81,7 @@ export default function MainScreen({navigation}) {
   //console.log(fetchedNormalEvents[0][0].choices[0].choiceDetail);
 
   useEffect(() => {
-    if (fetchedNormalEvents && userData){
+    if (fetchedNormalEvents.length !== 0 && Object.keys(userData).length !== 0) {
       setAgeEvent(fetchedNormalEvents[userData.age][0]);
       setLoading(false);
     }
@@ -91,18 +91,15 @@ export default function MainScreen({navigation}) {
     setPaused(false);
   };
   
-  const handleEndGame = () => { //test EventHaveChoice
+  const handleEndGame = () => {
+    setEventChoice(true);
     setPaused(false); 
   };
-  print(ageEvent);
-  print(isLoading);
   const handleHome = () => {
     navigation.navigate('HomeScreen');
     setPaused(false);
   };
-
   const handleChoice = (choiceIndex) => {
-    if (ageEvent && ageEvent.choices && ageEvent.choices[choiceIndex]) {
       setCurrentChoice(ageEvent.choices[choiceIndex]);
       const status = userData.status;
       const statusChanges = ageEvent.choices[choiceIndex].points;
@@ -122,8 +119,7 @@ export default function MainScreen({navigation}) {
       setResult(true);
       setUpdateData(!updateData);
       setEventChoice(false);
-    }
-  };
+    };
 
   const handleExit = () => {
     setResult(false);
@@ -207,7 +203,7 @@ export default function MainScreen({navigation}) {
           />
           <View style={styles.bar}>
             <ProgressBar
-              percentage={userData.status.money}
+              percentage={userData.status.relationship}
               bgColor={"#F5F5F3"}
               color={"#D394F9"}
             />
@@ -218,7 +214,7 @@ export default function MainScreen({navigation}) {
           <Image style={styles.icon} source={require("../assets/salary.png")} />
           <View style={styles.bar}>
             <ProgressBar
-              percentage={userData.status.relationship}
+              percentage={userData.status.money}
               bgColor={"#F5F5F3"}
               color={"#94E86C"}
             />
