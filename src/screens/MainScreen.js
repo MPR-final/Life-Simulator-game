@@ -98,7 +98,7 @@ export default function MainScreen({navigation}) {
     const choice = ageEvent.choices[0];
     const status = userData.status;
     const statusChanges = choice.points;
-    for (values of points) {
+    for (values in status) {
       const newHeath = status.health + statusChanges.health;
       const newIntel = status.intel + statusChanges.intel;
       const newMoney = status.money + statusChanges.money;
