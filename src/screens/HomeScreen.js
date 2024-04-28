@@ -9,14 +9,12 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import InforLife from "../components/InforLife";
 import { AuthContext } from "../store/AuthContext";
 import Popup from "../components/Popup";
 
 export default function HomeScreen({ navigation }) {
   const mainContext = useContext(AuthContext);
   const { height } = useWindowDimensions();
-  const [isCreatingPlayer, setIsCreatingPlayer] = useState(false);
   const [isGiftPress, setIsGiftPress] = useState(false);
 
   const [pickedStatus, setPickedStatus] = useState("");
@@ -56,21 +54,11 @@ export default function HomeScreen({ navigation }) {
     setIsReceiveGift(true);
   }
 
-  if (isGiftPress) {
-    return (
-      <Popup
-        srcImg={photoSrc}
-        height={700}
-        HandleClose={closeGiftBox}
-        message={`You have ${bonusPoint} bonus points which is added to your "${pickedStatus}" status!!!`}
-      ></Popup>
-    );
-  }
 
   // function to handle present press
   function handleGiftPress() {
     if (Object.keys(mainContext.player).length === 0) {
-      Alert.alert("Error Window", "You have to create player first.");
+      Alert.alert("Gift Warning", "You have to create an user in game first.");
     } else {
       const options = ["health", "money", "relationship", "intel"];
       const randomOption = options[Math.floor(Math.random() * options.length)];
@@ -101,24 +89,6 @@ export default function HomeScreen({ navigation }) {
     }
   }
 
-  // Function handle navigation to InforLife component
-  function handleInforLife() {
-    setIsCreatingPlayer(!isCreatingPlayer);
-  }
-
-  if (isCreatingPlayer) {
-    if (Object.keys(mainContext.player).length === 0) {
-      return <InforLife closePress={handleInforLife}></InforLife>;
-    }
-    else if (mainContext.player.reasonOfDeath.length !== 0){
-      return <InforLife closePress={handleInforLife}></InforLife>;
-    }
-    else {
-      navigation.navigate("HistoryScreen")
-      console.log("Navigated");
-        }
-  }
-
   // Function handle navigation to InstructionScreen
   function handleInstruction() {
     navigation.navigate("InstructionScreen");
@@ -144,6 +114,14 @@ export default function HomeScreen({ navigation }) {
           </TouchableOpacity>
         </View>
       )}
+      {isGiftPress && (
+        <Popup
+          srcImg={photoSrc}
+          height={700}
+          HandleClose={closeGiftBox}
+          message={`You have ${bonusPoint} bonus points which is added to your "${pickedStatus}" status!!!`}
+        ></Popup>
+      )}
       <View style={styles.bigCir}></View>
       <View style={styles.mediumCir}></View>
       <View style={styles.botCir}></View>
@@ -160,17 +138,36 @@ export default function HomeScreen({ navigation }) {
             : null,
         ]}
       >
-        <Pressable
-          onPress={handleInforLife}
-          style={({ pressed }) => [
-            styles.startBtn,
-            pressed ? { opacity: 0.9 } : null,
-          ]}
-        >
-          <Text style={{ color: "white", fontSize: 40, fontWeight: "bold" }}>
-            Start
-          </Text>
-        </Pressable>
+        {Object.keys(mainContext.player).length === 0 ||
+        mainContext.player.reasonOfDeath.length !== 0 ? (
+          <Pressable
+            onPress={() => {
+              navigation.navigate("InforLife");
+            }}
+            style={({ pressed }) => [
+              styles.startBtn,
+              pressed ? { opacity: 0.9 } : null,
+            ]}
+          >
+            <Text style={{ color: "white", fontSize: 40, fontWeight: "bold" }}>
+              Start
+            </Text>
+          </Pressable>
+        ) : (
+          <Pressable
+            onPress={() => {
+              navigation.navigate("InstructionScreen");
+            }}
+            style={({ pressed }) => [
+              styles.startBtn,
+              pressed ? { opacity: 0.9 } : null,
+            ]}
+          >
+            <Text style={{ color: "white", fontSize: 40, fontWeight: "bold" }}>
+              Continue
+            </Text>
+          </Pressable>
+        )}
         <Pressable
           onPress={handleInstruction}
           style={({ pressed }) => [

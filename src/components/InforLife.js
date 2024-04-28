@@ -12,7 +12,7 @@ import SubmitButton from "./SubmitButton";
 import { useContext, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../store/AuthContext";
-function InforLife({ closePress }) {
+function InforLife() {
   const navigation = useNavigation();
   const [malePress, setMalePress] = useState(false);
   const [femalePress, setFemalePress] = useState(false);
@@ -21,53 +21,63 @@ function InforLife({ closePress }) {
   const [location, setLocation] = useState("");
   const [player, setPlayer] = useState({});
   const [playerIsCreated, setPlayerIsCreated] = useState(false);
+  const mainContext = useContext(AuthContext);
 
   useEffect(() => {
     mainContext.addPlayer(player);
   }, [playerIsCreated]);
-  const mainContext = useContext(AuthContext);
 
   function startGameHandler() {
-    if (malePress) {
-      setPlayer({
-        name: firstName + " " + lastName,
-        location: location,
-        gender: "male",
-        age: 0,
-        progress: 0,
-        reasonOfDeath: "",
-        status: {
-          health: 250,
-          intel: 250,
-          relationship: 250,
-          money: 100,
-        },
-      });
+    if (
+      firstName !== "" &&
+      lastName !== "" &&
+      location !== "" &&
+      (malePress !== false || femalePress !== false)
+    ) {
+      if (malePress) {
+        setPlayer({
+          name: firstName + " " + lastName,
+          location: location,
+          gender: "male",
+          age: 0,
+          progress: 0,
+          reasonOfDeath: "",
+          currentEventNum: 0,
+          img: 0,
+          status: {
+            health: 250,
+            intel: 250,
+            relationship: 250,
+            money: 100,
+          },
+        });
+      }
+      if (femalePress) {
+        setPlayer({
+          name: firstName + lastName,
+          location: location,
+          gender: "female",
+          age: 0,
+          progress: 0,
+          reasonOfDeath: "",
+          currentEventNum: 0,
+          img: 0,
+          status: {
+            health: 250,
+            intel: 250,
+            relationship: 250,
+            money: 100,
+          },
+        });
+      }
+      setPlayerIsCreated(!playerIsCreated);
+      setFirstName("");
+      setLastName("");
+      setLocation("");
+      setFemalePress(false);
+      setMalePress(false);
+      navigation.navigate("HistoryScreen");
     }
-    if (femalePress) {
-      setPlayer({
-        name: firstName + lastName,
-        location: location,
-        gender: "female",
-        age: 0,
-        progress: 0,
-        reasonOfDeath: "",
-        img: "",
-        status: {
-          health: 250,
-          intel: 250,
-          relationship: 250,
-          money: 100,
-        },
-      });
-    }
-    setPlayerIsCreated(!playerIsCreated);
-    setFirstName("");
-    setLastName("");
-    setLocation("");
-    setFemalePress(false);
-    setMalePress(false);
-    navigation.navigate("HistoryScreen");
   }
 
   function handleInput(inputType, inputText) {
@@ -87,18 +97,15 @@ function InforLife({ closePress }) {
   function touchPress_1() {
     if (!femalePress) {
       setMalePress(!malePress);
-    }
-    else {
+    } else {
       setFemalePress(!femalePress);
       setMalePress(!malePress);
-
     }
   }
   function touchPress_2() {
     if (!malePress) {
       setFemalePress(!femalePress);
-    }
-    else {
+    } else {
       setMalePress(!malePress);
       setFemalePress(!femalePress);
     }
@@ -107,7 +114,9 @@ function InforLife({ closePress }) {
     <KeyboardAvoidingView behavior="position">
       <View style={styles.container}>
         <Pressable
-          onPress={closePress}
+          onPress={() => {
+            navigation.navigate("HomeScreen");
+          }}
           style={({ pressed }) => [
             styles.closeBtn,
             pressed ? { opacity: 0.75 } : null,
