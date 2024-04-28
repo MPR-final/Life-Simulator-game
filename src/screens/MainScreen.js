@@ -4,6 +4,8 @@ import { StyleSheet, Text, TouchableOpacity, View, Image, Dimensions, Animated, 
 import ProgressBar from "../components/progressBar.js";
 import CharacterData from "../components/getCharacterData.js";
 import { AuthContext } from "../store/AuthContext.js";
+import PauseOverlay from "../components/PauseOverlay.js";
+import { fetchNormalEvent } from "../util/auth.js";
 
 
 const { width, height } = Dimensions.get("window");
@@ -32,6 +34,19 @@ export default function MainScreen({navigation}) {
       clearInterval(interval);
     };
   }, []);
+
+
+  const [fetchedNormalEvents, setFetchedNormalEvents] = useState([]);
+
+  useEffect(() => {
+    async function getNormalEvents() {
+      const normalEvents = await fetchNormalEvent();
+      setFetchedNormalEvents(normalEvents);
+    }
+    getNormalEvents();
+  }, []);
+  console.log(fetchedNormalEvents[0][0].choices[0].choiceDetail);
+
 
   const [isPaused, setPaused] = useState(false);
 
