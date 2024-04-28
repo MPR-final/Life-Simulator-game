@@ -5,14 +5,14 @@ import ProgressBar from "../components/progressBar.js";
 import CharacterData from "../components/getCharacterData.js";
 import { AuthContext } from "../store/AuthContext.js";
 import PauseOverlay from "../components/PauseOverlay.js";
-import { fetchNormalEvent, fetchUser, changeStatus } from "../util/auth.js";
+import { fetchNormalEvent, fetchUser, changeStatus, changeProgress } from "../util/auth.js";
 import EventHaveChoice from "../components/EventHaveChoice.js";
 import LoadingOverLay from "../components/LoadingOverLay.js";
 import Result from "../components/Result.js";
 
 const { width, height } = Dimensions.get('window');
 
-function MainScreen() {
+function MainScreen({ navigation }) {
   const userId = 'e3MKj3heMFNFDgckYMMLsEHRlzI2';
   const [isLoading, setLoading] = useState(true);
   const [fetchedNormalEvents, setFetchedNormalEvents] = useState([]);
@@ -29,7 +29,7 @@ function MainScreen() {
   useEffect(() => {
     const interval = setInterval(() => {
       setProgress(prevProgress => prevProgress + 1);
-    }, 10000);
+    }, 7200);
  
     return () => clearInterval(interval);
   }, []);
@@ -128,8 +128,12 @@ function MainScreen() {
           money: newMoney,
           relationship: newRelationship
         };
-  
+
         changeStatus(userId, newStatus);
+        
+        const progressIncreasement = ageEvent.time/12*100;
+        setProgress(progress + progressIncreasement);
+        changeProgress(userId, progress);
       }
     } catch (error) {
       console.error("Error updating status:", error);

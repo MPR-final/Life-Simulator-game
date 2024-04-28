@@ -20,18 +20,26 @@ export async function storeUser(userId, userData) {
   try {
     const response = await axios.put(BACKEND_URL + 'account.json', { [userId]: userData });
     console.log('User data stored successfully:', response.data);
-    // You can handle the response or perform additional actions if needed
+
   } catch (error) {
     console.error('Error storing user data:', error);
     throw error;
   }
 }
 
-export async function changeProgress(userId, lifeIndex, newProgress) {
+export async function changeProgress(userId, newProgress) {
   try {
-    const response = await axios.patch(BACKEND_URL + 'account.json', {
-      [`${userId}.${lifeIndex}.progress`]: newProgress
-    });
+    const response = await axios.get(BACKEND_URL + 'account.json');
+    const userData = response.data[userId];
+    const userLatestLife = userData.length - 1;
+
+    if (userData) {
+      userData[userLatestLife].progress = newProgress;
+      await axios.patch(BACKEND_URL + `account/${userId}/${userLatestLife}.json`, { progress: newProgress });
+      console.log('Progress changed successfully!');
+    } else {
+      console.error('User not found');
+    }
   } catch (error) {
     console.error('Error changing progress:', error);
     throw error;
@@ -46,7 +54,7 @@ export async function changeStatus(userId, newStatus) {
     if (userData) {
       userData.status = newStatus;
       await axios.patch(BACKEND_URL + `account/${userId}/${userLatestLife}.json`, { status: newStatus });
-      console.log('User status changed successfully!');
+     // console.log('User status changed successfully!');
     } else {
       console.error('User not found');
     }
@@ -63,6 +71,7 @@ export async function fetchUser (userId) {
       const lifeData = response.data[userId][life];
       const lifeObj = {
         age: lifeData.age,
+        currentEventNum: lifeData.currentEventNum,
         gender: lifeData.gender,
         img: lifeData.img,
         location: lifeData.location,
