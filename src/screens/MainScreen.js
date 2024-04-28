@@ -5,6 +5,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import ProgressBar from "../components/progressBar.js";
 import CharacterData from "../components/getCharacterData.js";
 import PauseOverlay from "../components/PauseOverlay.js";
+import { fetchNormalEvent } from "../util/auth.js";
 
 const { width, height } = Dimensions.get("window");
 
@@ -24,13 +25,24 @@ export default function MainScreen({navigation}) {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setProgress(prevProgress => prevProgress + 0.01);
-    }, 0.1);
+      setProgress(prevProgress => prevProgress + 1);
+    }, 10000);
   
     return () => {
       clearInterval(interval);
     };
   }, []);
+
+  const [fetchedNormalEvents, setFetchedNormalEvents] = useState([]);
+
+  useEffect(() => {
+    async function getNormalEvents() {
+      const normalEvents = await fetchNormalEvent();
+      setFetchedNormalEvents(normalEvents);
+    }
+    getNormalEvents();
+  }, []);
+  console.log(fetchedNormalEvents[0][0].choices[0].choiceDetail);
 
   const [isPaused, setPaused] = useState(false);
 

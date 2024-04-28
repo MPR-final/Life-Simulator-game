@@ -1,11 +1,12 @@
 import { StyleSheet, View, Text, useWindowDimensions } from "react-native";
+import SubmitButton from "../components/SubmitButton";
 
 export default function HomeScreen({ navigation }) {
   const { height } = useWindowDimensions();
 
    // Function handle navigation to InforLife component
   function handleInforLife(){
-    navigation.navigate("InforLife");
+    navigation.navigate("MainScreen");
   }
 
   // Function handle navigation to InstructionScreen
@@ -36,15 +37,15 @@ export default function HomeScreen({ navigation }) {
             : null,
         ]}
       >
-        <Button
+        <SubmitButton
             title="Start"
             onPress={handleInforLife}
         />
-        <Button
+        <SubmitButton
             title="Instruction"
             onPress={handleInstruction}
         />
-        <Button
+        <SubmitButton
             title="History"
             onPress={handleHistory}
         />
