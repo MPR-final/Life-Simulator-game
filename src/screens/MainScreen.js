@@ -10,16 +10,18 @@ import EventHaveChoice from "../components/EventHaveChoice.js";
 import LoadingOverLay from "../components/LoadingOverLay.js";
 import Result from "../components/Result.js";
 
-
 const { width, height } = Dimensions.get("window");
 
-export default function MainScreen({navigation}) {
+
+export default function MainScreen({ navigation }) {
+
   const isPortrait = height > width;
   // const characterInfo = CharacterData({ characterAge, gender }); 
 
   {
     /** set bg color & img for character */
   }
+  
   const userId = 'e3MKj3heMFNFDgckYMMLsEHRlzI2';
   const [isLoading, setLoading] = useState(true);
   const [fetchedNormalEvents, setFetchedNormalEvents] = useState([]);
@@ -35,22 +37,9 @@ export default function MainScreen({navigation}) {
   useEffect(() => {
     const interval = setInterval(() => {
       setProgress(prevProgress => prevProgress + 1);
-      setUpdateData(prev => !prev);
     }, 10000);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setEventChoice(true);
-    }, 5000);
   
-    return () => {
-      clearInterval(interval);
-    };
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -78,7 +67,6 @@ export default function MainScreen({navigation}) {
     }
     getNormalEvents();
   }, [updateData]);
-  //console.log(fetchedNormalEvents[0][0].choices[0].choiceDetail);
 
   useEffect(() => {
     if (fetchedNormalEvents.length !== 0 && Object.keys(userData).length !== 0) {
@@ -90,36 +78,47 @@ export default function MainScreen({navigation}) {
   const handleContinue = () => {
     setPaused(false);
   };
-  
+
   const handleEndGame = () => {
     setEventChoice(true);
-    setPaused(false); 
+    setPaused(false);
   };
   const handleHome = () => {
     navigation.navigate('HomeScreen');
     setPaused(false);
   };
-  const handleChoice = (choiceIndex) => {
-      setCurrentChoice(ageEvent.choices[choiceIndex]);
-      const status = userData.status;
-      const statusChanges = ageEvent.choices[choiceIndex].points;
-  
-      const newHealth = status.health + statusChanges.health;
-      const newIntel = status.intel + statusChanges.intel;
-      const newMoney = status.money + statusChanges.money;
-      const newRelationship = status.relationship + statusChanges.relationship;
-      const newStatus = {
-        health: newHealth,
-        intel: newIntel,
-        money: newMoney,
-        relationship: newRelationship
-      };
-      changeStatus(userId, newStatus);
-  
-      setResult(true);
-      setUpdateData(!updateData);
-      setEventChoice(false);
-    };
+
+  const handleChoice1 = () => {
+    setCurrentChoice(ageEvent.choices[0]);
+    const status = userData.status;
+    const statusChanges = currentChoice.points;
+    const newHealth = status.health + statusChanges.health;
+    const newIntel = status.intel + statusChanges.intel;
+    const newMoney = status.money + statusChanges.money;
+    const newRelationship = status.relationship + statusChanges.relationship;
+    const newStatus = {
+      health: newHealth,
+      intel: newIntel,
+      money: newMoney,
+      relationship: newRelationship
+    }
+    changeStatus(userId, newStatus)
+
+    setResult(true);
+
+    setEventChoice(false);
+  }
+  const handleChoice2 = () => {
+    setEventChoice(false);
+  }
+
+  const handleChoice3 = () => {
+    setEventChoice(false);
+  }
+
+  const handleChoice4 = () => {
+    setEventChoice(false);
+  }
 
   const handleExit = () => {
     setResult(false);
@@ -128,7 +127,7 @@ export default function MainScreen({navigation}) {
   if (isLoading) {
     return (
       <View style={styles.container}>
-        <LoadingOverLay message={"Loading..."}/>
+        <LoadingOverLay message={"Loading..."} />
       </View>
     );
   }
@@ -139,7 +138,7 @@ export default function MainScreen({navigation}) {
       <View style={styles.header}>
         <View style={styles.pauseBox}>
           <TouchableOpacity onPress={() => setPaused(true)}>
-          <Image style={styles.pause} source={require("../assets/pause.png")} />
+            <Image style={styles.pause} source={require("../assets/pause.png")} />
           </TouchableOpacity>
         </View>
 
@@ -154,7 +153,7 @@ export default function MainScreen({navigation}) {
 
       {/** character */}
       <View style={styles.character}>
-      <View style={styles.timeline}>
+        <View style={styles.timeline}>
           <ProgressBar percentage={progress} bgColor={"#F5F5F3"} color={"#6CC3E8"} />
         </View>
 
@@ -223,20 +222,21 @@ export default function MainScreen({navigation}) {
       </View>
 
       <StatusBar style="auto" />
-      <PauseOverlay isVisible={isPaused} onContinue={handleContinue} onEndGame={handleEndGame} onHome ={handleHome}/>
+      <PauseOverlay isVisible={isPaused} onContinue={handleContinue} onEndGame={handleEndGame} onHome={handleHome} />
       {isEventChoice && (
-      <EventHaveChoice
-        onChoice1={() => handleChoice(0)}
-        onChoice2={() => handleChoice(1)}
-        onChoice3={() => handleChoice(2)}
-        onChoice4={() => handleChoice(3)}
-        detail={ageEvent.detail}
-        choice1={ageEvent.choices[0]}
-        choice2={ageEvent.choices[1]}
-        choice3={ageEvent.choices[2]}
-        choice4={ageEvent.choices[3]}
-      />
-    )}
+        <EventHaveChoice
+          isVisible={isEventChoice}
+          onChoice1={() => handleChoice1()}
+          onChoice2={() => handleChoice2()}
+          onChoice3={() => handleChoice3()}
+          onChoice4={() =>handleChoice4()}
+          detail={ageEvent.detail}
+          choice1={ageEvent.choices[0]}
+          choice2={ageEvent.choices[1]}
+          choice3={ageEvent.choices[2]}
+          choice4={ageEvent.choices[3]}
+        />
+      )}
 
       {isResult && (
         <Result
@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
   header: {
     // borderWidth: 0.5,
     width: "90%",
-    height: (1 / 6.5) * height,
+    height: "15%",
     marginTop: 40,
   },
   pauseBox: {
@@ -291,7 +291,7 @@ const styles = StyleSheet.create({
   },
   line: {
     marginTop: 5,
-    width: (2 / 2.5) * width,
+    width: "80%",
     height: 3,
     backgroundColor: "#F8CA72",
   },
@@ -299,7 +299,7 @@ const styles = StyleSheet.create({
   character: {
     // borderWidth: 0.5,
     width: "100%",
-    height: (1 / 2) * height,
+    height: "50%",
     alignItems: "center",
   },
   characterBox: {
@@ -348,7 +348,7 @@ const styles = StyleSheet.create({
   progressBars: {
     // borderWidth: 0.5,
     width: "90%",
-    height: (1 / 4) * height,
+    height: "25%",
     marginTop: 50,
   },
   Box: {
