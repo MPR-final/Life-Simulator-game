@@ -22,3 +22,11 @@ async function fetchDataFromFirebase() {
 }
 
 fetchDataFromFirebase();
+
+### gift ###
+- recieve gift -> update global
+  continue game -> get data from global
+
+## initial score ###
+250
+max 500
