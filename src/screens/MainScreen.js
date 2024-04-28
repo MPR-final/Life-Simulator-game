@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, TouchableOpacity, View, Image, Dimensions, } from "react-native";
 import ProgressBar from "../components/progressBar.js";
 import CharacterData from "../components/getCharacterData.js";
@@ -8,6 +8,7 @@ import PauseOverlay from "../components/PauseOverlay.js";
 import { fetchNormalEvent, fetchUser, changeStatus } from "../util/auth.js";
 import EventHaveChoice from "../components/EventHaveChoice.js";
 import LoadingOverLay from "../components/LoadingOverLay.js";
+import Result from "../components/Result.js";
 
 
 const { width, height } = Dimensions.get("window");
@@ -27,15 +28,15 @@ export default function MainScreen({navigation}) {
   const [progress, setProgress] = useState(0);
   const [isPaused, setPaused] = useState(false);
   const [isEventChoice, setEventChoice] = useState(false);
+  const [isResult, setResult] = useState(false);
   const [ageEvent, setAgeEvent] = useState([]);
+  const [currentChoice, setCurrentChoice] = useState([]);
 
-  const gender = userData.gender;
-  const characterAge = userData.age;
   useEffect(() => {
     const interval = setInterval(() => {
       setProgress(prevProgress => prevProgress + 1);
       setUpdateData(!updateData);
-    }, 1000);
+    }, 100000);
   
     return () => {
       clearInterval(interval);
@@ -45,7 +46,7 @@ export default function MainScreen({navigation}) {
   useEffect(() => {
     const interval = setInterval(() => {
       setEventChoice(true);
-    }, 30000);
+    }, 5000);
   
     return () => {
       clearInterval(interval);
@@ -71,15 +72,20 @@ export default function MainScreen({navigation}) {
       try {
         const normalEvents = await fetchNormalEvent();
         setFetchedNormalEvents(normalEvents);
-        setAgeEvent(normalEvents[characterAge][0]);
-        setLoading(false);
       } catch (error) {
-        
+        console.error("Error fetching normal events:", error);
       }
     }
     getNormalEvents();
   }, [updateData]);
   //console.log(fetchedNormalEvents[0][0].choices[0].choiceDetail);
+
+  useEffect(() => {
+    if (fetchedNormalEvents.length > 0 && userData.age !== undefined){
+      setAgeEvent(fetchedNormalEvents[userData.age][0]);
+      setLoading[false];
+    }
+  }, [fetchedNormalEvents, userData])
 
   const handleContinue = () => {
     setPaused(false);
@@ -94,29 +100,30 @@ export default function MainScreen({navigation}) {
     setPaused(false);
   };
 
-  const handleChoice1 = () => {
-    const choice = ageEvent.choices[0];
+  const handleChoice = (choiceIndex) => {
+    setCurrentChoice(ageEvent.choices[choiceIndex]);
     const status = userData.status;
-    const statusChanges = choice.points;
-    for (values in status) {
-      const newHeath = status.health + statusChanges.health;
-      const newIntel = status.intel + statusChanges.intel;
-      const newMoney = status.money + statusChanges.money;
-      const relationship = status.relationship + statusChanges.relationship;
-    }
-    setEventChoice(false);
-  }
+    const statusChanges = currentChoice.points;
 
-  const handleChoice2 = () => {
-    setEventChoice(false);
-  }
+    const newHealth = status.health + statusChanges.health;
+    const newIntel = status.intel + statusChanges.intel;
+    const newMoney = status.money + statusChanges.money;
+    const newRelationship = status.relationship + statusChanges.relationship;
+    const newStatus = {
+      health: newHealth,
+      intel: newIntel,
+      money: newMoney,
+      relationship: newRelationship
+   }
+    changeStatus(userId, newStatus);
 
-  const handleChoice3 = () => {
+    setResult(true);
+    setUpdateData(!updateData);
     setEventChoice(false);
-  }
+  };
 
-  const handleChoice4 = () => {
-    setEventChoice(false);
+  const handleExit = () => {
+    setResult(false);
   }
 
   if (isLoading) {
@@ -154,7 +161,7 @@ export default function MainScreen({navigation}) {
 
         <View style={styles.characterBox}>
           <View style={styles.circleAge}>
-            <Text style={styles.textAge}>{characterAge}</Text>
+            <Text style={styles.textAge}>{userData.age}</Text>
           </View>
           <View style={styles.characImg}>
             <Image style={styles.img} source={require("../assets/baby.png")} />
@@ -218,18 +225,26 @@ export default function MainScreen({navigation}) {
 
       <StatusBar style="auto" />
       <PauseOverlay isVisible={isPaused} onContinue={handleContinue} onEndGame={handleEndGame} onHome ={handleHome}/>
-          {isEventChoice && (
-        <EventHaveChoice
-          isVisible={isEventChoice}
-          onChoice1={handleChoice1}
-          onChoice2={handleChoice2}
-          onChoice3={handleChoice3}
-          onChoice4={handleChoice4}
-          detail={ageEvent.detail}
-          choice1={ageEvent.choices[0]}
-          choice2={ageEvent.choices[1]}
-          choice3={ageEvent.choices[2]}
-          choice4={ageEvent.choices[3]}
+      {isEventChoice && (
+      <EventHaveChoice
+        onChoice1={() => handleChoice(0)}
+        onChoice2={() => handleChoice(1)}
+        onChoice3={() => handleChoice(2)}
+        onChoice4={() => handleChoice(3)}
+        detail={ageEvent.detail}
+        choice1={ageEvent.choices[0]}
+        choice2={ageEvent.choices[1]}
+        choice3={ageEvent.choices[2]}
+        choice4={ageEvent.choices[3]}
+      />
+    )}
+
+      {isResult && (
+        <Result
+          isVisible={isResult}
+          onExit={handleExit}
+          result={currentChoice.choiceResult}
+          points={currentChoice.points}
         />
       )}
     </View>

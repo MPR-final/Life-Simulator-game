@@ -38,14 +38,20 @@ export async function changeProgress(userId, lifeIndex, newProgress) {
   }
 }
 
-export async function changeStatus(userId, lifeIndex, newStatus) {
+export async function changeStatus(userId, newStatus) {
   try {
-    const response = await axios.patch(BACKEND_URL + 'account.json', {
-      [`${userId}.${lifeIndex}.status`]: newStatus
-    });
+    const response = await axios.get(BACKEND_URL + 'account.json');
+    const userData = response.data[userId];
+    const userLatestLife = userData.length - 1;
+    if (userData) {
+      userData.status = newStatus;
+      await axios.patch(BACKEND_URL + `account/${userId}/${userLatestLife}.json`, { status: newStatus });
+      console.log('User status changed successfully!');
+    } else {
+      console.error('User not found');
+    }
   } catch (error) {
-    console.error('Error changing status:', error);
-    throw error;
+    console.error('Error changing user status', error);
   }
 }
 
