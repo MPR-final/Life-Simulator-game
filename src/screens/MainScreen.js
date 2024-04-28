@@ -3,8 +3,6 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 import { StyleSheet, Text, TouchableOpacity, View, Image, Dimensions, Animated, } from "react-native";
 import ProgressBar from "../components/progressBar.js";
 import CharacterData from "../components/getCharacterData.js";
-import PauseOverlay from "../components/PauseOverlay.js";
-import { fetchNormalEvent } from "../util/auth.js";
 import { AuthContext } from "../store/AuthContext.js";
 
 
