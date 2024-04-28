@@ -33,7 +33,8 @@ max 500
 
 ## at 23 years old if study university ###
 + salary each year for character
-
+## up db ##
+when pause/ exit game & die we up from global to db
 
 ### function to post to database ###
 import { StatusBar } from "expo-status-bar";
