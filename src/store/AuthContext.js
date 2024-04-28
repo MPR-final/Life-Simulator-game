@@ -13,8 +13,6 @@ export const AuthContext = createContext({
   addPlayerToList: (playerObj) => {},
   player: {},
   addPlayer: (playerObj) => {},
-  status: {},
-  addStatus: (statusObj) => {},
 });
 
 function AuthContextProvider({ children }) {
@@ -27,9 +25,6 @@ function AuthContextProvider({ children }) {
   // global variable that stores specific player
   const [player, setPlayer] = useState({});
 
-  // global variable that stores final status of player
-  const [status, setStatus] = useState({});
-
   // function to add the id to useContext
   function initializeAccount(localID) {
     setLocalID(localID);
@@ -39,15 +34,9 @@ function AuthContextProvider({ children }) {
   function addPlayerToList(playerObj) {
     setPlayersList((prevArray) => prevArray.concat(playerObj));
   }
-  // function to add player to useContext---"playerObj" here is an object that contains  name, age, gender, location, progress, reasonOfDeath
-  // But not includes status
+  // function to add player to useContext---"playerObj" here is an object that contains  name, age, gender, location, progress, reasonOfDeath, status(object including health, money, relationship, intel)
   function addPlayer(playerObj) {
     setPlayer(playerObj);
-  }
-
-  // function to add status to useContext
-  function addStatus(statusObj) {
-    setStatus(statusObj);
   }
 
   const value = {
@@ -58,8 +47,6 @@ function AuthContextProvider({ children }) {
     addPlayerToList: addPlayerToList,
     player: player,
     addPlayer: addPlayer,
-    status: status,
-    addStatus: addStatus,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
