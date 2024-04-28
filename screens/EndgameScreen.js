@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { playerData } from '../data/playerData';
 
 const { width, height } = Dimensions.get('window');
-const safeAreaOffset = Platform.OS === 'ios' ? 20 : 0;
+// const safeAreaOffset = Platform.OS === 'ios' ? 20 : 0;
 const EndgameScreen = () => {
   const navigation = useNavigation();
   const navigateHome = () => {
