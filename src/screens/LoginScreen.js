@@ -40,11 +40,10 @@ function LoginScreen() {
       // console.log(response.data.localId);
       authCtx.initializeAccount(response.data.localId);
       setIsAuthenticating(false);
-      setEnteredEmail('');
-      setEnteredPassword('');
+      setEnteredEmail("");
+      setEnteredPassword("");
     } catch (error) {
       setIsError(true);
-      console.log('error')
     }
   }
 
@@ -57,7 +56,7 @@ function LoginScreen() {
           height={850}
           HandleClose={() => {
             setIsAuthenticating(false);
-            setIsError(false)
+            setIsError(false);
           }}
         ></Popup>
       );
