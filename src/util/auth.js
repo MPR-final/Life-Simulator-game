@@ -162,3 +162,23 @@ export async function fetchRandomChoiceEvent() {
     console.error('Error fetching random choice events', error);
   }
 }
+
+export async function fetchRandomNoChoiceEvent() {
+  try {
+    const response = await axios.get(BACKEND_URL + 'randomEvent/withoutChoice.json');
+    const randomNoChoiceEvents = [];
+
+    for (const id of response.data) {
+      const randomEvent = {
+        points: id.points,
+        result: id.result,
+        detail: id.detail,
+        time: id.time,
+      }
+      randomNoChoiceEvents.push(randomEvent);
+    }
+    return randomNoChoiceEvents;
+  } catch (error) {
+    console.error('Error fetching random no choice events', error);
+  }
+}
