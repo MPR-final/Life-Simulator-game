@@ -5,7 +5,7 @@ import ProgressBar from "../components/progressBar.js";
 import CharacterData from "../components/getCharacterData.js";
 import { AuthContext } from "../store/AuthContext.js";
 import PauseOverlay from "../components/PauseOverlay.js";
-import { fetchNormalEvent, fetchUser } from "../util/auth.js";
+import { fetchNormalEvent, fetchUser, changeStatus } from "../util/auth.js";
 import EventHaveChoice from "../components/EventHaveChoice.js";
 import LoadingOverLay from "../components/LoadingOverLay.js";
 
@@ -95,6 +95,15 @@ export default function MainScreen({navigation}) {
   };
 
   const handleChoice1 = () => {
+    const choice = ageEvent.choices[0];
+    const status = userData.status;
+    const statusChanges = choice.points;
+    for (values of points) {
+      const newHeath = status.health + statusChanges.health;
+      const newIntel = status.intel + statusChanges.intel;
+      const newMoney = status.money + statusChanges.money;
+      const relationship = status.relationship + statusChanges.relationship;
+    }
     setEventChoice(false);
   }
 
