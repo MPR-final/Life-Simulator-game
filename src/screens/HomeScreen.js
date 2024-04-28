@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, useWindowDimensions } from "react-native";
+import { StyleSheet, View, Text, useWindowDimensions, Button } from "react-native";
 
 export default function HomeScreen({ navigation }) {
   const { height } = useWindowDimensions();
@@ -38,7 +38,7 @@ export default function HomeScreen({ navigation }) {
       >
         <Button
             title="Start"
-            onPress={handleInforLife}
+            onPress={() => {navigation.navigate("MainScreen")}}
         />
         <Button
             title="Instruction"
