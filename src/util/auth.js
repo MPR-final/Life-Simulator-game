@@ -23,10 +23,24 @@ export function storeUser (userData) {
   );
 }
 
-export async function fetchUser () {
+export async function fetchUser (userId) {
   try{
     const response = axios.get(BACKEND_URL + 'account.json');
-    return response;
+    const userDatas = [];
+    for (const life in response.data[userId]) {
+      const lifeData = response.data[userId];
+      const lifeObj = {
+        age: lifeData.age,
+        gender: lifeData.gender,
+        img: lifeData.img,
+        location: lifeData.location,
+        name: lifeData.name,
+        progress: lifeData.progress,
+        reasonOfDeath: lifeData.reasonOfDeath,
+        status: lifeData.status,
+      };
+      userDatas.push(lifeObj);
+    }
   } catch (error) {
     console.error('Error fetching user data', error);
   }
