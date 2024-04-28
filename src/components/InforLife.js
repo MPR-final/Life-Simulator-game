@@ -22,9 +22,9 @@ function InforLife({ closePress }) {
   const [player, setPlayer] = useState({});
   const [playerIsCreated, setPlayerIsCreated] = useState(false);
 
-    useEffect(()=>{
-        mainContext.addPlayer(player);   
-    },[playerIsCreated]);
+  useEffect(() => {
+    mainContext.addPlayer(player);
+  }, [playerIsCreated]);
   const mainContext = useContext(AuthContext);
 
   function startGameHandler() {
@@ -52,7 +52,7 @@ function InforLife({ closePress }) {
         age: 0,
         progress: 0,
         reasonOfDeath: "",
-        img: '',
+        img: "",
         status: {
           health: 250,
           intel: 250,
@@ -62,12 +62,12 @@ function InforLife({ closePress }) {
       });
     }
     setPlayerIsCreated(!playerIsCreated);
-    setFirstName('');
-    setLastName('');
-    setLocation('');
+    setFirstName("");
+    setLastName("");
+    setLocation("");
     setFemalePress(false);
     setMalePress(false);
-    navigation.navigate("MainScreen");
+    navigation.navigate("HistoryScreen");
   }
 
   function handleInput(inputType, inputText) {
@@ -85,10 +85,23 @@ function InforLife({ closePress }) {
   }
 
   function touchPress_1() {
-    setMalePress(!malePress);
+    if (!femalePress) {
+      setMalePress(!malePress);
+    }
+    else {
+      setFemalePress(!femalePress);
+      setMalePress(!malePress);
+
+    }
   }
   function touchPress_2() {
-    setFemalePress(!femalePress);
+    if (!malePress) {
+      setFemalePress(!femalePress);
+    }
+    else {
+      setMalePress(!malePress);
+      setFemalePress(!femalePress);
+    }
   }
   return (
     <KeyboardAvoidingView behavior="position">
@@ -113,19 +126,19 @@ function InforLife({ closePress }) {
           <View style={styles.inputContainer}>
             <Text style={styles.textInform}>First Name</Text>
             <InputCustom
-            value={firstName}
+              value={firstName}
               placeholder="Enter your first name"
               onChangeText={handleInput.bind(this, "firstName")}
             ></InputCustom>
             <Text style={styles.textInform}>Last Name</Text>
             <InputCustom
-            value={lastName}
+              value={lastName}
               placeholder="Enter your last name"
               onChangeText={handleInput.bind(this, "lastName")}
             ></InputCustom>
             <Text style={styles.textInform}>Location</Text>
             <InputCustom
-            value={location}
+              value={location}
               placeholder="Enter your country"
               onChangeText={handleInput.bind(this, "location")}
             ></InputCustom>
