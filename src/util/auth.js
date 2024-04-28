@@ -23,10 +23,13 @@ export function storeUser (userData) {
   );
 }
 
-export function fetchUser () {
-  axios.get(
-    BACKEND_URL + 'account.json'
-  );
+export async function fetchUser () {
+  try{
+    const response = axios.get(BACKEND_URL + 'account.json');
+  } catch (error) {
+    console.error('Error fetching user data', error);
+  }
+
 }
 
 export async function fetchNormalEvent() {
