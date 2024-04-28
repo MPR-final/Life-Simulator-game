@@ -30,3 +30,6 @@ fetchDataFromFirebase();
 ## initial score ###
 250
 max 500
+
+## at 23 years old if study university ###
++ salary each year for character
