@@ -6,27 +6,36 @@ import CharacterData from "../components/getCharacterData.js";
 import { AuthContext } from "../store/AuthContext.js";
 import PauseOverlay from "../components/PauseOverlay.js";
 import { fetchNormalEvent, fetchUser } from "../util/auth.js";
+import EventHaveChoice from "../components/EventHaveChoice.js";
+import LoadingOverLay from "../components/LoadingOverLay.js";
+import { update } from "firebase/database";
 
 
 const { width, height } = Dimensions.get("window");
 
 export default function MainScreen({navigation}) {
   const isPortrait = height > width;
-  const characterAge = 7;
-  const gender = "female";
   // const characterInfo = CharacterData({ characterAge, gender }); 
 
   {
     /** set bg color & img for character */
   }
+  const [isLoading, setLoading] = useState(true);
   const [fetchedNormalEvents, setFetchedNormalEvents] = useState([]);
   const [userData, setUserData] = useState([]);
+  const [updateData, setUpdateData] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isPaused, setPaused] = useState(false);
+  const [isEventChoice, setEventChoice] = useState(false);
+  const [ageEvent1, setAgeEvent1] = useState([]);
+
+  const gender = userData.gender;
+  const characterAge = userData.age;
   useEffect(() => {
     const interval = setInterval(() => {
-      setProgress(prevProgress => prevProgress + 1);
-    }, 10000);
+      setProgress(prevProgress => prevProgress + 0.1);
+      setUpdateData(!updateData);
+    }, 1000);
   
     return () => {
       clearInterval(interval);
@@ -34,38 +43,71 @@ export default function MainScreen({navigation}) {
   }, []);
 
   useEffect(() => {
-    async function getNormalEvents() {
-      const normalEvents = await fetchNormalEvent();
-      setFetchedNormalEvents(normalEvents);
-    }
-    getNormalEvents();
-  }, []);
-  //console.log(fetchedNormalEvents[0][0].choices[0].choiceDetail);
-
-  useEffect(() => {
     async function getUserData() {
-      const userDatas = await fetchUser('e3MKj3heMFNFDgckYMMLsEHRlzI2'); //test
-      const lifeNum = userDatas.length - 1;
-      const userData = userDatas[lifeNum]; //set user data to latest run only
-      setUserData(userData);
-      setProgress(progress);
+      try {
+        const userDatas = await fetchUser('e3MKj3heMFNFDgckYMMLsEHRlzI2');
+        const lifeNum = userDatas.length - 1;
+        const userData = userDatas[lifeNum];
+        setUserData(userData);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
     }
     getUserData();
-  }, []);
-  console.log(userData);
+  }, [updateData]);
+  
+  useEffect(() => {
+    async function getNormalEvents() {
+      try {
+        const normalEvents = await fetchNormalEvent();
+        setFetchedNormalEvents(normalEvents);
+        setAgeEvent1(normalEvents[characterAge][0]);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching normal events:', error);
+      }
+    }
+    getNormalEvents();
+  }, [updateData]);
+  //console.log(fetchedNormalEvents[0][0].choices[0].choiceDetail);
 
   const handleContinue = () => {
     setPaused(false);
   };
   
-  const handleEndGame = () => {
-    setPaused(false); //do later
+  const handleEndGame = () => { //test EventHaveChoice
+    setEventChoice(true);
+    setPaused(false); 
   };
   
   const handleHome = () => {
     navigation.navigate('HomeScreen');
     setPaused(false);
   };
+
+  const handleChoice1 = () => {
+    setEventChoice(false);
+  }
+
+  const handleChoice2 = () => {
+    setEventChoice(false);
+  }
+
+  const handleChoice3 = () => {
+    setEventChoice(false);
+  }
+
+  const handleChoice4 = () => {
+    setEventChoice(false);
+  }
+
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <LoadingOverLay message={"Loading..."}/>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -158,6 +200,20 @@ export default function MainScreen({navigation}) {
 
       <StatusBar style="auto" />
       <PauseOverlay isVisible={isPaused} onContinue={handleContinue} onEndGame={handleEndGame} onHome ={handleHome}/>
+          {isEventChoice && (
+        <EventHaveChoice
+          isVisible={isEventChoice}
+          onChoice1={handleChoice1}
+          onChoice2={handleChoice2}
+          onChoice3={handleChoice3}
+          onChoice4={handleChoice4}
+          detail={ageEvent1.detail}
+          choice1={ageEvent1.choices[0]}
+          choice2={ageEvent1.choices[1]}
+          choice3={ageEvent1.choices[2]}
+          choice4={ageEvent1.choices[3]}
+        />
+      )}
     </View>
   );
 }
@@ -281,5 +337,5 @@ const styles = StyleSheet.create({
     height: 20,
     backgroundColor: "#333",
     borderRadius: 10,
-  }
+  },
 });
