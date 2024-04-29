@@ -71,6 +71,7 @@ function MainScreen({ navigation }) {
         const userDatas = await fetchUser(userId);
         const lifeNum = userDatas.length - 1;
         const userData = userDatas[lifeNum];
+  
         setProgress(userData.progress);
         setUserData(userData);
       } catch (error) {
@@ -139,11 +140,26 @@ function MainScreen({ navigation }) {
   }, []);
 
   useEffect(() => {
+    if (workEvents.length !=0 && artEvents.length != 0 && techEvents.length != 0) {
+      if (userData.lifeRoad == "work") {
+        setAdultEvents(workEvents);
+      } 
+      if (userData.lifeRoad == "art") {
+        setAdultEvents(artEvents);
+      }
+      if (userData.lifeRoad == "tech") {
+        setAdultEvents(techEvents);
+      }
+    }
+  }, [adultEvents, workEvents, artEvents, techEvents, userData])
+
+  useEffect(() => {
     if (
       fetchedNormalEvents.length != 0 &&
       userData.length != 0 &&
       randomChoiceEvents.length != 0 &&
-      randomNoChoiceEvents.length != 0
+      randomNoChoiceEvents.length != 0 &&
+      adultEvents.length != 0
     ) {
       if (userData.age <= 18) {
         if (userData.currentEventNum == 0 || userData.currentEventNum == 1) {
@@ -200,7 +216,7 @@ function MainScreen({ navigation }) {
         }
       }
     }
-  }, [fetchedNormalEvents, randomChoiceEvents, userData, updateData]);
+  }, [fetchedNormalEvents, randomChoiceEvents, userData, updateData, techEvents, artEvents, workEvents, adultEvents]);
 
 
   const handleContinue = () => {
@@ -236,12 +252,24 @@ function MainScreen({ navigation }) {
       }
       if (choice == 1) {
         setAdultEvents(workEvents);
+        const newData = {
+          lifeRoad: "work",
+        }
+        editUser(userId, newData)
       }
       if (choice == 2) {
         setAdultEvents(artEvents);
+        const newData = {
+          lifeRoad: "art",
+        }
+        editUser(userId, newData)
       }
       if (choice == 3) {
         setAdultEvents(techEvents);
+        const newData = {
+          lifeRoad: "tech",
+        }
+        editUser(userId, newData)
       }
     }
 

@@ -103,6 +103,7 @@ export async function fetchUser (userId) {
         currentEventNum: lifeData.currentEventNum,
         gender: lifeData.gender,
         img: lifeData.img,
+        lifeRoad: lifeData.lifeRoad,
         location: lifeData.location,
         name: lifeData.name,
         progress: lifeData.progress,
