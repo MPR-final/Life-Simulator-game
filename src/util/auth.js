@@ -35,10 +35,9 @@ export async function editUser(userId, updatedData) {
 
     if (userData) {
       // Update user data with the provided updatedData
-      Object.assign(userData, updatedData);
 
       // Send a patch request to update the user information
-      await axios.patch(BACKEND_URL + `account/${userId}/${userLatestLife}.json`, userData);
+      await axios.patch(BACKEND_URL + `account/${userId}/${userLatestLife}.json`, updatedData);
 
       console.log('User information edited successfully!');
     } else {

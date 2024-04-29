@@ -5,11 +5,10 @@ import ProgressBar from "../components/progressBar.js";
 import CharacterData from "../components/getCharacterData.js";
 import { AuthContext } from "../store/AuthContext.js";
 import PauseOverlay from "../components/PauseOverlay.js";
-import { fetchRandomChoiceEvent, fetchRandomNoChoiceEvent, fetchNormalEvent, fetchUser, changeStatus, changeProgress } from "../util/auth.js";
+import { fetchRandomChoiceEvent, fetchRandomNoChoiceEvent, fetchNormalEvent, fetchUser, changeStatus, changeProgress, editUser } from "../util/auth.js";
 import EventHaveChoice from "../components/EventHaveChoice.js";
 import LoadingOverLay from "../components/LoadingOverLay.js";
 import Result from "../components/Result.js";
-const { width, height } = Dimensions.get('window');
 
 function MainScreen({ navigation }) {
   const userId = 'e3MKj3heMFNFDgckYMMLsEHRlzI2';
@@ -60,31 +59,41 @@ function MainScreen({ navigation }) {
         console.error("Error fetching normal events:", error);
       }
     }
-    // async function getRandomChoiceEvents() {
-    //   try {
-    //     const events = await fetchRandomChoiceEvent();
-    //     setRandomChoiceEvents(events);
-    //   } catch (error) {
-    //     console.log("Error fetching random choice event:", error);
-    //   }
-    // }
-    // async function getRandomNoChoiceEvents() {
-    //   try {
-    //     const events = await fetchRandomNoChoiceEvent();
-    //     setRandomNoChoiceEvents(events);
-    //   } catch (error) {
-    //     console.log("Error fetching random no choice event:", error);
-    //   }
-    // }
+    async function getRandomChoiceEvents() {
+      try {
+        const events = await fetchRandomChoiceEvent();
+        setRandomChoiceEvents(events);
+      } catch (error) {
+        console.log("Error fetching random choice event:", error);
+      }
+    }
+    async function getRandomNoChoiceEvents() {
+      try {
+        const events = await fetchRandomNoChoiceEvent();
+        setRandomNoChoiceEvents(events);
+      } catch (error) {
+        console.log("Error fetching random no choice event:", error);
+      }
+    }
     getNormalEvents();
+    getRandomChoiceEvents();
+    getRandomNoChoiceEvents();
   },[]);
 
   useEffect(() => {
-    if (fetchedNormalEvents.length != 0 && Object.keys(userData).length !== 0) {
+    if (fetchedNormalEvents.length != 0 && Object.keys(userData).length !== 0
+  && randomChoiceEvents.length != 0 && randomNoChoiceEvents.length != 0) {
+    if (userData.currentEventNum == 0 || userData.currentEventNum == 1) {
       setAgeEvent(fetchedNormalEvents[userData.age][userData.currentEventNum]);
       setLoading(false);
+    } else {
+      const randomIndex = Math.floor(Math.random() * (randomChoiceEvents.length - 1));
+      const randomEvent = randomChoiceEvents[randomIndex];
+      setAgeEvent(randomEvent);
     }
-  }, [fetchedNormalEvents, userData])
+
+    };
+  }, [fetchedNormalEvents, randomChoiceEvents, userData])
 
 
   const handleContinue = () => {
@@ -144,12 +153,22 @@ function MainScreen({ navigation }) {
           money: newMoney,
           relationship: newRelationship
         };
-
-        changeStatus(userId, newStatus);
         
         const progressIncreasement = ageEvent.time/12*100;
         setProgress(progress + progressIncreasement);
-        changeProgress(userId, progress);
+
+        const newData = {
+          status: newStatus,
+          progress: progress,
+          currentEventNum: userData.currentEventNum + 1,
+        }
+
+        editUser(userId, newData);
+        let updateDataExecuted = false;
+        if (!updateDataExecuted) {
+          setUpdateData(true);
+          updateDataExecuted = true;
+        }
       }
     } catch (error) {
       console.error("Error updating status:", error);
@@ -170,7 +189,8 @@ function MainScreen({ navigation }) {
     );
   }
 
-  return (
+  if (!isLoading) {
+    return (
       <View style={styles.container}>
               {/** header */}
       <View style={styles.header}>
@@ -190,27 +210,7 @@ function MainScreen({ navigation }) {
           <View style={styles.line}></View>
         </View>
       </View>
-
-            {/** character */}
-            <View style={styles.character}>
-        <View style={styles.timeline}>
-          <ProgressBar percentage={progress} bgColor={"#F5F5F3"} color={"#6CC3E8"} />
-        </View>
-
-
-        <View style={styles.characterBox}>
-          <View style={styles.circleAge}>
-            <Text style={styles.textAge}>{userData.age}</Text>
-          </View>
-          <View style={styles.characImg}>
-            <Image style={styles.img} source={require("../assets/baby.png")} />
-            {/* <Image style={styles.img} source={characterInfo[0]} /> */}
-          </View>
-        </View>
-      </View>
       
-      <View style={styles.progressBars}>
-        </View>
         <StatusBar style="auto" />
       <PauseOverlay isVisible={isPaused} onContinue={handleContinue} onEndGame={handleEndGame} onHome={handleHome} />
       {isEventChoice && (
@@ -239,6 +239,7 @@ function MainScreen({ navigation }) {
       )}
       </View>
   );
+  };
 }
 
 const styles = StyleSheet.create({
@@ -294,7 +295,6 @@ const styles = StyleSheet.create({
   characterBox: {
     // borderWidth: 0.5,
     width: "90%",
-    height: "100%",
     backgroundColor: 'blue',
     position: "relative",
     marginTop: 30,
@@ -332,12 +332,6 @@ const styles = StyleSheet.create({
     width: "60%",
     height: "60%",
   },
-  progressBars: {
-    // borderWidth: 0.5,
-    width: "90%",
-    height: "25%",
-    marginTop: 50,
-  },
   Box: {
     // borderWidth: 0.5,
     height: "20%",
@@ -345,11 +339,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-  },
-  icon: {
-    width: 40,
-    height: 40,
-    marginRight: 25,
   },
   bar: {},
 });
