@@ -107,7 +107,7 @@ function MainScreen({ navigation }) {
   useEffect(() => {
     if (
       fetchedNormalEvents.length != 0 &&
-      Object.keys(userData).length !== 0 &&
+      userData.length != 0 &&
       randomChoiceEvents.length != 0 &&
       randomNoChoiceEvents.length != 0
     ) {
@@ -134,8 +134,14 @@ function MainScreen({ navigation }) {
 
 
   const handleEndGame = () => {
-    setPaused(false);
+    const newData = {
+      reasonOfDeath: "Lightning strike",
+    }
+    editUser(userId, newData);
+      navigation.navigate("EndgameScreen");
+      setPaused(false);
   };
+  
   const handleHome = () => {
     navigation.navigate("HomeScreen");
     setPaused(false);
@@ -203,13 +209,15 @@ function MainScreen({ navigation }) {
         const progressIncreasement = (ageEvent.time / 12) * 100;
         setProgress(progress + progressIncreasement);
 
+        let age = userData.age;
         if (progress > 100 || currentEventNum >= 4) {
           advanceAge();
+          age += 1;
           currentEventNum = 0;
         }
 
         const newData = {
-          age: userData.age,
+          age: age,
           currentEventNum: currentEventNum,
           gender: userData.gender,
           img: userData.img,
@@ -221,6 +229,7 @@ function MainScreen({ navigation }) {
         };
         setUserData(newData);
         editUser(userId, newData);
+        checkDead(userData);
       }
     } catch (error) {
       console.error("Error updating status:", error);
@@ -228,13 +237,40 @@ function MainScreen({ navigation }) {
   };
 
   const advanceAge = () => {
+    let age = userData.age + 1;
     const newData = {
-      age: userData.age + 1,
+      age: age,
       progress: 0,
       currentEventNum: 0,
     }
     setProgress(0);
-    editUser(newData);
+    editUser(userId, newData);
+  }
+
+  const checkDead = (data) => {
+    const status = data.status;
+    let reasonOfDeath = "";
+    if (status.health <= 0) {
+      reasonOfDeath = "Heart failure";
+    }
+    if (status.money <= 0) {
+      reasonOfDeath = "Out of money";
+    }
+    if (status.intel <= 0) {
+      reasonOfDeath = "Brain rot";
+    }
+    if (status.relationship <= 0) {
+      reasonOfDeath = "Loneliness";
+    }
+
+    if(reasonOfDeath != "") {
+      const newData = {
+        reasonOfDeath: reasonOfDeath,
+      }
+
+      editUser(userId, newData);
+      navigation.navigate("EndgameScreen");
+    }
   }
 
   const handleExit = () => {
@@ -334,7 +370,7 @@ function MainScreen({ navigation }) {
             />
             <View style={styles.bar}>
               <ProgressBar
-                percentage={userData.status.health/5}
+                percentage={userData.status != undefined ? userData.status.health/5 : 50}
                 bgColor={"#F5F5F3"}
                 color={"#E15A6B"}
               />
@@ -353,7 +389,7 @@ function MainScreen({ navigation }) {
             />
             <View style={styles.bar}>
               <ProgressBar
-                percentage={userData.status.intel/5}
+                percentage={userData.status != undefined ? userData.status.intel/5 : 50}
                 bgColor={"#F5F5F3"}
                 color={"#F8CA72"}
               />
@@ -372,7 +408,7 @@ function MainScreen({ navigation }) {
             />
             <View style={styles.bar}>
               <ProgressBar
-                percentage={userData.status.relationship/5}
+                percentage={userData.status != undefined ? userData.status.relationship/5 : 50}
                 bgColor={"#F5F5F3"}
                 color={"#D394F9"}
               />
@@ -391,7 +427,7 @@ function MainScreen({ navigation }) {
             />
             <View style={styles.bar}>
               <ProgressBar
-                percentage={userData.status.money/5}
+                percentage={userData.status != undefined ? userData.status.money/5 : 50}
                 bgColor={"#F5F5F3"}
                 color={"#94E86C"}
               />
