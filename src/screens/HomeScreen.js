@@ -23,11 +23,11 @@ export default function HomeScreen({ navigation }) {
   const [photoSrc, setPhotoSrc] = useState();
   const [isRevceiedGift, setIsReceiveGift] = useState(false);
 
-  useEffect(() => {
-    if(mainContext.player != {}) {
-      storeUser(mainContext.localID, mainContext.player);
-    }
-  }, [mainContext])
+  // useEffect(() => {
+  //   if(mainContext.player != {}) {
+  //     storeUser(mainContext.localID, mainContext.player);
+  //   }
+  // }, [mainContext])
 
   useEffect(() => {
     const timer = setTimeout(() => {

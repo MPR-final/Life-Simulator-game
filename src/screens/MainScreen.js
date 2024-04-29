@@ -18,8 +18,6 @@ import {
   fetchRandomNoChoiceEvent,
   fetchNormalEvent,
   fetchUser,
-  changeStatus,
-  changeProgress,
   editUser,
 } from "../util/auth.js";
 import EventHaveChoice from "../components/EventHaveChoice.js";
@@ -43,7 +41,6 @@ function MainScreen({ navigation }) {
   const [ageEvent, setAgeEvent] = useState([]);
   const [currentChoice, setCurrentChoice] = useState([]);
   const status = userData.status;
-
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -153,6 +150,7 @@ function MainScreen({ navigation }) {
 
 
   const handleChoice = async (choice) => {
+    console.log(choice);
     setCurrentChoice(ageEvent.choices[choice]);
 
 
