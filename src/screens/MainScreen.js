@@ -352,11 +352,6 @@ const styles = StyleSheet.create({
     marginRight: 25,
   },
   bar: {},
-  ProgressBar: {
-    height: 20,
-    backgroundColor: "#333",
-    borderRadius: 10,
-  },
 });
 export default MainScreen;
 
