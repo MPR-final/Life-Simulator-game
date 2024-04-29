@@ -24,6 +24,7 @@ function MainScreen({ navigation }) {
   const [isResult, setResult] = useState(false);
   const [ageEvent, setAgeEvent] = useState([]);
   const [currentChoice, setCurrentChoice] = useState([]);
+  const [currentEventNum, setCurrentEventNum] = useState(userData.currentEventNum);
   const status = userData.status;
 
   useEffect(() => {
@@ -38,10 +39,13 @@ function MainScreen({ navigation }) {
   useEffect(() => {
     async function getUserData() {
       try {
-        const userDatas = await fetchUser(userId);
-        const lifeNum = userDatas.length - 1;
-        const userData = userDatas[lifeNum];
-        setUserData(userData);
+        if (updateData || !updateData) {
+          setUserData([]);
+          const userDatas = await fetchUser(userId);
+          const lifeNum = userDatas.length - 1;
+          const userData = userDatas[lifeNum];
+          setUserData(userData);
+        }
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
@@ -158,23 +162,25 @@ function MainScreen({ navigation }) {
         setProgress(progress + progressIncreasement);
 
         const newData = {
+          age: userData.age,
+          gender: userData.gender,
+          img: userData.img,
+          location: userData.location,
+          name: userData.name,
+          reasonOfDeath: userData.reasonOfDeath,
           status: newStatus,
           progress: progress,
           currentEventNum: userData.currentEventNum + 1,
         }
-
+        setUserData(newData);
         editUser(userId, newData);
-        let updateDataExecuted = false;
-        if (!updateDataExecuted) {
-          setUpdateData(true);
-          updateDataExecuted = true;
-        }
       }
     } catch (error) {
       console.error("Error updating status:", error);
     }
   };
 
+  console.log(userData);
 
   const handleExit = () => {
     setResult(false);
