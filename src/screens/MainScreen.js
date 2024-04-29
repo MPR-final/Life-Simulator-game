@@ -5,20 +5,21 @@ import ProgressBar from "../components/progressBar.js";
 import CharacterData from "../components/getCharacterData.js";
 import { AuthContext } from "../store/AuthContext.js";
 import PauseOverlay from "../components/PauseOverlay.js";
-import { fetchNormalEvent, fetchUser, changeStatus, changeProgress } from "../util/auth.js";
+import { fetchRandomChoiceEvent, fetchRandomNoChoiceEvent, fetchNormalEvent, fetchUser, changeStatus, changeProgress } from "../util/auth.js";
 import EventHaveChoice from "../components/EventHaveChoice.js";
 import LoadingOverLay from "../components/LoadingOverLay.js";
 import Result from "../components/Result.js";
-
 const { width, height } = Dimensions.get('window');
 
 function MainScreen({ navigation }) {
   const userId = 'e3MKj3heMFNFDgckYMMLsEHRlzI2';
   const [isLoading, setLoading] = useState(true);
   const [fetchedNormalEvents, setFetchedNormalEvents] = useState([]);
+  const [randomChoiceEvents, setRandomChoiceEvents] = useState([]);
+  const [randomNoChoiceEvents, setRandomNoChoiceEvents] = useState([]);
   const [userData, setUserData] = useState([]);
   const [updateData, setUpdateData] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const [progress, setProgress] = useState(userData.progress);
   const [isPaused, setPaused] = useState(false);
   const [isEventChoice, setEventChoice] = useState(false);
   const [isResult, setResult] = useState(false);
@@ -59,13 +60,28 @@ function MainScreen({ navigation }) {
         console.error("Error fetching normal events:", error);
       }
     }
+    // async function getRandomChoiceEvents() {
+    //   try {
+    //     const events = await fetchRandomChoiceEvent();
+    //     setRandomChoiceEvents(events);
+    //   } catch (error) {
+    //     console.log("Error fetching random choice event:", error);
+    //   }
+    // }
+    // async function getRandomNoChoiceEvents() {
+    //   try {
+    //     const events = await fetchRandomNoChoiceEvent();
+    //     setRandomNoChoiceEvents(events);
+    //   } catch (error) {
+    //     console.log("Error fetching random no choice event:", error);
+    //   }
+    // }
     getNormalEvents();
-  }, [updateData]);
-
+  },[]);
 
   useEffect(() => {
-    if (fetchedNormalEvents.length !== 0 && Object.keys(userData).length !== 0) {
-      setAgeEvent(fetchedNormalEvents[userData.age][0]);
+    if (fetchedNormalEvents.length != 0 && Object.keys(userData).length !== 0) {
+      setAgeEvent(fetchedNormalEvents[userData.age][userData.currentEventNum]);
       setLoading(false);
     }
   }, [fetchedNormalEvents, userData])
@@ -117,7 +133,7 @@ function MainScreen({ navigation }) {
   
   const updateStatus = (statusChanges) => {
     try {
-      if (statusChanges !== null && status !== undefined) {
+      if (statusChanges !== null && status !== undefined && userData.length != 0) {
         const newHealth = status.health + statusChanges.health;
         const newIntel = status.intel + statusChanges.intel;
         const newMoney = status.money + statusChanges.money;
