@@ -31,7 +31,7 @@ function MainScreen({ navigation }) {
     const interval = setInterval(() => {
       setProgress(prevProgress => prevProgress + 1);
     }, 7200);
- 
+    setUpdateData(!updateData);
     return () => clearInterval(interval);
   }, []);
 
@@ -39,13 +39,11 @@ function MainScreen({ navigation }) {
   useEffect(() => {
     async function getUserData() {
       try {
-        if (updateData || !updateData) {
           setUserData([]);
           const userDatas = await fetchUser(userId);
           const lifeNum = userDatas.length - 1;
           const userData = userDatas[lifeNum];
           setUserData(userData);
-        }
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
@@ -94,10 +92,11 @@ function MainScreen({ navigation }) {
       const randomIndex = Math.floor(Math.random() * (randomChoiceEvents.length - 1));
       const randomEvent = randomChoiceEvents[randomIndex];
       setAgeEvent(randomEvent);
+      setLoading(false);
     }
 
     };
-  }, [fetchedNormalEvents, randomChoiceEvents, userData])
+  }, [fetchedNormalEvents, randomChoiceEvents, userData, updateData])
 
 
   const handleContinue = () => {
@@ -179,8 +178,6 @@ function MainScreen({ navigation }) {
       console.error("Error updating status:", error);
     }
   };
-
-  console.log(userData);
 
   const handleExit = () => {
     setResult(false);
