@@ -7,7 +7,6 @@ import {
   View,
   Image,
   Dimensions,
-  ScrollView,
 } from "react-native";
 import ProgressBar from "../components/progressBar.js";
 import CharacterData from "../components/getCharacterData.js";
@@ -18,6 +17,8 @@ import {
   fetchRandomNoChoiceEvent,
   fetchNormalEvent,
   fetchTechEvents,
+  fetchArtisticEvents,
+  fetchWorkEvents,
   fetchUser,
   editUser,
 } from "../util/auth.js";
@@ -34,6 +35,9 @@ function MainScreen({ navigation }) {
   const [randomChoiceEvents, setRandomChoiceEvents] = useState([]);
   const [randomNoChoiceEvents, setRandomNoChoiceEvents] = useState([]);
   const [techEvents, setTechEvents] = useState([]);
+  const [artEvents, setArtEvents] = useState([]);
+  const [workEvents, setWorkEvents] = useState([]);
+  const [adultEvents, setAdultEvents] = useState([]);
   const [userData, setUserData] = useState([]);
   const [updateData, setUpdateData] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -47,15 +51,18 @@ function MainScreen({ navigation }) {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setProgress((prevProgress) => prevProgress + 1);
+      setProgress((prevProgress) => {
+        if (prevProgress >= 100) {
+          advanceAge();
+          return 0;
+        } else {
+          return prevProgress + 1;
+        }
+      });
     }, 7200);
-    setUpdateData(!updateData);
-    if (progress >= 100) {
-      advanceAge();
-    }
+  
     return () => clearInterval(interval);
   }, []);
-
 
   useEffect(() => {
     async function getUserData() {
@@ -107,10 +114,28 @@ function MainScreen({ navigation }) {
         console.log("Error fetching tech events:", error);
       }
     }
+    async function getArtEvents() {
+      try {
+        const events = await fetchArtisticEvents();
+        setArtEvents(events);
+      } catch (error) {
+        console.log("Error fetching art events:", error);
+      }
+    }
+    async function getWorkEvents() {
+      try {
+        const events = await fetchWorkEvents();
+        setWorkEvents(events);
+      } catch (error) {
+        console.log("Error fetching work events:", error);
+      }
+    }
     getNormalEvents();
     getRandomChoiceEvents();
     getRandomNoChoiceEvents();
     getTechEvents();
+    getArtEvents();
+    getWorkEvents();
   }, []);
 
   useEffect(() => {
@@ -120,19 +145,36 @@ function MainScreen({ navigation }) {
       randomChoiceEvents.length != 0 &&
       randomNoChoiceEvents.length != 0
     ) {
-      if (userData.currentEventNum == 0 || userData.currentEventNum == 1) {
-        setAgeEvent(
-          fetchedNormalEvents[userData.age][userData.currentEventNum]
-        );
-        setLoading(false);
+      if (userData.age <= 18) {
+        if (userData.currentEventNum == 0 || userData.currentEventNum == 1) {
+          setAgeEvent(
+            fetchedNormalEvents[userData.age][userData.currentEventNum]
+          );
+          setLoading(false);
+        } else {
+          const randomIndex = Math.floor(
+            Math.random() * (randomChoiceEvents.length - 1)
+          );
+          const randomEvent = randomChoiceEvents[randomIndex];
+          setAgeEvent(randomEvent);
+          setLoading(false);
+        }
       } else {
-        const randomIndex = Math.floor(
-          Math.random() * (randomChoiceEvents.length - 1)
-        );
-        const randomEvent = randomChoiceEvents[randomIndex];
-        setAgeEvent(randomEvent);
-        setLoading(false);
+        if (userData.currentEventNum == 0 || userData.currentEventNum == 1) {
+          setAgeEvent(
+            adultEvents[userData.age][userData.currentEventNum]
+          );
+          setLoading(false);
+        } else {
+          const randomIndex = Math.floor(
+            Math.random() * (randomChoiceEvents.length - 1)
+          );
+          const randomEvent = randomChoiceEvents[randomIndex];
+          setAgeEvent(randomEvent);
+          setLoading(false);
+        }
       }
+
       setDisabledChoices([false, false, false, false]); 
       if(userData.currentEventNum == 1 && userData.age == 18) {
         if (userData.status.money < 250) {
@@ -188,6 +230,20 @@ function MainScreen({ navigation }) {
   const handleChoice = async (choice) => {
     setCurrentChoice(ageEvent.choices[choice]);
 
+    if (userData.currentEventNum == 1 && userData.age == 18) {
+      if (choice == 0) {
+        
+      }
+      if (choice == 1) {
+        setAdultEvents(workEvents);
+      }
+      if (choice == 2) {
+        setAdultEvents(artEvents);
+      }
+      if (choice == 3) {
+        setAdultEvents(techEvents);
+      }
+    }
 
     let statusChanges = null;
 
