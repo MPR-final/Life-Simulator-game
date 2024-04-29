@@ -41,7 +41,6 @@ function MainScreen({ navigation }) {
   const [ageEvent, setAgeEvent] = useState([]);
   const [currentChoice, setCurrentChoice] = useState([]);
   const [disabledChoices, setDisabledChoices] = useState([false, false, false, false]);
-  const [adultLife, setAdultLife] = useState('');
   const status = userData.status;
 
   useEffect(() => {
@@ -125,7 +124,6 @@ function MainScreen({ navigation }) {
         setLoading(false);
       }
       setDisabledChoices([false, false, false, false]); 
-
       if(userData.currentEventNum == 1 && userData.age == 18) {
         if (userData.status.money < 250) {
           setDisabledChoices(prevState => {
@@ -178,7 +176,6 @@ function MainScreen({ navigation }) {
 
 
   const handleChoice = async (choice) => {
-    console.log(choice);
     setCurrentChoice(ageEvent.choices[choice]);
 
 
@@ -203,13 +200,12 @@ function MainScreen({ navigation }) {
       updateDataExecuted = true;
     }
 
+
     if (statusChanges !== null && statusChanges !== undefined) {
       updateStatus(statusChanges); // Move the status update logic to a separate function
       setResult(true);
       setEventChoice(false);
     }
-
-
   };
 
 
@@ -345,7 +341,6 @@ function MainScreen({ navigation }) {
           <TouchableOpacity
             style={styles.timeline}
             activeOpacity={0.8}
-            onPress={() => setShowTime(true)}
           >
             <ProgressBar
               percentage={progress}
@@ -359,14 +354,12 @@ function MainScreen({ navigation }) {
             <TouchableOpacity
               style={styles.circleAge}
               activeOpacity={0.8}
-              onPress={() => setShowAge(true)}
             >
               <Text style={styles.textAge}>{userData.age}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.characImg}
               activeOpacity={0.8}
-              onPress={() => setShowCharacter(true)}
             >
               <Image
                 style={styles.img}
@@ -389,7 +382,6 @@ function MainScreen({ navigation }) {
           <TouchableOpacity
             style={styles.Box}
             activeOpacity={0.8}
-            onPress={() => setShowHealth(true)}
           >
             <Image
               style={styles.icon}
@@ -408,7 +400,6 @@ function MainScreen({ navigation }) {
           <TouchableOpacity
             style={styles.Box}
             activeOpacity={0.8}
-            onPress={() => setShowIntell(true)}
           >
             <Image
               style={styles.icon}
@@ -427,7 +418,6 @@ function MainScreen({ navigation }) {
           <TouchableOpacity
             style={styles.Box}
             activeOpacity={0.8}
-            onPress={() => setShowRelate(true)}
           >
             <Image
               style={styles.icon}
@@ -446,7 +436,6 @@ function MainScreen({ navigation }) {
           <TouchableOpacity
             style={styles.Box}
             activeOpacity={0.8}
-            onPress={() => setShowMoney(true)}
           >
             <Image
               style={styles.icon}

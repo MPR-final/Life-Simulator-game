@@ -118,6 +118,49 @@ export async function fetchUser (userId) {
   }
 }
 
+export async function fetchTechEvents() {
+  try {
+    const response = await axios.get(BACKEND_URL + 'TechEvent.json');
+    const techEvents = [];
+
+    for (const age of response.data) {
+      if (age !== null) {
+        const ageEvents = [];
+
+        for (const ageEvent of age) {
+          const choices = [];
+
+          for (const choiceKey in ageEvent.choice) {
+            const choice = ageEvent.choice[choiceKey];
+            const choiceDetail = choice.choiceDetail;
+            const choiceResult = choice.choiceResult;
+            const points = choice.points;
+
+            const newChoice = {
+              choiceDetail: choiceDetail,
+              choiceResult: choiceResult,
+              points: points,
+            };
+            choices.push(newChoice);
+          }
+
+          const normalEvent = {
+            detail: ageEvent.detail,
+            time: ageEvent.time,
+            choices: choices,
+          };
+
+          ageEvents.push(normalEvent);
+        }
+        techEvents.push(ageEvents);
+      }
+    }
+    return techEvents;
+  } catch (error) {
+    console.error('Error fetching tech events', error);
+  }
+}
+
 export async function fetchNormalEvent() {
   try {
     const response = await axios.get(BACKEND_URL + 'normalEvent.json');
