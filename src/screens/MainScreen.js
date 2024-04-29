@@ -9,6 +9,7 @@ import { fetchRandomChoiceEvent, fetchRandomNoChoiceEvent, fetchNormalEvent, fet
 import EventHaveChoice from "../components/EventHaveChoice.js";
 import LoadingOverLay from "../components/LoadingOverLay.js";
 import Result from "../components/Result.js";
+import PlusButton from "../components/PlusButton.js";
 
 function MainScreen({ navigation }) {
   const userId = 'e3MKj3heMFNFDgckYMMLsEHRlzI2';
@@ -213,6 +214,128 @@ function MainScreen({ navigation }) {
           <View style={styles.line}></View>
         </View>
       </View>
+
+      {/** character */}
+      <View style={styles.character}>
+          <TouchableOpacity
+            style={styles.timeline}
+            activeOpacity={0.8}
+            onPress={() => setShowTime(true)}
+          >
+            <ProgressBar
+              percentage={85}
+              bgColor={"#F5F5F3"}
+              color={"#6CC3E8"}
+            />
+          </TouchableOpacity>
+
+
+          <View style={styles.characterBox}>
+            <TouchableOpacity
+              style={styles.circleAge}
+              activeOpacity={0.8}
+              onPress={() => setShowAge(true)}
+            >
+              <Text style={styles.textAge}>2</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.characImg}
+              activeOpacity={0.8}
+              onPress={() => setShowCharacter(true)}
+            >
+              <Image
+                style={styles.img}
+                source={require("../assets/baby.png")}
+              />
+            </TouchableOpacity>
+
+
+            <TouchableOpacity
+              tyle={styles.characPlus}
+              activeOpacity={0.8}
+              onPress={() => setShowPlus(true)}
+            >
+              <PlusButton />
+            </TouchableOpacity>
+          </View>
+        </View>
+        {/** 4 chi so */}
+        <View style={styles.progressBars}>
+          <TouchableOpacity
+            style={styles.Box}
+            activeOpacity={0.8}
+            onPress={() => setShowHealth(true)}
+          >
+            <Image
+              style={styles.icon}
+              source={require("../assets/health.png")}
+            />
+            <View style={styles.bar}>
+              <ProgressBar
+                percentage={50}
+                bgColor={"#F5F5F3"}
+                color={"#E15A6B"}
+              />
+            </View>
+          </TouchableOpacity>
+
+
+          <TouchableOpacity
+            style={styles.Box}
+            activeOpacity={0.8}
+            onPress={() => setShowIntell(true)}
+          >
+            <Image
+              style={styles.icon}
+              source={require("../assets/intelligent.png")}
+            />
+            <View style={styles.bar}>
+              <ProgressBar
+                percentage={70}
+                bgColor={"#F5F5F3"}
+                color={"#F8CA72"}
+              />
+            </View>
+          </TouchableOpacity>
+
+
+          <TouchableOpacity
+            style={styles.Box}
+            activeOpacity={0.8}
+            onPress={() => setShowRelate(true)}
+          >
+            <Image
+              style={styles.icon}
+              source={require("../assets/Relationship.png")}
+            />
+            <View style={styles.bar}>
+              <ProgressBar
+                percentage={60}
+                bgColor={"#F5F5F3"}
+                color={"#D394F9"}
+              />
+            </View>
+          </TouchableOpacity>
+
+
+          <TouchableOpacity
+            style={styles.Box}
+            activeOpacity={0.8}
+            onPress={() => setShowMoney(true)}
+          >
+            <Image
+              style={styles.icon}
+              source={require("../assets/salary.png")}
+            />
+            <View style={styles.bar}>
+              <ProgressBar
+                percentage={20}
+                bgColor={"#F5F5F3"}
+                color={"#94E86C"}
+              />
+            </View>
+          </TouchableOpacity>
+        </View>
       
         <StatusBar style="auto" />
       <PauseOverlay isVisible={isPaused} onContinue={handleContinue} onEndGame={handleEndGame} onHome={handleHome} />

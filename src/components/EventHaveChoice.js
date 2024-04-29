@@ -3,15 +3,18 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Modal from 'react-native-modal';
 import { useFonts } from 'expo-font';
 
+
 const EventHaveChoice = ({ isVisible, onChoice1, onChoice2, onChoice3, onChoice4, detail, choice1, choice2, choice3, choice4 }) => {
   const [fontsLoaded] = useFonts({
     'Inika-Regular': require('../assets/fonts/Inika-Regular.ttf'),
     'Inika-Bold': require('../assets/fonts/Inika-Bold.ttf'),
   });
 
+
   if (!fontsLoaded) {
     return null;
   }
+
 
   return (
     <Modal isVisible={isVisible} backdropOpacity={0.7} style={styles.modal}>
@@ -26,6 +29,8 @@ const EventHaveChoice = ({ isVisible, onChoice1, onChoice2, onChoice3, onChoice4
             <Text style={styles.buttonText}>{choice2.choiceDetail}</Text>
           </TouchableOpacity>
         </View>
+
+
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={onChoice3}>
             <Text style={styles.buttonText}>{choice3.choiceDetail}</Text>
@@ -38,6 +43,7 @@ const EventHaveChoice = ({ isVisible, onChoice1, onChoice2, onChoice3, onChoice4
     </Modal>
   );
 };
+
 
 const styles = StyleSheet.create({
   modal: {
@@ -65,10 +71,12 @@ const styles = StyleSheet.create({
   top: -11,
   },
   buttonContainer: {
+  borderRadius: 0.5,
   flexDirection: 'row',
   justifyContent: 'center',
   marginTop: 10,
-  paddingHorizontal: 10,
+  paddingHorizontal: 15,
+ 
   },
   button: {
   width: '65 %',
@@ -94,6 +102,7 @@ const styles = StyleSheet.create({
   fontFamily: 'Inika-Bold',
   color: '#000000',
   fontSize: 16,
+  marginHorizontal: 5
   },
   descriptionText: {
   fontFamily: 'Inika-Regular',
@@ -101,9 +110,14 @@ const styles = StyleSheet.create({
   color: '#000000',
   marginBottom: 30,
   textAlign: 'center',
+  width: '96%'
   },
   });
-  
-  
+ 
+ 
+
 
 export default EventHaveChoice;
+
+
+
