@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { AuthContext } from "../store/AuthContext";
 import Popup from "../components/Popup";
+import { storeUser } from "../util/auth";
 
 export default function HomeScreen({ navigation }) {
   const mainContext = useContext(AuthContext);
@@ -22,7 +23,11 @@ export default function HomeScreen({ navigation }) {
   const [photoSrc, setPhotoSrc] = useState();
   const [isRevceiedGift, setIsReceiveGift] = useState(false);
 
-  console.log(mainContext.player);
+  useEffect(() => {
+    if(mainContext.player != {}) {
+      storeUser(mainContext.localID, mainContext.player);
+    }
+  }, [mainContext])
 
   useEffect(() => {
     const timer = setTimeout(() => {

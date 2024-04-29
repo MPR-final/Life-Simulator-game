@@ -16,11 +16,18 @@ export async function login(email, password){
   return response;
 }
 
-export async function storeUser(userId, userData) {
+export async function storeUser(userId, newData) {
   try {
-    const response = await axios.put(BACKEND_URL + 'account.json', { [userId]: userData });
-    console.log('User data stored successfully:', response.data);
+    const response = await axios.get(BACKEND_URL + 'account.json');
+    const userData = response.data[userId];
 
+    let newLifeId = 0;
+    if (userData !== undefined) {
+      newLifeId = userData.length;
+    }
+    console.log(newData);
+    await axios.put(BACKEND_URL + `account/${userId}/${newLifeId}.json`, newData);
+    console.log('User data stored successfully!');
   } catch (error) {
     console.error('Error storing user data:', error);
     throw error;
