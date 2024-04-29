@@ -17,6 +17,7 @@ import {
   fetchRandomChoiceEvent,
   fetchRandomNoChoiceEvent,
   fetchNormalEvent,
+  fetchTechEvents,
   fetchUser,
   editUser,
 } from "../util/auth.js";
@@ -32,6 +33,7 @@ function MainScreen({ navigation }) {
   const [fetchedNormalEvents, setFetchedNormalEvents] = useState([]);
   const [randomChoiceEvents, setRandomChoiceEvents] = useState([]);
   const [randomNoChoiceEvents, setRandomNoChoiceEvents] = useState([]);
+  const [techEvents, setTechEvents] = useState([]);
   const [userData, setUserData] = useState([]);
   const [updateData, setUpdateData] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -97,11 +99,19 @@ function MainScreen({ navigation }) {
         console.log("Error fetching random no choice event:", error);
       }
     }
+    async function getTechEvents() {
+      try {
+        const events = await fetchTechEvents();
+        setTechEvents(events);
+      } catch (error) {
+        console.log("Error fetching tech events:", error);
+      }
+    }
     getNormalEvents();
     getRandomChoiceEvents();
     getRandomNoChoiceEvents();
+    getTechEvents();
   }, []);
-
 
   useEffect(() => {
     if (
