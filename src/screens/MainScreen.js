@@ -40,6 +40,8 @@ function MainScreen({ navigation }) {
   const [isResult, setResult] = useState(false);
   const [ageEvent, setAgeEvent] = useState([]);
   const [currentChoice, setCurrentChoice] = useState([]);
+  const [disabledChoices, setDisabledChoices] = useState([false, false, false, false]);
+  const [adultLife, setAdultLife] = useState('');
   const status = userData.status;
 
   useEffect(() => {
@@ -61,6 +63,7 @@ function MainScreen({ navigation }) {
         const userDatas = await fetchUser(userId);
         const lifeNum = userDatas.length - 1;
         const userData = userDatas[lifeNum];
+        setProgress(userData.progress);
         setUserData(userData);
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -121,6 +124,31 @@ function MainScreen({ navigation }) {
         setAgeEvent(randomEvent);
         setLoading(false);
       }
+      setDisabledChoices([false, false, false, false]); 
+
+      if(userData.currentEventNum == 1 && userData.age == 18) {
+        if (userData.status.money < 250) {
+          setDisabledChoices(prevState => {
+            const updatedChoices = [...prevState];
+            updatedChoices[0] = true;
+            return updatedChoices;
+          });
+        }
+        if (userData.status.relationship < 250) {
+          setDisabledChoices(prevState => {
+            const updatedChoices = [...prevState];
+            updatedChoices[2] = true;
+            return updatedChoices;
+          });
+        }
+        if (userData.status.intel < 250) {
+          setDisabledChoices(prevState => {
+            const updatedChoices = [...prevState];
+            updatedChoices[3] = true;
+            return updatedChoices;
+          });
+        }
+      }
     }
   }, [fetchedNormalEvents, randomChoiceEvents, userData, updateData]);
 
@@ -175,12 +203,13 @@ function MainScreen({ navigation }) {
       updateDataExecuted = true;
     }
 
-
     if (statusChanges !== null && statusChanges !== undefined) {
       updateStatus(statusChanges); // Move the status update logic to a separate function
       setResult(true);
       setEventChoice(false);
     }
+
+
   };
 
 
@@ -453,6 +482,7 @@ function MainScreen({ navigation }) {
             choice2={ageEvent.choices[1]}
             choice3={ageEvent.choices[2]}
             choice4={ageEvent.choices[3]}
+            disabledChoices={disabledChoices}
           />
         )}
 
