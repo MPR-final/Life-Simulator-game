@@ -1,18 +1,35 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect, useRef } from "react";
-import { StyleSheet, Text, TouchableOpacity, View, Image, Dimensions, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Image,
+  Dimensions,
+  ScrollView,
+} from "react-native";
 import ProgressBar from "../components/progressBar.js";
 import CharacterData from "../components/getCharacterData.js";
 import { AuthContext } from "../store/AuthContext.js";
 import PauseOverlay from "../components/PauseOverlay.js";
-import { fetchRandomChoiceEvent, fetchRandomNoChoiceEvent, fetchNormalEvent, fetchUser, changeStatus, changeProgress, editUser } from "../util/auth.js";
+import {
+  fetchRandomChoiceEvent,
+  fetchRandomNoChoiceEvent,
+  fetchNormalEvent,
+  fetchUser,
+  changeStatus,
+  changeProgress,
+  editUser,
+} from "../util/auth.js";
 import EventHaveChoice from "../components/EventHaveChoice.js";
 import LoadingOverLay from "../components/LoadingOverLay.js";
 import Result from "../components/Result.js";
 import PlusButton from "../components/PlusButton.js";
 
+
 function MainScreen({ navigation }) {
-  const userId = 'e3MKj3heMFNFDgckYMMLsEHRlzI2';
+  const userId = "e3MKj3heMFNFDgckYMMLsEHRlzI2";
   const [isLoading, setLoading] = useState(true);
   const [fetchedNormalEvents, setFetchedNormalEvents] = useState([]);
   const [randomChoiceEvents, setRandomChoiceEvents] = useState([]);
@@ -25,12 +42,15 @@ function MainScreen({ navigation }) {
   const [isResult, setResult] = useState(false);
   const [ageEvent, setAgeEvent] = useState([]);
   const [currentChoice, setCurrentChoice] = useState([]);
-  const [currentEventNum, setCurrentEventNum] = useState(userData.currentEventNum);
+  const [currentEventNum, setCurrentEventNum] = useState(
+    userData.currentEventNum
+  );
   const status = userData.status;
+
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setProgress(prevProgress => prevProgress + 1);
+      setProgress((prevProgress) => prevProgress + 1);
     }, 7200);
     setUpdateData(!updateData);
     return () => clearInterval(interval);
@@ -40,13 +60,13 @@ function MainScreen({ navigation }) {
   useEffect(() => {
     async function getUserData() {
       try {
-          setUserData([]);
-          const userDatas = await fetchUser(userId);
-          const lifeNum = userDatas.length - 1;
-          const userData = userDatas[lifeNum];
-          setUserData(userData);
+        setUserData([]);
+        const userDatas = await fetchUser(userId);
+        const lifeNum = userDatas.length - 1;
+        const userData = userDatas[lifeNum];
+        setUserData(userData);
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error("Error fetching user data:", error);
       }
     }
     getUserData();
@@ -81,23 +101,31 @@ function MainScreen({ navigation }) {
     getNormalEvents();
     getRandomChoiceEvents();
     getRandomNoChoiceEvents();
-  },[]);
+  }, []);
+
 
   useEffect(() => {
-    if (fetchedNormalEvents.length != 0 && Object.keys(userData).length !== 0
-  && randomChoiceEvents.length != 0 && randomNoChoiceEvents.length != 0) {
-    if (userData.currentEventNum == 0 || userData.currentEventNum == 1) {
-      setAgeEvent(fetchedNormalEvents[userData.age][userData.currentEventNum]);
-      setLoading(false);
-    } else {
-      const randomIndex = Math.floor(Math.random() * (randomChoiceEvents.length - 1));
-      const randomEvent = randomChoiceEvents[randomIndex];
-      setAgeEvent(randomEvent);
-      setLoading(false);
+    if (
+      fetchedNormalEvents.length != 0 &&
+      Object.keys(userData).length !== 0 &&
+      randomChoiceEvents.length != 0 &&
+      randomNoChoiceEvents.length != 0
+    ) {
+      if (userData.currentEventNum == 0 || userData.currentEventNum == 1) {
+        setAgeEvent(
+          fetchedNormalEvents[userData.age][userData.currentEventNum]
+        );
+        setLoading(false);
+      } else {
+        const randomIndex = Math.floor(
+          Math.random() * (randomChoiceEvents.length - 1)
+        );
+        const randomEvent = randomChoiceEvents[randomIndex];
+        setAgeEvent(randomEvent);
+        setLoading(false);
+      }
     }
-
-    };
-  }, [fetchedNormalEvents, randomChoiceEvents, userData, updateData])
+  }, [fetchedNormalEvents, randomChoiceEvents, userData, updateData]);
 
 
   const handleContinue = () => {
@@ -110,23 +138,26 @@ function MainScreen({ navigation }) {
     setPaused(false);
   };
   const handleHome = () => {
-    navigation.navigate('HomeScreen');
+    navigation.navigate("HomeScreen");
     setPaused(false);
   };
 
 
   const handleChoice = async (choice) => {
     setCurrentChoice(ageEvent.choices[choice]);
-  
+
+
     let statusChanges = null;
-  
+
+
     while (statusChanges === null || statusChanges === undefined) {
       try {
         statusChanges = await currentChoice.points;
       } catch (error) {
         console.error("Error retrieving status changes:", error);
       }
-  
+
+
       if (statusChanges === null || statusChanges === undefined) {
         await new Promise((resolve) => setTimeout(resolve, 1000)); // Delay for 1 second before retrying
       }
@@ -137,29 +168,38 @@ function MainScreen({ navigation }) {
       updateDataExecuted = true;
     }
 
+
     if (statusChanges !== null && statusChanges !== undefined) {
       updateStatus(statusChanges); // Move the status update logic to a separate function
       setResult(true);
       setEventChoice(false);
     }
   };
-  
+
+
   const updateStatus = (statusChanges) => {
     try {
-      if (statusChanges !== null && status !== undefined && userData.length != 0) {
+      if (
+        statusChanges !== null &&
+        status !== undefined &&
+        userData.length != 0
+      ) {
         const newHealth = status.health + statusChanges.health;
         const newIntel = status.intel + statusChanges.intel;
         const newMoney = status.money + statusChanges.money;
-        const newRelationship = status.relationship + statusChanges.relationship;
+        const newRelationship =
+          status.relationship + statusChanges.relationship;
         const newStatus = {
           health: newHealth,
           intel: newIntel,
           money: newMoney,
-          relationship: newRelationship
+          relationship: newRelationship,
         };
-        
-        const progressIncreasement = ageEvent.time/12*100;
+
+
+        const progressIncreasement = (ageEvent.time / 12) * 100;
         setProgress(progress + progressIncreasement);
+
 
         const newData = {
           age: userData.age,
@@ -171,7 +211,7 @@ function MainScreen({ navigation }) {
           status: newStatus,
           progress: progress,
           currentEventNum: userData.currentEventNum + 1,
-        }
+        };
         setUserData(newData);
         editUser(userId, newData);
       }
@@ -180,9 +220,10 @@ function MainScreen({ navigation }) {
     }
   };
 
+
   const handleExit = () => {
     setResult(false);
-  }
+  };
 
 
   if (isLoading) {
@@ -193,37 +234,42 @@ function MainScreen({ navigation }) {
     );
   }
 
+
   if (!isLoading) {
     return (
       <View style={styles.container}>
-              {/** header */}
-      <View style={styles.header}>
-        <View style={styles.pauseBox}>
-          <TouchableOpacity onPress={() => setPaused(true)}>
-            <Image style={styles.pause} source={require("../assets/pause.png")} />
-          </TouchableOpacity>
+        {/** header */}
+        <View style={styles.header}>
+          <View style={styles.pauseBox}>
+            <TouchableOpacity onPress={() => setPaused(true)}>
+              <Image
+                style={styles.pause}
+                source={require("../assets/pause.png")}
+              />
+            </TouchableOpacity>
+          </View>
+
+
+          <View style={styles.textBox}>
+            <Text style={styles.headText}>Your Life</Text>
+          </View>
+
+
+          <View style={styles.lineBox}>
+            <View style={styles.line}></View>
+          </View>
         </View>
 
 
-        <View style={styles.textBox}>
-          <Text style={styles.headText}>Your Life</Text>
-        </View>
-
-
-        <View style={styles.lineBox}>
-          <View style={styles.line}></View>
-        </View>
-      </View>
-
-      {/** character */}
-      <View style={styles.character}>
+        {/** character */}
+        <View style={styles.character}>
           <TouchableOpacity
             style={styles.timeline}
             activeOpacity={0.8}
             onPress={() => setShowTime(true)}
           >
             <ProgressBar
-              percentage={85}
+              percentage={userData.progress}
               bgColor={"#F5F5F3"}
               color={"#6CC3E8"}
             />
@@ -336,37 +382,44 @@ function MainScreen({ navigation }) {
             </View>
           </TouchableOpacity>
         </View>
-      
         <StatusBar style="auto" />
-      <PauseOverlay isVisible={isPaused} onContinue={handleContinue} onEndGame={handleEndGame} onHome={handleHome} />
-      {isEventChoice && (
-        <EventHaveChoice
-          isVisible={isEventChoice}
-          onChoice1={() => handleChoice(0)}
-          onChoice2={() => handleChoice(1)}
-          onChoice3={() => handleChoice(2)}
-          onChoice4={() => handleChoice(3)}
-          detail={ageEvent.detail}
-          choice1={ageEvent.choices[0]}
-          choice2={ageEvent.choices[1]}
-          choice3={ageEvent.choices[2]}
-          choice4={ageEvent.choices[3]}
-        />
-      )}
 
 
-      {isResult && (
-        <Result
-          isVisible={isResult}
-          onExit={handleExit}
-          result={currentChoice.choiceResult}
-          points={currentChoice.points}
+        <PauseOverlay
+          isVisible={isPaused}
+          onContinue={handleContinue}
+          onEndGame={handleEndGame}
+          onHome={handleHome}
         />
-      )}
+        {isEventChoice && (
+          <EventHaveChoice
+            isVisible={isEventChoice}
+            onChoice1={() => handleChoice(0)}
+            onChoice2={() => handleChoice(1)}
+            onChoice3={() => handleChoice(2)}
+            onChoice4={() => handleChoice(3)}
+            detail={ageEvent.detail}
+            choice1={ageEvent.choices[0]}
+            choice2={ageEvent.choices[1]}
+            choice3={ageEvent.choices[2]}
+            choice4={ageEvent.choices[3]}
+          />
+        )}
+
+
+        {isResult && (
+          <Result
+            isVisible={isResult}
+            onExit={handleExit}
+            result={currentChoice.choiceResult}
+            points={currentChoice.points}
+          />
+        )}
       </View>
-  );
-  };
+    );
+  }
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -412,16 +465,19 @@ const styles = StyleSheet.create({
     height: 3,
     backgroundColor: "#F8CA72",
   },
+
+
   character: {
     // borderWidth: 0.5,
     width: "100%",
-    height: "50%",
+    height: "45%",
     alignItems: "center",
+    marginTop: -15,
   },
   characterBox: {
     // borderWidth: 0.5,
-    width: "90%",
-    backgroundColor: 'blue',
+    width: "86%",
+    backgroundColor: "blue",
     position: "relative",
     marginTop: 30,
   },
@@ -430,7 +486,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: 'blue',
+    backgroundColor: "blue",
     alignItems: "center",
     // justifyContent: "center",
     position: "absolute",
@@ -451,12 +507,13 @@ const styles = StyleSheet.create({
     height: "100%",
     justifyContent: "center",
     alignItems: "center",
-    marginLeft: "17.5%"
+    marginLeft: "17.5%",
   },
   img: {
     // borderWidth: 0.5,
     width: "60%",
     height: "60%",
+    marginBottom: 40,
   },
   Box: {
     // borderWidth: 0.5,
@@ -466,8 +523,32 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  bar: {},
+
+
+  progressBars: {
+    // borderWidth: 0.5,
+    width: "90%",
+    // height: "30%",
+    marginTop: 70,
+    marginBottom: 40,
+  },
+  Box: {
+    // borderWidth: 0.5,
+    // height: "20%",
+    // marginBottom: 15,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 20,
+  },
+  icon: {
+    width: 40,
+    height: 40,
+    marginRight: 25,
+  },
 });
+
+
 export default MainScreen;
 
 
@@ -483,18 +564,22 @@ export default MainScreen;
 // import LoadingOverLay from "../components/LoadingOverLay.js";
 // import Result from "../components/Result.js";
 
+
 // const { width, height } = Dimensions.get("window");
 
 
 // export default function MainScreen({ navigation }) {
 
+
 //   const isPortrait = height > width;
-//   // const characterInfo = CharacterData({ characterAge, gender }); 
+//   // const characterInfo = CharacterData({ characterAge, gender });
+
 
 //   {
 //     /** set bg color & img for character */
 //   }
-  
+
+
 //   const userId = 'e3MKj3heMFNFDgckYMMLsEHRlzI2';
 //   const [isLoading, setLoading] = useState(true);
 //   const [fetchedNormalEvents, setFetchedNormalEvents] = useState([]);
@@ -507,13 +592,16 @@ export default MainScreen;
 //   const [ageEvent, setAgeEvent] = useState([]);
 //   const [currentChoice, setCurrentChoice] = useState([]);
 
+
 //   useEffect(() => {
 //     const interval = setInterval(() => {
 //       setProgress(prevProgress => prevProgress + 1);
 //     }, 10000);
-  
+
+
 //     return () => clearInterval(interval);
 //   }, []);
+
 
 //   useEffect(() => {
 //     async function getUserData() {
@@ -529,6 +617,7 @@ export default MainScreen;
 //     getUserData();
 //   }, [updateData]);
 
+
 //   useEffect(() => {
 //     async function getNormalEvents() {
 //       try {
@@ -541,6 +630,7 @@ export default MainScreen;
 //     getNormalEvents();
 //   }, [updateData]);
 
+
 //   useEffect(() => {
 //     if (fetchedNormalEvents.length !== 0 && Object.keys(userData).length !== 0) {
 //       setAgeEvent(fetchedNormalEvents[userData.age][0]);
@@ -548,9 +638,11 @@ export default MainScreen;
 //     }
 //   }, [fetchedNormalEvents, userData])
 
+
 //   const handleContinue = () => {
 //     setPaused(false);
 //   };
+
 
 //   const handleEndGame = () => {
 //     setEventChoice(true);
@@ -560,6 +652,7 @@ export default MainScreen;
 //     navigation.navigate('HomeScreen');
 //     setPaused(false);
 //   };
+
 
 //   const handleChoice1 = () => {
 //     setCurrentChoice(ageEvent.choices[0]);
@@ -577,7 +670,9 @@ export default MainScreen;
 //     }
 //     changeStatus(userId, newStatus)
 
+
 //     setResult(true);
+
 
 //     setEventChoice(false);
 //   }
@@ -585,17 +680,21 @@ export default MainScreen;
 //     setEventChoice(false);
 //   }
 
+
 //   const handleChoice3 = () => {
 //     setEventChoice(false);
 //   }
+
 
 //   const handleChoice4 = () => {
 //     setEventChoice(false);
 //   }
 
+
 //   const handleExit = () => {
 //     setResult(false);
 //   }
+
 
 //   if (isLoading) {
 //     return (
@@ -604,6 +703,7 @@ export default MainScreen;
 //       </View>
 //     );
 //   }
+
 
 //   return (
 //     <View style={styles.container}>
@@ -615,20 +715,24 @@ export default MainScreen;
 //           </TouchableOpacity>
 //         </View>
 
+
 //         <View style={styles.textBox}>
 //           <Text style={styles.headText}>Your Life</Text>
 //         </View>
+
 
 //         <View style={styles.lineBox}>
 //           <View style={styles.line}></View>
 //         </View>
 //       </View>
 
+
 //       {/** character */}
 //       <View style={styles.character}>
 //         <View style={styles.timeline}>
 //           <ProgressBar percentage={progress} bgColor={"#F5F5F3"} color={"#6CC3E8"} />
 //         </View>
+
 
 //         <View style={styles.characterBox}>
 //           <View style={styles.circleAge}>
@@ -640,6 +744,7 @@ export default MainScreen;
 //           </View>
 //         </View>
 //       </View>
+
 
 //       {/** 4 chi so */}
 //       <View style={styles.progressBars}>
@@ -653,6 +758,7 @@ export default MainScreen;
 //             />
 //           </View>
 //         </View>
+
 
 //         <View style={styles.Box}>
 //           <Image
@@ -668,6 +774,7 @@ export default MainScreen;
 //           </View>
 //         </View>
 
+
 //         <View style={styles.Box}>
 //           <Image
 //             style={styles.icon}
@@ -682,6 +789,7 @@ export default MainScreen;
 //           </View>
 //         </View>
 
+
 //         <View style={styles.Box}>
 //           <Image style={styles.icon} source={require("../assets/salary.png")} />
 //           <View style={styles.bar}>
@@ -693,6 +801,7 @@ export default MainScreen;
 //           </View>
 //         </View>
 //       </View>
+
 
 //       <StatusBar style="auto" />
 //       <PauseOverlay isVisible={isPaused} onContinue={handleContinue} onEndGame={handleEndGame} onHome={handleHome} />
@@ -711,6 +820,7 @@ export default MainScreen;
 //         />
 //       )}
 
+
 //       {isResult && (
 //         <Result
 //           isVisible={isResult}
@@ -722,6 +832,7 @@ export default MainScreen;
 //     </View>
 //   );
 // }
+
 
 // const styles = StyleSheet.create({
 //   container: {
@@ -769,6 +880,7 @@ export default MainScreen;
 //     backgroundColor: "#F8CA72",
 //   },
 
+
 //   character: {
 //     // borderWidth: 0.5,
 //     width: "100%",
@@ -782,6 +894,7 @@ export default MainScreen;
 //     backgroundColor: 'blue',
 //     position: "relative",
 //     marginTop: 30,
+
 
 //   },
 //   circleAge: {
@@ -818,6 +931,7 @@ export default MainScreen;
 //     height: "60%",
 //   },
 
+
 //   progressBars: {
 //     // borderWidth: 0.5,
 //     width: "90%",
@@ -844,5 +958,7 @@ export default MainScreen;
 //     borderRadius: 10,
 //   },
 // });
+
+
 
 
