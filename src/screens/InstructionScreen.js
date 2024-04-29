@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import ProgressBar from "../components/progressBar.js";
 
+
 export default function InstructionScreen({navigation}) {
   const windowDimensions = useWindowDimensions();
   const width = windowDimensions.width;
@@ -17,10 +18,12 @@ export default function InstructionScreen({navigation}) {
   const isPortrait = height > width;
   console.log("height: " + height + " width: " + width);
 
+
   {
     /** set bg color for character */
   }
   const bgCharacter = "#F5ACE1";
+
 
   {
     /** instruction component */
@@ -57,6 +60,7 @@ export default function InstructionScreen({navigation}) {
     );
   };
 
+
   {
     /** set show instruction for each elements */
   }
@@ -73,6 +77,7 @@ export default function InstructionScreen({navigation}) {
   {
     /** set message and show instruction */
   }
+
 
   const styles = StyleSheet.create({
     container: {
@@ -122,6 +127,7 @@ export default function InstructionScreen({navigation}) {
       backgroundColor: "#F8CA72",
     },
 
+
     character: {
       // borderWidth: 0.5,
       width: "100%",
@@ -169,6 +175,7 @@ export default function InstructionScreen({navigation}) {
       height: "75%",
     },
 
+
     progressBars: {
       // borderWidth: 0.5,
       width: "90%",
@@ -189,6 +196,7 @@ export default function InstructionScreen({navigation}) {
       marginRight: 25,
     },
     bar: {},
+
 
     overlay: {
       position: "absolute",
@@ -234,6 +242,7 @@ export default function InstructionScreen({navigation}) {
     },
   });
 
+
   return (
     <View style={styles.container}>
       {/** header */}
@@ -249,6 +258,7 @@ export default function InstructionScreen({navigation}) {
           />
         </TouchableOpacity>
 
+
         <TouchableOpacity
           style={styles.pauseBox}
           activeOpacity={0.8}
@@ -259,14 +269,17 @@ export default function InstructionScreen({navigation}) {
           <Image style={styles.pause} source={require("../assets/pause.png")} />
         </TouchableOpacity>
 
+
         <View style={styles.textBox}>
           <Text style={styles.headText}>Instruction</Text>
         </View>
+
 
         <View style={styles.lineBox}>
           <View style={styles.line}></View>
         </View>
       </View>
+
 
       {/** character */}
       <View style={styles.character}>
@@ -277,6 +290,7 @@ export default function InstructionScreen({navigation}) {
         >
           <ProgressBar percentage={85} bgColor={"#F5F5F3"} color={"#6CC3E8"} />
         </TouchableOpacity>
+
 
         <View style={styles.characterBox}>
           <TouchableOpacity
@@ -296,6 +310,7 @@ export default function InstructionScreen({navigation}) {
         </View>
       </View>
 
+
       {/** 4 chi so */}
       <View style={styles.progressBars}>
         <TouchableOpacity
@@ -312,6 +327,7 @@ export default function InstructionScreen({navigation}) {
             />
           </View>
         </TouchableOpacity>
+
 
         <TouchableOpacity
           style={styles.Box}
@@ -331,6 +347,7 @@ export default function InstructionScreen({navigation}) {
           </View>
         </TouchableOpacity>
 
+
         <TouchableOpacity
           style={styles.Box}
           activeOpacity={0.8}
@@ -349,6 +366,7 @@ export default function InstructionScreen({navigation}) {
           </View>
         </TouchableOpacity>
 
+
         <TouchableOpacity
           style={styles.Box}
           activeOpacity={0.8}
@@ -364,6 +382,7 @@ export default function InstructionScreen({navigation}) {
           </View>
         </TouchableOpacity>
       </View>
+
 
       {showPause && (
         <InstructionBox
@@ -427,6 +446,7 @@ export default function InstructionScreen({navigation}) {
           srcImg={require("../assets/salary.png")}
         />
       )}
+
 
       <StatusBar style="auto" />
     </View>

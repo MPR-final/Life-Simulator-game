@@ -36,15 +36,12 @@ function MainScreen({ navigation }) {
   const [randomNoChoiceEvents, setRandomNoChoiceEvents] = useState([]);
   const [userData, setUserData] = useState([]);
   const [updateData, setUpdateData] = useState(false);
-  const [progress, setProgress] = useState(userData.progress);
+  const [progress, setProgress] = useState(0);
   const [isPaused, setPaused] = useState(false);
   const [isEventChoice, setEventChoice] = useState(false);
   const [isResult, setResult] = useState(false);
   const [ageEvent, setAgeEvent] = useState([]);
   const [currentChoice, setCurrentChoice] = useState([]);
-  const [currentEventNum, setCurrentEventNum] = useState(
-    userData.currentEventNum
-  );
   const status = userData.status;
 
 
@@ -134,13 +131,16 @@ function MainScreen({ navigation }) {
 
 
   const handleEndGame = () => {
-    setEventChoice(true);
     setPaused(false);
   };
   const handleHome = () => {
     navigation.navigate("HomeScreen");
     setPaused(false);
   };
+
+  const handlePlay = () => {
+    setEventChoice(true);
+  }
 
 
   const handleChoice = async (choice) => {
@@ -195,22 +195,28 @@ function MainScreen({ navigation }) {
           money: newMoney,
           relationship: newRelationship,
         };
-
-
+        
+        let age = userData.age;
+        let currentEventNum = userData.currentEventNum + 1;
         const progressIncreasement = (ageEvent.time / 12) * 100;
         setProgress(progress + progressIncreasement);
 
+        if (progress > 100 || currentEventNum >= 4) {
+          age += 1;
+          setProgress(0);
+          currentEventNum = 0;
+        }
 
         const newData = {
-          age: userData.age,
+          age: age,
+          currentEventNum: currentEventNum,
           gender: userData.gender,
           img: userData.img,
           location: userData.location,
           name: userData.name,
+          progress: progress,
           reasonOfDeath: userData.reasonOfDeath,
           status: newStatus,
-          progress: progress,
-          currentEventNum: userData.currentEventNum + 1,
         };
         setUserData(newData);
         editUser(userId, newData);
@@ -282,7 +288,7 @@ function MainScreen({ navigation }) {
               activeOpacity={0.8}
               onPress={() => setShowAge(true)}
             >
-              <Text style={styles.textAge}>2</Text>
+              <Text style={styles.textAge}>{userData.age}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.characImg}
@@ -299,7 +305,7 @@ function MainScreen({ navigation }) {
             <TouchableOpacity
               tyle={styles.characPlus}
               activeOpacity={0.8}
-              onPress={() => setShowPlus(true)}
+              onPress={() => handlePlay(true)}
             >
               <PlusButton />
             </TouchableOpacity>
