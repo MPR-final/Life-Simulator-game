@@ -156,7 +156,7 @@ export default function HomeScreen({ navigation }) {
         ) : (
           <Pressable
             onPress={() => {
-              navigation.navigate("InstructionScreen");
+              navigation.navigate("MainScreen");
             }}
             style={({ pressed }) => [
               styles.startBtn,

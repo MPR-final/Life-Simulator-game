@@ -16,21 +16,76 @@ export async function login(email, password){
   return response;
 }
 
-export function storeUser (userData) {
-  axios.post(
-    BACKEND_URL + 'account.json',
-    userData
-  );
+export async function storeUser(userId, userData) {
+  try {
+    const response = await axios.put(BACKEND_URL + 'account.json', { [userId]: userData });
+    console.log('User data stored successfully:', response.data);
+
+  } catch (error) {
+    console.error('Error storing user data:', error);
+    throw error;
+  }
 }
 
-export async function fetchUser () {
+export async function changeProgress(userId, newProgress) {
+  try {
+    const response = await axios.get(BACKEND_URL + 'account.json');
+    const userData = response.data[userId];
+    const userLatestLife = userData.length - 1;
+
+    if (userData) {
+      userData[userLatestLife].progress = newProgress;
+      await axios.patch(BACKEND_URL + `account/${userId}/${userLatestLife}.json`, { progress: newProgress });
+      console.log('Progress changed successfully!');
+    } else {
+      console.error('User not found');
+    }
+  } catch (error) {
+    console.error('Error changing progress:', error);
+    throw error;
+  }
+}
+
+export async function changeStatus(userId, newStatus) {
+  try {
+    const response = await axios.get(BACKEND_URL + 'account.json');
+    const userData = response.data[userId];
+    const userLatestLife = userData.length - 1;
+    if (userData) {
+      userData.status = newStatus;
+      await axios.patch(BACKEND_URL + `account/${userId}/${userLatestLife}.json`, { status: newStatus });
+     // console.log('User status changed successfully!');
+    } else {
+      console.error('User not found');
+    }
+  } catch (error) {
+    console.error('Error changing user status', error);
+  }
+}
+
+export async function fetchUser (userId) {
   try{
-    const response = axios.get(BACKEND_URL + 'account.json');
-    return response;
+    const response = await axios.get(BACKEND_URL + 'account.json');
+    const userDatas = [];
+    for (const life in response.data[userId]) {
+      const lifeData = response.data[userId][life];
+      const lifeObj = {
+        age: lifeData.age,
+        currentEventNum: lifeData.currentEventNum,
+        gender: lifeData.gender,
+        img: lifeData.img,
+        location: lifeData.location,
+        name: lifeData.name,
+        progress: lifeData.progress,
+        reasonOfDeath: lifeData.reasonOfDeath,
+        status: lifeData.status,
+      };
+      userDatas.push(lifeObj);
+    }
+    return userDatas;
   } catch (error) {
     console.error('Error fetching user data', error);
   }
-
 }
 
 export async function fetchNormalEvent() {
@@ -71,5 +126,59 @@ export async function fetchNormalEvent() {
     return normalEvents;
   } catch (error) {
     console.error('Error fetching normal events', error);
+  }
+}
+
+export async function fetchRandomChoiceEvent() {
+  try {
+    const response = await axios.get(BACKEND_URL + 'randomEvent/withChoice.json');
+    const randomChoiceEvents = [];
+
+    for (const id of response.data) {
+
+      const choices = [];
+      for (const choiceKey in id.choice) {
+        const choice = ageEvent.choice[choiceKey];
+        const choiceDetail = choice.choiceDetail;
+        const choiceResult = choice.choiceResult;
+        const points = choice.points;
+
+        const newChoice = {
+          choiceDetail: choiceDetail,
+          choiceResult: choiceResult,
+          points: points,
+        };
+        choices.push(newChoice);
+      }
+      const randomEvent = {
+        choices: choices,
+        detail: id.detail,
+        time: id.time,
+      }
+      randomChoiceEvents.push(randomEvent);
+    }
+    return randomChoiceEvents;
+  } catch (error) {
+    console.error('Error fetching random choice events', error);
+  }
+}
+
+export async function fetchRandomNoChoiceEvent() {
+  try {
+    const response = await axios.get(BACKEND_URL + 'randomEvent/withoutChoice.json');
+    const randomNoChoiceEvents = [];
+
+    for (const id of response.data) {
+      const randomEvent = {
+        points: id.points,
+        result: id.result,
+        detail: id.detail,
+        time: id.time,
+      }
+      randomNoChoiceEvents.push(randomEvent);
+    }
+    return randomNoChoiceEvents;
+  } catch (error) {
+    console.error('Error fetching random no choice events', error);
   }
 }

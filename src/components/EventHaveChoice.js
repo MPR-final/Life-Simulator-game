@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Modal from 'react-native-modal';
 import { useFonts } from 'expo-font';
 
-const EventHaveChoice = ({ isVisible, onChoice1, onChoice2, onChoice3, onChoice4 }) => {
+const EventHaveChoice = ({ isVisible, onChoice1, onChoice2, onChoice3, onChoice4, detail, choice1, choice2, choice3, choice4 }) => {
   const [fontsLoaded] = useFonts({
     'Inika-Regular': require('../assets/fonts/Inika-Regular.ttf'),
     'Inika-Bold': require('../assets/fonts/Inika-Bold.ttf'),
@@ -17,21 +17,21 @@ const EventHaveChoice = ({ isVisible, onChoice1, onChoice2, onChoice3, onChoice4
     <Modal isVisible={isVisible} backdropOpacity={0.7} style={styles.modal}>
       <View style={styles.container}>
         <Text style={styles.eventText}>Event</Text>
-        <Text style={styles.descriptionText}>You are taking your first steps. You are wobbling and uncoordinated, but you are determined to get somewhere.</Text>
+        <Text style={styles.descriptionText}>{detail}</Text>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={onChoice1}>
-            <Text style={styles.buttonText}>Fall down and cry</Text>
+            <Text style={styles.buttonText}>{choice1.choiceDetail}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={onChoice2}>
-            <Text style={styles.buttonText}>Get back and keep trying</Text>
+            <Text style={styles.buttonText}>{choice2.choiceDetail}</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={onChoice3}>
-            <Text style={styles.buttonText}>Give up and crawl back to mama</Text>
+            <Text style={styles.buttonText}>{choice3.choiceDetail}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={onChoice4}>
-            <Text style={styles.buttonText}>Start walking towards a dangerous object.</Text>
+            <Text style={styles.buttonText}>{choice4.choiceDetail}</Text>
           </TouchableOpacity>
         </View>
       </View>

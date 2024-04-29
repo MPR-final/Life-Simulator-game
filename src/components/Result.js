@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
 import { FONT_PATHS } from '../constants/constants';
 
-const Result = ({ isVisible, onExit }) => {
+const Result = ({ isVisible, onExit, result, points }) => {
   const [fontsLoaded] = useFonts(FONT_PATHS);
 
   if (!fontsLoaded) {
@@ -17,32 +17,41 @@ const Result = ({ isVisible, onExit }) => {
       <View style={styles.container}>
         <Text style={styles.resultText}>Result</Text>
         <Text style={styles.descriptionText}>
-          You are taking your first steps. You are wobbling and uncoordinated, but you are determined to get somewhere.
+          {result}
         </Text>
         <View style={styles.iconContainer}>
           {/* Health */}
           <View style={styles.iconItem}>
             <Ionicons name="heart" size={24} color="#F8CA72" />
-            <Text style={[styles.iconValue, styles.plusValue]}>+5</Text>
+            <Text style={[styles.iconValue, points.health >= 0 ? styles.positiveValue : styles.negativeValue]}>
+              {points.health >= 0 ? `+${points.health}` : points.health}
+            </Text>
           </View>
 
           {/* Intelligence */}
           <View style={styles.iconItem}>
             <Ionicons name="book" size={24} color="#F8CA72" />
-            <Text style={[styles.iconValue, styles.minusValue]}>-2</Text>
-          </View>
-
-          {/* Relationship */}
-          <View style={styles.iconItem}>
-            <Ionicons name="people" size={24} color="#F8CA72" />
-            <Text style={[styles.iconValue, styles.plusValue]}>+3</Text>
+            <Text style={[styles.iconValue, points.intel >= 0 ? styles.positiveValue : styles.negativeValue]}>
+              {points.intel >= 0 ? `+${points.intel}` : points.intel}
+            </Text>
           </View>
 
           {/* Money */}
           <View style={styles.iconItem}>
             <Ionicons name="cash" size={24} color="#F8CA72" />
-            <Text style={[styles.iconValue, styles.minusValue]}>-10</Text>
+            <Text style={[styles.iconValue, points.money >= 0 ? styles.positiveValue : styles.negativeValue]}>
+              {points.money >= 0 ? `+${points.money}` : points.money}
+            </Text>
           </View>
+          
+          {/* Relationship */}
+          <View style={styles.iconItem}>
+            <Ionicons name="people" size={24} color="#F8CA72" />
+            <Text style={[styles.iconValue, points.relationship >= 0 ? styles.positiveValue : styles.negativeValue]}>
+              {points.relationship >= 0 ? `+${points.relationship}` : points.relationship}
+            </Text>
+          </View>
+
         </View>
         <TouchableOpacity style={styles.closeButton} onPress={onExit}>
           <View style={styles.closeButtonBackground}>
@@ -92,10 +101,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 5,
   },
-  plusValue: {
+  positiveValue: {
     color: 'green',
   },
-  minusValue: {
+  negativeValue: {
     color: 'red',
   },
   closeButton: {
