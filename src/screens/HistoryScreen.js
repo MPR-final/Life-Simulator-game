@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Text, StyleSheet, View, TouchableOpacity, Dimensions, FlatList, Image } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios'; 
-import { AuthContext } from "../store/AuthContext.js";  
+import { AuthContext } from "../store/AuthContext.js";  // Ensure this path is correct
 import boyChild from '../assets/boy_child.png';
 import boy from '../assets/boy.png';
 import girlChild from '../assets/girl_child.png';
@@ -14,7 +14,7 @@ const { width, height } = Dimensions.get('window');
 
 const HistoryScreen = () => {
   const navigation = useNavigation();
-  const { localID } = useContext(AuthContext); 
+  const { localID } = useContext(AuthContext); // Use useContext to access AuthContext
   const [players, setPlayers] = useState([]);
 
   useEffect(() => {
@@ -28,8 +28,8 @@ const HistoryScreen = () => {
           if (data && Array.isArray(data)) {
             const loadedPlayers = data.map((UserData, index) => ({
               ...UserData,
-              Localid: `UserData-${index}`, 
-              ...UserData.status, 
+              Localid: `UserData-${index}`, // Assign a unique ID for key extractor
+              ...UserData.status, // Spread the status object into the character object
             }));
             setPlayers(loadedPlayers);
           } else {
@@ -48,10 +48,10 @@ const HistoryScreen = () => {
 
   const sortByNewest = () => {
     const sorted = [...players].sort((a, b) => {
-      
+      // Extract the numerical part of the Localid and convert it to a number
       const numIdA = parseInt(a.Localid.split('-')[1], 10);
       const numIdB = parseInt(b.Localid.split('-')[1], 10);
-      return numIdB - numIdA; 
+      return numIdB - numIdA; // Sort in descending order
     });
     setPlayers(sorted);
   };
@@ -85,6 +85,7 @@ const renderItem = ({ item }) => (
           <Text style={styles.infoText}><Text style={styles.boldLabel}>Age:</Text> {item.age}</Text>
           <Text style={styles.infoText}><Text style={styles.boldLabel}>Gender:</Text> {item.gender}</Text>
           <Text style={styles.infoText}><Text style={styles.boldLabel}>Location:</Text> {item.location}</Text>
+          <Text style={styles.infoText}><Text style={styles.boldLabel}>Progress:</Text> {item.progress}%</Text>
           <Text style={styles.infoText}><Text style={styles.boldLabel}>Death by:</Text> {item.reasonOfDeath}</Text>
           <Text style={styles.infoText}><Text style={styles.boldLabel}>Health:</Text> {Math.round(item.health / 5)}%</Text>
           <Text style={styles.infoText}><Text style={styles.boldLabel}>Intelligence:</Text> {Math.round(item.intel / 5)}%</Text>
