@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -29,7 +29,8 @@ import PlusButton from "../components/PlusButton.js";
 
 
 function MainScreen({ navigation }) {
-  const userId = "e3MKj3heMFNFDgckYMMLsEHRlzI2";
+  const mainContext = useContext(AuthContext);
+  const userId = mainContext.localID;
   const [isLoading, setLoading] = useState(true);
   const [fetchedNormalEvents, setFetchedNormalEvents] = useState([]);
   const [randomChoiceEvents, setRandomChoiceEvents] = useState([]);
