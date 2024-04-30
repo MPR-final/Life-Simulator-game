@@ -44,11 +44,12 @@ function InforLife() {
           reasonOfDeath: "",
           currentEventNum: 0,
           img: 0,
+          lifeRoad: "",
           status: {
             health: 250,
             intel: 250,
             relationship: 250,
-            money: 100,
+            money: 250,
           },
         });
       }
@@ -62,11 +63,14 @@ function InforLife() {
           reasonOfDeath: "",
           currentEventNum: 0,
           img: 0,
+
+          lifeRoad: "",
           status: {
             health: 250,
             intel: 250,
             relationship: 250,
-            money: 100,
+
+            money: 250,
           },
         });
       }

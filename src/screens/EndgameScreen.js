@@ -5,10 +5,11 @@ import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 
 const { width, height } = Dimensions.get('window');
-const EndgameScreen = () => {
+const EndgameScreen = ({route}) => {
   const [player, setPlayer] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
+  const {reasonOfDeath} = route.params;
 
   useEffect(() => {
     const fetchNewestPlayerData = async () => {
@@ -92,7 +93,7 @@ const EndgameScreen = () => {
       
       <Text style={[styles.age]}>Age: {player.age}</Text>
       <Text style={[styles.deathBy]}>
-        Death by: {player.reasonOfDeath}
+        Death by: {reasonOfDeath}
       </Text>
       <Text style={[styles.playerName]}>
         Name: {player.name}

@@ -9,13 +9,14 @@ import Popup from "../components/Popup";
 import { AuthContext } from "../store/AuthContext";
 
 function LoginScreen() {
+  const authCtx = useContext(AuthContext);
   const navigation = useNavigation();
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [isError, setIsError] = useState(false);
   const [enteredEmail, setEnteredEmail] = useState("");
   const [enteredPassword, setEnteredPassword] = useState("");
 
-  const authCtx = useContext(AuthContext);
+  
 
   //function to handle user input
   function handleUserInput(inputType, input) {
