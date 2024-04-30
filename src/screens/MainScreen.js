@@ -250,7 +250,7 @@ function MainScreen({ navigation }) {
   };
 
   const handleHome = () => {
-    navigation.navigate("HomeScreen");
+    navigation.navigate("HomeScreen", {return: true});
     setPaused(false);
   };
 
