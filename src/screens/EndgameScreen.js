@@ -11,7 +11,7 @@ const EndgameScreen = ({ route }) => {
   const [player, setPlayer] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
-  const { localID } = useContext(AuthContext); // Assuming localID is the current user's ID from AuthContext
+  const { localID } = useContext(AuthContext); 
 
   const navigateHome = () => navigation.navigate('HomeScreen', {reasonOfDeath: reasonOfDeath});
 
@@ -19,7 +19,7 @@ const EndgameScreen = ({ route }) => {
     const fetchUserData = async () => {
       setLoading(true);
       try {
-        // Fetch data for the current user
+        
         const userDataUrl = `https://mpr-final-project-c4ed7-default-rtdb.firebaseio.com/account/${localID}.json`;
         const response = await axios.get(userDataUrl);
         const data = response.data;
@@ -32,7 +32,7 @@ const EndgameScreen = ({ route }) => {
               ...playerData.status,
             }));
             loadedPlayers.sort((a, b) => b.id.localeCompare(a.id));
-            setPlayer(loadedPlayers[0]);  // Assuming the first element after sorting by id is the latest
+            setPlayer(loadedPlayers[0]);  
           } else {
             setPlayer({
               id: localID,
@@ -55,7 +55,7 @@ const EndgameScreen = ({ route }) => {
     } else {
       console.log("No user ID provided.");
     }
-  }, [localID]);  // Depend on localID to refetch when it changes
+  }, [localID]);  
 
   if (loading) {
     return <ActivityIndicator size="large" />;
