@@ -44,7 +44,7 @@ function InforLife() {
           reasonOfDeath: "",
           currentEventNum: 0,
           img: 0,
-          lifeRoad: '',
+          lifeRoad: "",
           status: {
             health: 250,
             intel: 250,
