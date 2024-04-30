@@ -1,12 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect, useContext } from "react";
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  Image,
-  Dimensions,
+import {StyleSheet,Text,TouchableOpacity,View,Image,
 } from "react-native";
 import ProgressBar from "../components/progressBar.js";
 import CharacterData from "../components/getCharacterData.js";
