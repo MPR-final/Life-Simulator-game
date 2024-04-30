@@ -58,12 +58,12 @@ function Navigation() {
 export default function App() {
   const [hideSplashScreen, setHideSplashScreen] = React.useState(true);
   const [fontsLoaded, error] = useFonts({
-    "Inter-Regular": require("./assets/fonts/Inter-Regular.ttf"),
-    "Inter-Medium": require("./assets/fonts/Inter-Medium.ttf"),
-    "Inter-SemiBold": require("./assets/fonts/Inter-SemiBold.ttf"),
-    "Inter-Bold": require("./assets/fonts/Inter-Bold.ttf"),
-    "ZenKurenaido-Regular": require("./assets/fonts/ZenKurenaido-Regular.ttf"),
-    "NosiferCaps-Regular": require("./assets/fonts/NosiferCaps-Regular.ttf")
+    "Inter-Regular": require("./src/assets/fonts/Inter-Regular.ttf"),
+    "Inter-Medium": require("./src/assets/fonts/Inter-Medium.ttf"),
+    "Inter-SemiBold": require("./src/assets/fonts/Inter-SemiBold.ttf"),
+    "Inter-Bold": require("./src/assets/fonts/Inter-Bold.ttf"),
+    "ZenKurenaido-Regular": require("./src/assets/fonts/ZenKurenaido-Regular.ttf"),
+    "NosiferCaps-Regular": require("./src/assets/fonts/NosiferCaps-Regular.ttf")
   });
 
   return (
