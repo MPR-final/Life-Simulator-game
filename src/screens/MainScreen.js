@@ -158,8 +158,7 @@ function MainScreen({ navigation }) {
       fetchedNormalEvents.length != 0 &&
       userData.length != 0 &&
       randomChoiceEvents.length != 0 &&
-      randomNoChoiceEvents.length != 0 &&
-      adultEvents.length != 0
+      randomNoChoiceEvents.length != 0
     ) {
       if (userData.age <= 18) {
         if (userData.currentEventNum == 0 || userData.currentEventNum == 1) {
@@ -285,7 +284,7 @@ function MainScreen({ navigation }) {
 
 
       if (statusChanges === null || statusChanges === undefined) {
-        await new Promise((resolve) => setTimeout(resolve, 1000)); // Delay for 1 second before retrying
+        await new Promise((resolve) => setTimeout(resolve, 500)); // Delay for 1 second before retrying
       }
     }
     let updateDataExecuted = false;
