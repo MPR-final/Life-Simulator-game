@@ -24,10 +24,10 @@ export default function HomeScreen({ navigation }) {
   const [isRevceiedGift, setIsReceiveGift] = useState(false);
 
   useEffect(() => {
-    if(mainContext.player != {}) {
+    if(mainContext.player.length != 0) {
       storeUser(mainContext.localID, mainContext.player);
     }
-  }, [mainContext])
+  }, [mainContext.player])
 
   useEffect(() => {
     const timer = setTimeout(() => {
