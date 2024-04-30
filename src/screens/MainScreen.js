@@ -310,11 +310,10 @@ function MainScreen({ navigation }) {
         status !== undefined &&
         userData.length != 0
       ) {
-        const newHealth = status.health + statusChanges.health;
-        const newIntel = status.intel + statusChanges.intel;
-        const newMoney = status.money + statusChanges.money;
-        const newRelationship =
-          status.relationship + statusChanges.relationship;
+        const newHealth = Math.min(status.health + statusChanges.health, 500);
+        const newIntel = Math.min(status.intel + statusChanges.intel, 500);
+        const newMoney = Math.min(status.money + statusChanges.money, 500);
+        const newRelationship = Math.min(status.relationship + statusChanges.relationship, 500);
         const newStatus = {
           health: newHealth,
           intel: newIntel,
