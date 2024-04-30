@@ -42,7 +42,6 @@ export default function HomeScreen({ navigation, route }) {
     }
     getUserData();
   }, [mainContext, route.params]);
-  console.log(userData);
 
   useEffect(() => {
     if(mainContext.player.length != 0) {
@@ -164,7 +163,7 @@ export default function HomeScreen({ navigation, route }) {
             : null,
         ]}
       >
-        {userData === undefined ||
+        {userData == undefined ||
         userData.reasonOfDeath != "" ? (
           <Pressable
             onPress={() => {

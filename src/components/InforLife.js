@@ -12,6 +12,8 @@ import SubmitButton from "./SubmitButton";
 import { useContext, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../store/AuthContext";
+import { storeUser } from "../util/auth";
+import LoadingOverLay from "./LoadingOverLay";
 function InforLife() {
   const navigation = useNavigation();
   const [malePress, setMalePress] = useState(false);
@@ -21,11 +23,18 @@ function InforLife() {
   const [location, setLocation] = useState("");
   const [player, setPlayer] = useState({});
   const [playerIsCreated, setPlayerIsCreated] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const mainContext = useContext(AuthContext);
 
   useEffect(() => {
     mainContext.addPlayer(player);
   }, [playerIsCreated]);
+
+  useEffect(() => {
+    if(mainContext.player.length != 0 && mainContext.player != {}) {
+      storeUser(mainContext.localID, mainContext.player);
+    }
+  }, [mainContext.player])
 
   function startGameHandler() {
     if (
@@ -34,6 +43,7 @@ function InforLife() {
       location !== "" &&
       (malePress !== false || femalePress !== false)
     ) {
+      setLoading(true);
       if (malePress) {
         setPlayer({
           name: firstName + " " + lastName,
@@ -55,7 +65,7 @@ function InforLife() {
       }
       if (femalePress) {
         setPlayer({
-          name: firstName + lastName,
+          name: firstName + " " + lastName,
           location: location,
           gender: "female",
           age: 0,
@@ -69,7 +79,6 @@ function InforLife() {
             health: 250,
             intel: 250,
             relationship: 250,
-
             money: 250,
           },
         });
@@ -80,7 +89,10 @@ function InforLife() {
       setLocation("");
       setFemalePress(false);
       setMalePress(false);
-      navigation.navigate("MainScreen");
+      setTimeout(() => {
+        setLoading(false);
+        navigation.navigate("MainScreen");
+      }, 500);
     }
   }
 
@@ -114,6 +126,15 @@ function InforLife() {
       setFemalePress(!femalePress);
     }
   }
+
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <LoadingOverLay message={"Loading..."} />
+      </View>
+    );
+  }
+  
   return (
     <KeyboardAvoidingView behavior="position">
       <View style={styles.container}>

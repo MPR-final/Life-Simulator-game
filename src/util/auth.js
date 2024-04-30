@@ -25,7 +25,6 @@ export async function storeUser(userId, newData) {
     if (userData !== undefined) {
       newLifeId = userData.length;
     }
-    console.log(newData);
     await axios.put(BACKEND_URL + `account/${userId}/${newLifeId}.json`, newData);
     console.log('User data stored successfully!');
   } catch (error) {

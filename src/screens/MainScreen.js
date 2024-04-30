@@ -168,7 +168,8 @@ function MainScreen({ navigation }) {
       fetchedNormalEvents.length != 0 &&
       userData.length != 0 &&
       randomChoiceEvents.length != 0 &&
-      randomNoChoiceEvents.length != 0
+      randomNoChoiceEvents.length != 0 &&
+      userData != undefined
     ) {
       if (userData.age <= 18) {
         if (userData.currentEventNum == 0 || userData.currentEventNum == 1) {
@@ -423,8 +424,6 @@ function MainScreen({ navigation }) {
   useEffect(() => {
     try {
       setCharacterData(getCharacterData(userData.age, userData.gender));
-      console.log("setCharacter: " + characterData)
-
     } catch (error) {
       console.error(error.message); 
     }
