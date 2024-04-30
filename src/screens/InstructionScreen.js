@@ -9,21 +9,19 @@ import {
   useWindowDimensions,
 } from "react-native";
 import ProgressBar from "../components/progressBar.js";
+import PlusButton from "../components/PlusButton.js";
 
-
-export default function InstructionScreen({navigation}) {
+export default function InstructionScreen({ navigation }) {
   const windowDimensions = useWindowDimensions();
   const width = windowDimensions.width;
   const height = windowDimensions.height;
   const isPortrait = height > width;
   console.log("height: " + height + " width: " + width);
 
-
   {
     /** set bg color for character */
   }
   const bgCharacter = "#F5ACE1";
-
 
   {
     /** instruction component */
@@ -44,6 +42,7 @@ export default function InstructionScreen({navigation}) {
                 setShowMoney(false),
                 setShowRelate(false),
                 setShowTime(false);
+                setShowPlus(false);
             }}
           >
             <Image
@@ -60,7 +59,6 @@ export default function InstructionScreen({navigation}) {
     );
   };
 
-
   {
     /** set show instruction for each elements */
   }
@@ -72,12 +70,11 @@ export default function InstructionScreen({navigation}) {
   const [showIntell, setShowIntell] = useState(false);
   const [showRelate, setShowRelate] = useState(false);
   const [showMoney, setShowMoney] = useState(false);
-  // const [showInstruction, setShowInstruction] = useState(false);
+  const [showPlus, setShowPlus] = useState(false);
   const [message, setMessage] = useState(false);
   {
     /** set message and show instruction */
   }
-
 
   const styles = StyleSheet.create({
     container: {
@@ -98,7 +95,7 @@ export default function InstructionScreen({navigation}) {
       alignItems: "flex-end",
       justifyContent: "flex-end",
       marginBottom: -20,
-      marginLeft: 75
+      marginLeft: 75,
     },
     pause: {
       width: 50,
@@ -127,11 +124,10 @@ export default function InstructionScreen({navigation}) {
       backgroundColor: "#F8CA72",
     },
 
-
     character: {
       // borderWidth: 0.5,
       width: "100%",
-      height: (1 / 2) * height,
+      height: (1 / 2.1) * height,
       alignItems: "center",
     },
     characterBox: {
@@ -173,14 +169,14 @@ export default function InstructionScreen({navigation}) {
       // borderWidth: 0.5,
       width: "75%",
       height: "75%",
+      marginBottom: 40
     },
-
 
     progressBars: {
       // borderWidth: 0.5,
       width: "90%",
       height: (1 / 4) * height,
-      marginTop: 50,
+      marginTop: 70,
     },
     Box: {
       // borderWidth: 0.5,
@@ -196,7 +192,6 @@ export default function InstructionScreen({navigation}) {
       marginRight: 25,
     },
     bar: {},
-
 
     overlay: {
       position: "absolute",
@@ -242,7 +237,6 @@ export default function InstructionScreen({navigation}) {
     },
   });
 
-
   return (
     <View style={styles.container}>
       {/** header */}
@@ -250,14 +244,15 @@ export default function InstructionScreen({navigation}) {
         <TouchableOpacity
           style={{ marginBottom: -5 }}
           activeOpacity={0.8}
-          onPress={() => {navigation.navigate('HomeScreen');}}
+          onPress={() => {
+            navigation.navigate("HomeScreen");
+          }}
         >
           <Image
             style={{ width: 30, height: 30, marginBottom: -40, marginTop: 5 }}
             source={require("../assets/left-arrow.png")}
           />
         </TouchableOpacity>
-
 
         <TouchableOpacity
           style={styles.pauseBox}
@@ -269,17 +264,14 @@ export default function InstructionScreen({navigation}) {
           <Image style={styles.pause} source={require("../assets/pause.png")} />
         </TouchableOpacity>
 
-
         <View style={styles.textBox}>
           <Text style={styles.headText}>Instruction</Text>
         </View>
-
 
         <View style={styles.lineBox}>
           <View style={styles.line}></View>
         </View>
       </View>
-
 
       {/** character */}
       <View style={styles.character}>
@@ -290,7 +282,6 @@ export default function InstructionScreen({navigation}) {
         >
           <ProgressBar percentage={85} bgColor={"#F5F5F3"} color={"#6CC3E8"} />
         </TouchableOpacity>
-
 
         <View style={styles.characterBox}>
           <TouchableOpacity
@@ -307,9 +298,16 @@ export default function InstructionScreen({navigation}) {
           >
             <Image style={styles.img} source={require("../assets/baby.png")} />
           </TouchableOpacity>
+
+          <TouchableOpacity
+            tyle={styles.characPlus}
+            activeOpacity={0.8}
+            onPress={() => setShowPlus(true)}
+          >
+            <PlusButton/>
+          </TouchableOpacity>
         </View>
       </View>
-
 
       {/** 4 chi so */}
       <View style={styles.progressBars}>
@@ -327,7 +325,6 @@ export default function InstructionScreen({navigation}) {
             />
           </View>
         </TouchableOpacity>
-
 
         <TouchableOpacity
           style={styles.Box}
@@ -347,7 +344,6 @@ export default function InstructionScreen({navigation}) {
           </View>
         </TouchableOpacity>
 
-
         <TouchableOpacity
           style={styles.Box}
           activeOpacity={0.8}
@@ -366,7 +362,6 @@ export default function InstructionScreen({navigation}) {
           </View>
         </TouchableOpacity>
 
-
         <TouchableOpacity
           style={styles.Box}
           activeOpacity={0.8}
@@ -382,7 +377,6 @@ export default function InstructionScreen({navigation}) {
           </View>
         </TouchableOpacity>
       </View>
-
 
       {showPause && (
         <InstructionBox
@@ -446,7 +440,14 @@ export default function InstructionScreen({navigation}) {
           srcImg={require("../assets/salary.png")}
         />
       )}
-
+       {showPlus && (
+        <InstructionBox
+          message={
+            "This is the button that when you click you will get your question."
+          }
+          srcImg={require("../assets/plus.png")}
+        />
+      )}
 
       <StatusBar style="auto" />
     </View>
