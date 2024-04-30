@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
     fontFamily: "NosiferCaps-Regular",
     color: "#0d0d0d",
     textAlign: 'center',
-    marginBottom: '100%',
+    marginBottom: '100%', 
   },
   EndgameScreen: {
     backgroundColor: '#F3ECDB',
