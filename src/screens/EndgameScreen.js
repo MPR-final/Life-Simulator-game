@@ -5,43 +5,57 @@ import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 
 const { width, height } = Dimensions.get('window');
-const EndgameScreen = ({route}) => {
+const EndgameScreen = ({ route }) => {
   const [player, setPlayer] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
-  const {reasonOfDeath} = route.params;
+  const navigateHome = () => navigation.navigate('HomeScreen');
 
   useEffect(() => {
     const fetchNewestPlayerData = async () => {
       setLoading(true);
       try {
+        // Fetch all user accounts
         const usersUrl = 'https://mpr-final-project-c4ed7-default-rtdb.firebaseio.com/account.json';
         const usersResponse = await axios.get(usersUrl);
         if (usersResponse.data) {
+          // Determine the newest user based on createdAt field
           const userAccounts = usersResponse.data;
           const newestUserId = Object.keys(userAccounts).reduce((newest, current) => {
-            return (!newest || userAccounts[current].createdAt > userAccounts[newest].createdAt) ? current : newest;
+            return (!newest || new Date(userAccounts[current].createdAt) > new Date(userAccounts[newest].createdAt)) ? current : newest;
           }, null);
 
           if (newestUserId) {
+            // Fetch the data of the newest user
             const newestUserDataUrl = `https://mpr-final-project-c4ed7-default-rtdb.firebaseio.com/account/${newestUserId}.json`;
             const response = await axios.get(newestUserDataUrl);
             const data = response.data;
 
-            if (data && Array.isArray(data)) {
-              // Assuming data is an array of characters
-              const loadedPlayers = data.map((playerData, index) => ({
-                id: `player-${index}`,
-                ...playerData,
-                ...playerData.status,
-              }));
-              // Sort players by id in descending order and take the first one (largest id)
-              loadedPlayers.sort((a, b) => b.id.localeCompare(a.id));
-              setPlayer(loadedPlayers[0]); // Store the player with the largest id
+            if (data) {
+              // Assuming the data might not necessarily be an array of characters
+              if (Array.isArray(data)) {
+                // Process if it is an array
+                const loadedPlayers = data.map((playerData, index) => ({
+                  id: `player-${index}`,
+                  ...playerData,
+                  ...playerData.status,
+                }));
+                loadedPlayers.sort((a, b) => b.id.localeCompare(a.id));
+                setPlayer(loadedPlayers[0]);  // Assuming the first element after sorting by id is the latest
+              } else {
+                // Handle a single object data format
+                setPlayer({
+                  id: newestUserId,
+                  ...data,
+                  ...data.status,
+                });
+              }
             } else {
-              console.log("Data is not in expected format or no characters found:", data);
+              console.log("No data found for the newest user.");
             }
           }
+        } else {
+          console.log("No users found in the database.");
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -53,14 +67,13 @@ const EndgameScreen = ({route}) => {
     fetchNewestPlayerData();
   }, []);
 
-  const navigateHome = () => navigation.navigate('HomeScreen');
 
   if (loading) {
     return <ActivityIndicator size="large" />;
   }
 
   if (!player) {
-    return <Text style={styles.infoText}>No player data found.</Text>;
+    return <Text>No player data found.</Text>;
   }
 
   return (
@@ -93,7 +106,7 @@ const EndgameScreen = ({route}) => {
       
       <Text style={[styles.age]}>Age: {player.age}</Text>
       <Text style={[styles.deathBy]}>
-        Death by: {reasonOfDeath}
+        Death by: {player.reasonOfDeath}
       </Text>
       <Text style={[styles.playerName]}>
         Name: {player.name}
