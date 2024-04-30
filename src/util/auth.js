@@ -16,11 +16,18 @@ export async function login(email, password){
   return response;
 }
 
-export async function storeUser(userId, userData) {
+export async function storeUser(userId, newData) {
   try {
-    const response = await axios.put(BACKEND_URL + 'account.json', { [userId]: userData });
-    console.log('User data stored successfully:', response.data);
+    const response = await axios.get(BACKEND_URL + 'account.json');
+    const userData = response.data[userId];
 
+    let newLifeId = 0;
+    if (userData !== undefined) {
+      newLifeId = userData.length;
+    }
+    console.log(newData);
+    await axios.put(BACKEND_URL + `account/${userId}/${newLifeId}.json`, newData);
+    console.log('User data stored successfully!');
   } catch (error) {
     console.error('Error storing user data:', error);
     throw error;
@@ -96,6 +103,7 @@ export async function fetchUser (userId) {
         currentEventNum: lifeData.currentEventNum,
         gender: lifeData.gender,
         img: lifeData.img,
+        lifeRoad: lifeData.lifeRoad,
         location: lifeData.location,
         name: lifeData.name,
         progress: lifeData.progress,
@@ -108,6 +116,135 @@ export async function fetchUser (userId) {
   } catch (error) {
     console.error('Error fetching user data', error);
     throw error;
+  }
+}
+
+export async function fetchTechEvents() {
+  try {
+    const response = await axios.get(BACKEND_URL + 'TechEvent.json');
+    const techEvents = [];
+
+    for (const age of response.data) {
+      if (age !== null) {
+        const ageEvents = [];
+
+        for (const ageEvent of age) {
+          const choices = [];
+
+          for (const choiceKey in ageEvent.choice) {
+            const choice = ageEvent.choice[choiceKey];
+            const choiceDetail = choice.choiceDetail;
+            const choiceResult = choice.choiceResult;
+            const points = choice.points;
+
+            const newChoice = {
+              choiceDetail: choiceDetail,
+              choiceResult: choiceResult,
+              points: points,
+            };
+            choices.push(newChoice);
+          }
+
+          const normalEvent = {
+            detail: ageEvent.detail,
+            time: ageEvent.time,
+            choices: choices,
+          };
+
+          ageEvents.push(normalEvent);
+        }
+        techEvents.push(ageEvents);
+      }
+    }
+    return techEvents;
+  } catch (error) {
+    console.error('Error fetching tech events', error);
+  }
+}
+
+export async function fetchArtisticEvents() {
+  try {
+    const response = await axios.get(BACKEND_URL + 'ArtisticEvent.json');
+    const artEvents = [];
+
+    for (const age of response.data) {
+      if (age !== null) {
+        const ageEvents = [];
+
+        for (const ageEvent of age) {
+          const choices = [];
+
+          for (const choiceKey in ageEvent.choice) {
+            const choice = ageEvent.choice[choiceKey];
+            const choiceDetail = choice.choiceDetail;
+            const choiceResult = choice.choiceResult;
+            const points = choice.points;
+
+            const newChoice = {
+              choiceDetail: choiceDetail,
+              choiceResult: choiceResult,
+              points: points,
+            };
+            choices.push(newChoice);
+          }
+
+          const normalEvent = {
+            detail: ageEvent.detail,
+            time: ageEvent.time,
+            choices: choices,
+          };
+
+          ageEvents.push(normalEvent);
+        }
+        artEvents.push(ageEvents);
+      }
+    }
+    return artEvents;
+  } catch (error) {
+    console.error('Error fetching art events', error);
+  }
+}
+
+export async function fetchWorkEvents() {
+  try {
+    const response = await axios.get(BACKEND_URL + ' WorkEvent.json');
+    const workEvents = [];
+
+    for (const age of response.data) {
+      if (age !== null) {
+        const ageEvents = [];
+
+        for (const ageEvent of age) {
+          const choices = [];
+
+          for (const choiceKey in ageEvent.choice) {
+            const choice = ageEvent.choice[choiceKey];
+            const choiceDetail = choice.choiceDetail;
+            const choiceResult = choice.choiceResult;
+            const points = choice.points;
+
+            const newChoice = {
+              choiceDetail: choiceDetail,
+              choiceResult: choiceResult,
+              points: points,
+            };
+            choices.push(newChoice);
+          }
+
+          const normalEvent = {
+            detail: ageEvent.detail,
+            time: ageEvent.time,
+            choices: choices,
+          };
+
+          ageEvents.push(normalEvent);
+        }
+        workEvents.push(ageEvents);
+      }
+    }
+    return workEvents;
+  } catch (error) {
+    console.error('Error fetching work events', error);
   }
 }
 
