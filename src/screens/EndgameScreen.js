@@ -7,13 +7,12 @@ import { AuthContext } from "../store/AuthContext";
 
 const { width, height } = Dimensions.get('window');
 const EndgameScreen = ({ route }) => {
-  const {reasonOfDeath} = route.params;
   const [player, setPlayer] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
   const { localID } = useContext(AuthContext); // Assuming localID is the current user's ID from AuthContext
 
-  const navigateHome = () => navigation.navigate('HomeScreen', {reasonOfDeath: reasonOfDeath});
+  const navigateHome = () => navigation.navigate('HomeScreen');
 
   useEffect(() => {
     const fetchUserData = async () => {
