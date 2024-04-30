@@ -11,10 +11,11 @@ import {
 } from "react-native";
 import { AuthContext } from "../store/AuthContext";
 import Popup from "../components/Popup";
-import { storeUser } from "../util/auth";
+import { storeUser, fetchUser } from "../util/auth";
 
 export default function HomeScreen({ navigation }) {
   const mainContext = useContext(AuthContext);
+  const [userData, setUserData] = useState([]);
   const { height } = useWindowDimensions();
   const [isGiftPress, setIsGiftPress] = useState(false);
 
@@ -22,6 +23,26 @@ export default function HomeScreen({ navigation }) {
   const [bonusPoint, setBonusPoint] = useState(0);
   const [photoSrc, setPhotoSrc] = useState();
   const [isRevceiedGift, setIsReceiveGift] = useState(false);
+
+  useEffect(() => {
+    async function getUserData() {
+      try {
+        setUserData([]);
+        const userDatas = await fetchUser(mainContext.localID);
+        let lifeNum = 0;
+        if (userDatas.length != 0) {
+          lifeNum = userDatas.length - 1;
+        }
+        const userData = userDatas[lifeNum];
+  
+        setUserData(userData);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    }
+    getUserData();
+  }, [mainContext]);
+  console.log(userData);
 
   useEffect(() => {
     if(mainContext.player.length != 0) {
@@ -143,8 +164,8 @@ export default function HomeScreen({ navigation }) {
             : null,
         ]}
       >
-        {Object.keys(mainContext.player).length === 0 ||
-        mainContext.player.reasonOfDeath.length !== 0 ? (
+        {userData === undefined ||
+        userData.reasonOfDeath != "" ? (
           <Pressable
             onPress={() => {
               navigation.navigate("InforLife");
