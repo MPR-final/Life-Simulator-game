@@ -24,12 +24,13 @@ const getCharacterData = (characterAge, gender) => {
     },
   ];
 
-  const matchingData = characterData.find((obj) => obj.gender === gender);
+  const matchingData = characterData.find((obj) => obj.gender === "female");
+
   if (!matchingData) {
     throw new Error(`Invalid gender: ${gender}`); // Throw custom error
   }
 
-  console.log("character: "+matchingData.images[0])
+  
   if (characterAge <= 6) {
     return [matchingData.images[0], matchingData.backgrounds[0]];
   } else if (characterAge <= 16) {
@@ -41,19 +42,18 @@ const getCharacterData = (characterAge, gender) => {
   }
 };
 
+// const CharacterData = ({ characterAge, gender }) => {
+//   const [characterData, setCharacterData] = useState([]);
 
-const CharacterData = ({ characterAge, gender }) => {
-  const [characterData, setCharacterData] = useState([]);
+//   useEffect(() => {
+//     try {
+//       setCharacterData(getCharacterData(characterAge, gender));
+//     } catch (error) {
+//       console.error(error.message); // Log the error message
+//     }
+//   }, [characterAge, gender]);
 
-  useEffect(() => {
-    try {
-      setCharacterData(getCharacterData(characterAge, gender));
-    } catch (error) {
-      console.error(error.message); // Log the error message
-    }
-  }, [characterAge, gender]);
+//   return characterData;
+// };
 
-  return characterData;
-};
-
-export default CharacterData;
+export default getCharacterData;
