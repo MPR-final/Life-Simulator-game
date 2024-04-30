@@ -189,7 +189,7 @@ function MainScreen({ navigation }) {
           setLoading(false);
         }
       }
-
+      
       setDisabledChoices([false, false, false, false]); 
       if(userData.currentEventNum == 1 && userData.age == 18) {
         if (userData.status.money < 250) {
