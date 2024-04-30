@@ -66,14 +66,14 @@ const HistoryScreen = () => {
     setPlayers(sorted);
   };
   const getImageForPlayer = (gender, age) => {
-    if (age < 3) {
+    if (age <= 6 ) {
         return baby;
-    } else if (age > 60) {
+    } else if (age > 49) {
         return gender === "male" ? elderMale : elderFemale;
     } else if (gender === "male") {
-        return age < 18 ? boyChild : boy;
+        return age <= 16 ? boyChild : boy;
     } else {
-        return age < 18 ? girlChild : girl;
+        return age <= 16 ? girlChild : girl;
     }
 };
 
@@ -85,7 +85,6 @@ const renderItem = ({ item }) => (
           <Text style={styles.infoText}><Text style={styles.boldLabel}>Age:</Text> {item.age}</Text>
           <Text style={styles.infoText}><Text style={styles.boldLabel}>Gender:</Text> {item.gender}</Text>
           <Text style={styles.infoText}><Text style={styles.boldLabel}>Location:</Text> {item.location}</Text>
-          <Text style={styles.infoText}><Text style={styles.boldLabel}>Progress:</Text> {item.progress}%</Text>
           <Text style={styles.infoText}><Text style={styles.boldLabel}>Death by:</Text> {item.reasonOfDeath}</Text>
           <Text style={styles.infoText}><Text style={styles.boldLabel}>Health:</Text> {Math.round(item.health / 5)}%</Text>
           <Text style={styles.infoText}><Text style={styles.boldLabel}>Intelligence:</Text> {Math.round(item.intel / 5)}%</Text>
