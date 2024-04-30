@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Text, StyleSheet, View, TouchableOpacity, Dimensions, FlatList, Image } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios'; 
-import { AuthContext } from "../store/AuthContext.js";  // Ensure this path is correct
+import { AuthContext } from "../store/AuthContext.js";  
 import boyChild from '../assets/boy_child.png';
 import boy from '../assets/boy.png';
 import girlChild from '../assets/girl_child.png';
@@ -14,7 +14,7 @@ const { width, height } = Dimensions.get('window');
 
 const HistoryScreen = () => {
   const navigation = useNavigation();
-  const { localID } = useContext(AuthContext); // Use useContext to access AuthContext
+  const { localID } = useContext(AuthContext); 
   const [players, setPlayers] = useState([]);
 
   useEffect(() => {
@@ -28,8 +28,8 @@ const HistoryScreen = () => {
           if (data && Array.isArray(data)) {
             const loadedPlayers = data.map((UserData, index) => ({
               ...UserData,
-              Localid: `UserData-${index}`, // Assign a unique ID for key extractor
-              ...UserData.status, // Spread the status object into the character object
+              Localid: `UserData-${index}`, 
+              ...UserData.status, 
             }));
             setPlayers(loadedPlayers);
           } else {
@@ -48,10 +48,10 @@ const HistoryScreen = () => {
 
   const sortByNewest = () => {
     const sorted = [...players].sort((a, b) => {
-      // Extract the numerical part of the Localid and convert it to a number
+      
       const numIdA = parseInt(a.Localid.split('-')[1], 10);
       const numIdB = parseInt(b.Localid.split('-')[1], 10);
-      return numIdB - numIdA; // Sort in descending order
+      return numIdB - numIdA; 
     });
     setPlayers(sorted);
   };
