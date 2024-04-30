@@ -41,7 +41,7 @@ export default function HomeScreen({ navigation }) {
       }
     }
     getUserData();
-  }, [mainContext]);
+  }, [mainContext, userData]);
   console.log(userData);
 
   useEffect(() => {
