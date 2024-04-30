@@ -52,7 +52,7 @@ const EndgameScreen = () => {
     fetchNewestPlayerData();
   }, []);
 
-  const navigateHome = () => navigation.navigate('Home');
+  const navigateHome = () => navigation.navigate('HomeScreen');
 
   if (loading) {
     return <ActivityIndicator size="large" />;
