@@ -13,7 +13,7 @@ import { AuthContext } from "../store/AuthContext";
 import Popup from "../components/Popup";
 import { storeUser, fetchUser } from "../util/auth";
 
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen({ navigation, route }) {
   const mainContext = useContext(AuthContext);
   const [userData, setUserData] = useState([]);
   const { height } = useWindowDimensions();
@@ -41,7 +41,7 @@ export default function HomeScreen({ navigation }) {
       }
     }
     getUserData();
-  }, [mainContext, userData]);
+  }, [mainContext, route.params]);
   console.log(userData);
 
   useEffect(() => {

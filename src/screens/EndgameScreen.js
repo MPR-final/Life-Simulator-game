@@ -6,10 +6,11 @@ import axios from 'axios';
 
 const { width, height } = Dimensions.get('window');
 const EndgameScreen = ({ route }) => {
+  const {reasonOfDeath} = route.params;
   const [player, setPlayer] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
-  const navigateHome = () => navigation.navigate('HomeScreen');
+  const navigateHome = () => navigation.navigate('HomeScreen', {reasonOfDeath:reasonOfDeath});
 
   useEffect(() => {
     const fetchNewestPlayerData = async () => {
