@@ -225,11 +225,12 @@ function MainScreen({ navigation }) {
 
 
   const handleEndGame = () => {
+    const reasonOfDeath = "Lightning strike";
     const newData = {
-      reasonOfDeath: "Lightning strike",
+      reasonOfDeath: reasonOfDeath,
     }
     editUser(userId, newData);
-      navigation.navigate("EndgameScreen");
+      navigation.navigate("EndgameScreen", {reasonOfDeath: reasonOfDeath});
       setPaused(false);
   };
   
@@ -366,6 +367,7 @@ function MainScreen({ navigation }) {
   const checkDead = (data) => {
     const status = data.status;
     let reasonOfDeath = "";
+    
     if (status.health <= 0) {
       reasonOfDeath = "Heart failure";
     }
@@ -378,6 +380,9 @@ function MainScreen({ navigation }) {
     if (status.relationship <= 0) {
       reasonOfDeath = "Loneliness";
     }
+    if (data.age >= 40 && data.currentEventNum >= 3) {
+      reasonOfDeath = "Old age";
+    }
 
     if(reasonOfDeath != "") {
       const newData = {
@@ -385,7 +390,7 @@ function MainScreen({ navigation }) {
       }
 
       editUser(userId, newData);
-      navigation.navigate("EndgameScreen");
+      navigation.navigate("EndgameScreen", {reasonOfDeath: reasonOfDeath});
     }
   }
 
