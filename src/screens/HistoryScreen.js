@@ -49,7 +49,7 @@ const HistoryScreen = () => {
     };
 
     fetchNewestUserData();
-  }, []);
+  }, []); 
 
   const sortByNewest = () => {
     const sorted = [...players].sort((a, b) => {

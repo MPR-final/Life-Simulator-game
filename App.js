@@ -1,6 +1,8 @@
 import { StyleSheet, Text, View, Image, ImageBackground } from "react-native";
+import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useFonts } from "expo-font";
 
 import HomeScreen from "./src/screens/HomeScreen.js";
 import EndgameScreen from "./src/screens/EndgameScreen.js";
@@ -19,6 +21,9 @@ import InforLife from "./src/components/InforLife.js";
 const Stack = createNativeStackNavigator();
 
 function AuthScreens() {
+  
+  const [hideSplashScreen, setHideSplashScreen] = React.useState(true);
+  
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="FirstScreen" component={FirstScreen} />
@@ -51,6 +56,16 @@ function Navigation() {
 }
 
 export default function App() {
+  const [hideSplashScreen, setHideSplashScreen] = React.useState(true);
+  const [fontsLoaded, error] = useFonts({
+    "Inter-Regular": require("./assets/fonts/Inter-Regular.ttf"),
+    "Inter-Medium": require("./assets/fonts/Inter-Medium.ttf"),
+    "Inter-SemiBold": require("./assets/fonts/Inter-SemiBold.ttf"),
+    "Inter-Bold": require("./assets/fonts/Inter-Bold.ttf"),
+    "ZenKurenaido-Regular": require("./assets/fonts/ZenKurenaido-Regular.ttf"),
+    "NosiferCaps-Regular": require("./assets/fonts/NosiferCaps-Regular.ttf")
+  });
+
   return (
     <AuthContextProvider>
       <Navigation></Navigation>
