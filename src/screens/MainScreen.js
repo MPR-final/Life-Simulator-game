@@ -13,6 +13,7 @@ import {
   fetchTechEvents,
   fetchArtisticEvents,
   fetchWorkEvents,
+  fetchFinanceEvents,
   fetchUser,
   editUser,
 } from "../util/auth.js";
@@ -32,6 +33,7 @@ function MainScreen({ navigation }) {
   const [techEvents, setTechEvents] = useState([]);
   const [artEvents, setArtEvents] = useState([]);
   const [workEvents, setWorkEvents] = useState([]);
+  const [financeEvents, setFinanceEvents] = useState([]);
   const [adultEvents, setAdultEvents] = useState([]);
   const [userData, setUserData] = useState([]);
   const [updateData, setUpdateData] = useState(false);
@@ -126,16 +128,25 @@ function MainScreen({ navigation }) {
         console.log("Error fetching work events:", error);
       }
     }
+    async function getFinanceEvents() {
+      try {
+        const events = await fetchFinanceEvents();
+        setFinanceEvents(events);
+      } catch (error) {
+        console.log("Error fetching finance events:", error);
+      }
+    }
     getNormalEvents();
     getRandomChoiceEvents();
     getRandomNoChoiceEvents();
     getTechEvents();
     getArtEvents();
     getWorkEvents();
+    getFinanceEvents();
   }, []);
 
   useEffect(() => {
-    if (workEvents.length !=0 && artEvents.length != 0 && techEvents.length != 0) {
+    if (workEvents.length !=0 && artEvents.length != 0 && techEvents.length != 0 && financeEvents.length != 0) {
       if (userData.lifeRoad == "work") {
         setAdultEvents(workEvents);
       } 
@@ -145,8 +156,10 @@ function MainScreen({ navigation }) {
       if (userData.lifeRoad == "tech") {
         setAdultEvents(techEvents);
       }
+      if (userData.lifeRoad == 'finance')
+      setAdultEvents(financeEvents);
     }
-  }, [adultEvents, workEvents, artEvents, techEvents, userData])
+  }, [adultEvents, workEvents, artEvents, techEvents, financeEvents, userData])
 
   useEffect(() => {
     if (
@@ -243,7 +256,11 @@ function MainScreen({ navigation }) {
 
     if (userData.currentEventNum == 1 && userData.age == 18) {
       if (choice == 0) {
-        
+        setAdultEvents(financeEvents);
+        const newData = {
+          lifeRoad: "finance",
+        }
+        editUser(userId, newData);
       }
       if (choice == 1) {
         setAdultEvents(workEvents);
