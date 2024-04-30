@@ -242,6 +242,7 @@ function MainScreen({ navigation }) {
     const reasonOfDeath = "Lightning strike";
     const newData = {
       reasonOfDeath: reasonOfDeath,
+      img: characterData[0]
     };
     editUser(userId, newData);
     navigation.navigate("EndgameScreen", { reasonOfDeath: reasonOfDeath });
@@ -428,10 +429,6 @@ function MainScreen({ navigation }) {
       console.error(error.message); 
     }
   }, [ userData]);
-
-  
-
-
 
 
   if (isLoading) {
