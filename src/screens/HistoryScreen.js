@@ -11,36 +11,52 @@ const HistoryScreen = () => {
   const [players, setPlayers] = useState([]);
 
   useEffect(() => {
-    const fetchDataFromFirebase = async () => {
+    const fetchNewestUserData = async () => {
       try {
-        
-        const databaseUrl = 'https://mpr-final-project-c4ed7-default-rtdb.firebaseio.com/account/e3MKj3heMFNFDgckYMMLsEHRlzI2.json'; 
-        const response = await axios.get(databaseUrl);
-        const data = response.data;
-        
-        if (data) {
-          
-          const loadedPlayers = data.map((UserData, index) => ({
-            ...UserData,
-            Localid: `UserData-${index}`,  
-            ...UserData.status,
-          }));
-          setPlayers(loadedPlayers);
+        // Fetch the list of user IDs from the Firebase database
+        const usersUrl = 'https://mpr-final-project-c4ed7-default-rtdb.firebaseio.com/account.json';
+        const usersResponse = await axios.get(usersUrl);
+        if (usersResponse.data) {
+          const userAccounts = usersResponse.data;
+          const newestUserId = Object.keys(userAccounts).reduce((newest, current) => {
+            return (!newest || userAccounts[current].createdAt > userAccounts[newest].createdAt) ? current : newest;
+          }, null);
+
+          if (newestUserId) {
+            const newestUserDataUrl = `https://mpr-final-project-c4ed7-default-rtdb.firebaseio.com/account/${newestUserId}.json`;
+            const response = await axios.get(newestUserDataUrl);
+            const data = response.data;
+
+            if (data && Array.isArray(data)) {
+              const loadedPlayers = data.map((UserData, index) => ({
+                ...UserData,
+                Localid: `UserData-${index}`, // Assign a unique ID for key extractor
+                ...UserData.status, // Spread the status object into the character object
+              }));
+              setPlayers(loadedPlayers);
+            } else {
+              console.log("Data is not in expected format:", data);
+            }
+          } else {
+            console.log("No newest user ID found or no valid 'createdAt' timestamps.");
+          }
+        } else {
+          console.log("No data retrieved from Firebase.");
         }
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
 
-    fetchDataFromFirebase();
+    fetchNewestUserData();
   }, []);
 
   const sortByNewest = () => {
     const sorted = [...players].sort((a, b) => {
-      
+      // Extract the numerical part of the Localid and convert it to a number
       const numIdA = parseInt(a.Localid.split('-')[1], 10);
       const numIdB = parseInt(b.Localid.split('-')[1], 10);
-      return numIdB - numIdA; 
+      return numIdB - numIdA; // Sort in descending order
     });
     setPlayers(sorted);
   };

@@ -11,23 +11,36 @@ const EndgameScreen = () => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    const fetchDataFromFirebase = async () => {
+    const fetchNewestPlayerData = async () => {
       setLoading(true);
       try {
-        const databaseUrl = 'https://mpr-final-project-c4ed7-default-rtdb.firebaseio.com/account/e3MKj3heMFNFDgckYMMLsEHRlzI2.json';
-        const response = await axios.get(databaseUrl);
-        const data = response.data;
+        const usersUrl = 'https://mpr-final-project-c4ed7-default-rtdb.firebaseio.com/account.json';
+        const usersResponse = await axios.get(usersUrl);
+        if (usersResponse.data) {
+          const userAccounts = usersResponse.data;
+          const newestUserId = Object.keys(userAccounts).reduce((newest, current) => {
+            return (!newest || userAccounts[current].createdAt > userAccounts[newest].createdAt) ? current : newest;
+          }, null);
 
-        if (data) {
-          const loadedPlayers = data.map((playerData, index) => ({
-            id: `player-${index}`,
-            ...playerData,
-            ...playerData.status,
-          }));
+          if (newestUserId) {
+            const newestUserDataUrl = `https://mpr-final-project-c4ed7-default-rtdb.firebaseio.com/account/${newestUserId}.json`;
+            const response = await axios.get(newestUserDataUrl);
+            const data = response.data;
 
-          
-          loadedPlayers.sort((a, b) => b.id.localeCompare(a.id));
-          setPlayer(loadedPlayers[0]); 
+            if (data && Array.isArray(data)) {
+              // Assuming data is an array of characters
+              const loadedPlayers = data.map((playerData, index) => ({
+                id: `player-${index}`,
+                ...playerData,
+                ...playerData.status,
+              }));
+              // Sort players by id in descending order and take the first one (largest id)
+              loadedPlayers.sort((a, b) => b.id.localeCompare(a.id));
+              setPlayer(loadedPlayers[0]); // Store the player with the largest id
+            } else {
+              console.log("Data is not in expected format or no characters found:", data);
+            }
+          }
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -36,10 +49,10 @@ const EndgameScreen = () => {
       }
     };
 
-    fetchDataFromFirebase();
+    fetchNewestPlayerData();
   }, []);
 
-  const navigateHome = () => navigation.navigate('HomeScreen'); 
+  const navigateHome = () => navigation.navigate('Home');
 
   if (loading) {
     return <ActivityIndicator size="large" />;
@@ -68,14 +81,15 @@ const EndgameScreen = () => {
       </TouchableOpacity>
       </View>
       <Text style={styles.playerInfor}>
-        {`Location: ${player.location}\n`}
-        {`Gender: ${player.gender}\n`}       
-        {`Relationship: ${player.relationship}%\n`}
-        {`Intelligence: ${player.intel}%\n`}
-        {`Health: ${player.health}%\n`}
-        {`Money: ${player.money}%`}
-      </Text>
+  {`Location: ${player.location}\n`}
+  {`Gender: ${player.gender}\n`}       
+  {`Relationship: ${player.relationship}%\n`}
+  {`Intelligence: ${player.intel}%\n`}
+  {`Health: ${player.health}%\n`}
+  {`Money: ${player.money}%`}
+</Text>
 
+      
       <Text style={[styles.age]}>Age: {player.age}</Text>
       <Text style={[styles.deathBy]}>
         Death by: {player.reasonOfDeath}
@@ -94,6 +108,8 @@ const EndgameScreen = () => {
 };
 
 const styles = StyleSheet.create({
+ 
+ 
   groupChildLayout: {
     height: 83,
     width: 270,
@@ -181,7 +197,8 @@ const styles = StyleSheet.create({
     width: '100%',
   
     textAlign:'center'
-  }, 
+  },
+  
   age: {
     top: width * 0.63,
     textAlign:'center',
