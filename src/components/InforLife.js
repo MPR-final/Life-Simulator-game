@@ -80,7 +80,7 @@ function InforLife() {
       setLocation("");
       setFemalePress(false);
       setMalePress(false);
-      navigation.navigate("HistoryScreen");
+      navigation.navigate("MainScreen");
     }
   }
 
