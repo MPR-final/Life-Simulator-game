@@ -1,9 +1,8 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect, useContext } from "react";
-import {StyleSheet,Text,TouchableOpacity,View,Image,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
 import ProgressBar from "../components/progressBar.js";
-import CharacterData from "../components/getCharacterData.js";
+import getCharacterData from "../components/getCharacterData.js";
 import { AuthContext } from "../store/AuthContext.js";
 import PauseOverlay from "../components/PauseOverlay.js";
 import {
@@ -21,7 +20,6 @@ import EventHaveChoice from "../components/EventHaveChoice.js";
 import LoadingOverLay from "../components/LoadingOverLay.js";
 import Result from "../components/Result.js";
 import PlusButton from "../components/PlusButton.js";
-
 
 function MainScreen({ navigation }) {
   const mainContext = useContext(AuthContext);
@@ -43,7 +41,12 @@ function MainScreen({ navigation }) {
   const [isResult, setResult] = useState(false);
   const [ageEvent, setAgeEvent] = useState([]);
   const [currentChoice, setCurrentChoice] = useState([]);
-  const [disabledChoices, setDisabledChoices] = useState([false, false, false, false]);
+  const [disabledChoices, setDisabledChoices] = useState([
+    false,
+    false,
+    false,
+    false,
+  ]);
   const status = userData.status;
 
   useEffect(() => {
@@ -57,7 +60,7 @@ function MainScreen({ navigation }) {
         }
       });
     }, 7200);
-  
+
     return () => clearInterval(interval);
   }, []);
 
@@ -68,7 +71,7 @@ function MainScreen({ navigation }) {
         const userDatas = await fetchUser(userId);
         const lifeNum = userDatas.length - 1;
         const userData = userDatas[lifeNum];
-  
+
         setProgress(userData.progress);
         setUserData(userData);
       } catch (error) {
@@ -77,7 +80,6 @@ function MainScreen({ navigation }) {
     }
     getUserData();
   }, [updateData]);
-
 
   useEffect(() => {
     async function getNormalEvents() {
@@ -149,7 +151,7 @@ function MainScreen({ navigation }) {
     if (workEvents.length !=0 && artEvents.length != 0 && techEvents.length != 0 && financeEvents.length != 0) {
       if (userData.lifeRoad == "work") {
         setAdultEvents(workEvents);
-      } 
+      }
       if (userData.lifeRoad == "art") {
         setAdultEvents(artEvents);
       }
@@ -184,9 +186,7 @@ function MainScreen({ navigation }) {
         }
       } else {
         if (userData.currentEventNum == 0 || userData.currentEventNum == 1) {
-          setAgeEvent(
-            adultEvents[userData.age][userData.currentEventNum]
-          );
+          setAgeEvent(adultEvents[userData.age][userData.currentEventNum]);
           setLoading(false);
         } else {
           const randomIndex = Math.floor(
@@ -197,25 +197,25 @@ function MainScreen({ navigation }) {
           setLoading(false);
         }
       }
-      
-      setDisabledChoices([false, false, false, false]); 
-      if(userData.currentEventNum == 1 && userData.age == 18) {
+
+      setDisabledChoices([false, false, false, false]);
+      if (userData.currentEventNum == 1 && userData.age == 18) {
         if (userData.status.money < 250) {
-          setDisabledChoices(prevState => {
+          setDisabledChoices((prevState) => {
             const updatedChoices = [...prevState];
             updatedChoices[0] = true;
             return updatedChoices;
           });
         }
         if (userData.status.relationship < 250) {
-          setDisabledChoices(prevState => {
+          setDisabledChoices((prevState) => {
             const updatedChoices = [...prevState];
             updatedChoices[2] = true;
             return updatedChoices;
           });
         }
         if (userData.status.intel < 250) {
-          setDisabledChoices(prevState => {
+          setDisabledChoices((prevState) => {
             const updatedChoices = [...prevState];
             updatedChoices[3] = true;
             return updatedChoices;
@@ -223,24 +223,31 @@ function MainScreen({ navigation }) {
         }
       }
     }
-  }, [fetchedNormalEvents, randomChoiceEvents, userData, updateData, techEvents, artEvents, workEvents, adultEvents]);
-
+  }, [
+    fetchedNormalEvents,
+    randomChoiceEvents,
+    userData,
+    updateData,
+    techEvents,
+    artEvents,
+    workEvents,
+    adultEvents,
+  ]);
 
   const handleContinue = () => {
     setPaused(false);
   };
 
-
   const handleEndGame = () => {
     const reasonOfDeath = "Lightning strike";
     const newData = {
       reasonOfDeath: reasonOfDeath,
-    }
+    };
     editUser(userId, newData);
-      navigation.navigate("EndgameScreen", {reasonOfDeath: reasonOfDeath});
-      setPaused(false);
+    navigation.navigate("EndgameScreen", { reasonOfDeath: reasonOfDeath });
+    setPaused(false);
   };
-  
+
   const handleHome = () => {
     navigation.navigate("HomeScreen");
     setPaused(false);
@@ -248,8 +255,7 @@ function MainScreen({ navigation }) {
 
   const handlePlay = () => {
     setEventChoice(true);
-  }
-
+  };
 
   const handleChoice = async (choice) => {
     setCurrentChoice(ageEvent.choices[choice]);
@@ -266,27 +272,26 @@ function MainScreen({ navigation }) {
         setAdultEvents(workEvents);
         const newData = {
           lifeRoad: "work",
-        }
-        editUser(userId, newData)
+        };
+        editUser(userId, newData);
       }
       if (choice == 2) {
         setAdultEvents(artEvents);
         const newData = {
           lifeRoad: "art",
-        }
-        editUser(userId, newData)
+        };
+        editUser(userId, newData);
       }
       if (choice == 3) {
         setAdultEvents(techEvents);
         const newData = {
           lifeRoad: "tech",
-        }
-        editUser(userId, newData)
+        };
+        editUser(userId, newData);
       }
     }
 
     let statusChanges = null;
-
 
     while (statusChanges === null || statusChanges === undefined) {
       try {
@@ -294,7 +299,6 @@ function MainScreen({ navigation }) {
       } catch (error) {
         console.error("Error retrieving status changes:", error);
       }
-
 
       if (statusChanges === null || statusChanges === undefined) {
         await new Promise((resolve) => setTimeout(resolve, 500)); // Delay for 1 second before retrying
@@ -306,14 +310,12 @@ function MainScreen({ navigation }) {
       updateDataExecuted = true;
     }
 
-
     if (statusChanges !== null && statusChanges !== undefined) {
       updateStatus(statusChanges); // Move the status update logic to a separate function
       setResult(true);
       setEventChoice(false);
     }
   };
-
 
   const updateStatus = (statusChanges) => {
     try {
@@ -325,14 +327,17 @@ function MainScreen({ navigation }) {
         const newHealth = Math.min(status.health + statusChanges.health, 500);
         const newIntel = Math.min(status.intel + statusChanges.intel, 500);
         const newMoney = Math.min(status.money + statusChanges.money, 500);
-        const newRelationship = Math.min(status.relationship + statusChanges.relationship, 500);
+        const newRelationship = Math.min(
+          status.relationship + statusChanges.relationship,
+          500
+        );
         const newStatus = {
           health: newHealth,
           intel: newIntel,
           money: newMoney,
           relationship: newRelationship,
         };
-        
+
         let currentEventNum = userData.currentEventNum + 1;
         const progressIncreasement = (ageEvent.time / 12) * 100;
         setProgress(progress + progressIncreasement);
@@ -370,15 +375,15 @@ function MainScreen({ navigation }) {
       age: age,
       progress: 0,
       currentEventNum: 0,
-    }
+    };
     setProgress(0);
     editUser(userId, newData);
-  }
+  };
 
   const checkDead = (data) => {
     const status = data.status;
     let reasonOfDeath = "";
-    
+
     if (status.health <= 0) {
       reasonOfDeath = "Heart failure";
     }
@@ -395,19 +400,38 @@ function MainScreen({ navigation }) {
       reasonOfDeath = "Old age";
     }
 
-    if(reasonOfDeath != "") {
+    if (reasonOfDeath != "") {
       const newData = {
         reasonOfDeath: reasonOfDeath,
-      }
+      };
 
       editUser(userId, newData);
-      navigation.navigate("EndgameScreen", {reasonOfDeath: reasonOfDeath});
+      navigation.navigate("EndgameScreen", { reasonOfDeath: reasonOfDeath });
     }
-  }
+  };
 
   const handleExit = () => {
     setResult(false);
   };
+
+  {
+    /** dynamic character's img*/
+  }
+  const [characterData, setCharacterData] = useState([]);
+
+  useEffect(() => {
+    try {
+      setCharacterData(getCharacterData(userData.age, userData.gender));
+      console.log("setCharacter: " + characterData)
+
+    } catch (error) {
+      console.error(error.message); 
+    }
+  }, [ userData]);
+
+  
+
+
 
 
   if (isLoading) {
@@ -417,7 +441,6 @@ function MainScreen({ navigation }) {
       </View>
     );
   }
-
 
   if (!isLoading) {
     return (
@@ -433,24 +456,18 @@ function MainScreen({ navigation }) {
             </TouchableOpacity>
           </View>
 
-
           <View style={styles.textBox}>
             <Text style={styles.headText}>Your Life</Text>
           </View>
-
 
           <View style={styles.lineBox}>
             <View style={styles.line}></View>
           </View>
         </View>
 
-
         {/** character */}
         <View style={styles.character}>
-          <TouchableOpacity
-            style={styles.timeline}
-            activeOpacity={0.8}
-          >
+          <TouchableOpacity style={styles.timeline} activeOpacity={0.8}>
             <ProgressBar
               percentage={progress}
               bgColor={"#F5F5F3"}
@@ -458,24 +475,17 @@ function MainScreen({ navigation }) {
             />
           </TouchableOpacity>
 
-
-          <View style={styles.characterBox}>
-            <TouchableOpacity
-              style={styles.circleAge}
-              activeOpacity={0.8}
-            >
+          <View style={[styles.characterBox, {backgroundColor: characterData[1]}]}>
+            <View style={[styles.circleAge, {backgroundColor: characterData[1]}]}>
               <Text style={styles.textAge}>{userData.age}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.characImg}
-              activeOpacity={0.8}
-            >
+            </View>
+            <View style={styles.characImg}>
               <Image
                 style={styles.img}
-                source={require("../assets/boy_child.png")}
+                // source={require("../assets/boy_child.png")}
+                source={characterData[0]}
               />
-            </TouchableOpacity>
-
+            </View>
 
             <TouchableOpacity
               tyle={styles.characPlus}
@@ -486,73 +496,70 @@ function MainScreen({ navigation }) {
             </TouchableOpacity>
           </View>
         </View>
+
+
         {/** 4 chi so */}
         <View style={styles.progressBars}>
-          <TouchableOpacity
-            style={styles.Box}
-            activeOpacity={0.8}
-          >
+          <TouchableOpacity style={styles.Box} activeOpacity={0.8}>
             <Image
               style={styles.icon}
               source={require("../assets/health.png")}
             />
             <View style={styles.bar}>
               <ProgressBar
-                percentage={userData.status != undefined ? userData.status.health/5 : 50}
+                percentage={
+                  userData.status != undefined ? userData.status.health / 5 : 50
+                }
                 bgColor={"#F5F5F3"}
                 color={"#E15A6B"}
               />
             </View>
           </TouchableOpacity>
 
-
-          <TouchableOpacity
-            style={styles.Box}
-            activeOpacity={0.8}
-          >
+          <TouchableOpacity style={styles.Box} activeOpacity={0.8}>
             <Image
               style={styles.icon}
               source={require("../assets/intelligent.png")}
             />
             <View style={styles.bar}>
               <ProgressBar
-                percentage={userData.status != undefined ? userData.status.intel/5 : 50}
+                percentage={
+                  userData.status != undefined ? userData.status.intel / 5 : 50
+                }
                 bgColor={"#F5F5F3"}
                 color={"#F8CA72"}
               />
             </View>
           </TouchableOpacity>
 
-
-          <TouchableOpacity
-            style={styles.Box}
-            activeOpacity={0.8}
-          >
+          <TouchableOpacity style={styles.Box} activeOpacity={0.8}>
             <Image
               style={styles.icon}
               source={require("../assets/Relationship.png")}
             />
             <View style={styles.bar}>
               <ProgressBar
-                percentage={userData.status != undefined ? userData.status.relationship/5 : 50}
+                percentage={
+                  userData.status != undefined
+                    ? userData.status.relationship / 5
+                    : 50
+                }
                 bgColor={"#F5F5F3"}
                 color={"#D394F9"}
               />
             </View>
           </TouchableOpacity>
 
-
-          <TouchableOpacity
-            style={styles.Box}
-            activeOpacity={0.8}
-          >
+          <TouchableOpacity style={styles.Box} activeOpacity={0.8}>
             <Image
               style={styles.icon}
               source={require("../assets/salary.png")}
             />
             <View style={styles.bar}>
               <ProgressBar
-                percentage={userData.status != undefined ? userData.status.money/5 : 50}
+                percentage={
+                  userData.status != undefined ? userData.status.money / 5 : 50
+                }
                 bgColor={"#F5F5F3"}
                 color={"#94E86C"}
               />
@@ -560,7 +567,6 @@ function MainScreen({ navigation }) {
           </TouchableOpacity>
         </View>
         <StatusBar style="auto" />
-
 
         <PauseOverlay
           isVisible={isPaused}
@@ -584,7 +590,6 @@ function MainScreen({ navigation }) {
           />
         )}
 
-
         {isResult && (
           <Result
             isVisible={isResult}
@@ -597,7 +602,6 @@ function MainScreen({ navigation }) {
     );
   }
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -644,7 +648,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#F8CA72",
   },
 
-
   character: {
     // borderWidth: 0.5,
     width: "100%",
@@ -655,7 +658,7 @@ const styles = StyleSheet.create({
   characterBox: {
     // borderWidth: 0.5,
     width: "86%",
-    backgroundColor: "#ACF5EC",
+    // backgroundColor: "red",
     position: "relative",
     marginTop: 30,
   },
@@ -664,7 +667,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: "blue",
+    // backgroundColor: "blue",
     alignItems: "center",
     // justifyContent: "center",
     position: "absolute",
@@ -702,7 +705,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-
   progressBars: {
     // borderWidth: 0.5,
     width: "90%",
@@ -725,6 +727,5 @@ const styles = StyleSheet.create({
     marginRight: 25,
   },
 });
-
 
 export default MainScreen;

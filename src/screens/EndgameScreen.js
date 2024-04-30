@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useContext } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Dimensions,ActivityIndicator  } from "react-native";
 import { Image } from "expo-image";
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
+import { AuthContext } from "../store/AuthContext";
 
 const { width, height } = Dimensions.get('window');
 const EndgameScreen = ({ route }) => {
@@ -10,53 +11,37 @@ const EndgameScreen = ({ route }) => {
   const [player, setPlayer] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
-  const navigateHome = () => navigation.navigate('HomeScreen', {reasonOfDeath:reasonOfDeath});
+  const { localID } = useContext(AuthContext); // Assuming localID is the current user's ID from AuthContext
+
+  const navigateHome = () => navigation.navigate('HomeScreen', {reasonOfDeath: reasonOfDeath});
 
   useEffect(() => {
-    const fetchNewestPlayerData = async () => {
+    const fetchUserData = async () => {
       setLoading(true);
       try {
-        // Fetch all user accounts
-        const usersUrl = 'https://mpr-final-project-c4ed7-default-rtdb.firebaseio.com/account.json';
-        const usersResponse = await axios.get(usersUrl);
-        if (usersResponse.data) {
-          // Determine the newest user based on createdAt field
-          const userAccounts = usersResponse.data;
-          const newestUserId = Object.keys(userAccounts).reduce((newest, current) => {
-            return (!newest || new Date(userAccounts[current].createdAt) > new Date(userAccounts[newest].createdAt)) ? current : newest;
-          }, null);
+        // Fetch data for the current user
+        const userDataUrl = `https://mpr-final-project-c4ed7-default-rtdb.firebaseio.com/account/${localID}.json`;
+        const response = await axios.get(userDataUrl);
+        const data = response.data;
 
-          if (newestUserId) {
-            // Fetch the data of the newest user
-            const newestUserDataUrl = `https://mpr-final-project-c4ed7-default-rtdb.firebaseio.com/account/${newestUserId}.json`;
-            const response = await axios.get(newestUserDataUrl);
-            const data = response.data;
-
-            if (data) {
-              // Assuming the data might not necessarily be an array of characters
-              if (Array.isArray(data)) {
-                // Process if it is an array
-                const loadedPlayers = data.map((playerData, index) => ({
-                  id: `player-${index}`,
-                  ...playerData,
-                  ...playerData.status,
-                }));
-                loadedPlayers.sort((a, b) => b.id.localeCompare(a.id));
-                setPlayer(loadedPlayers[0]);  // Assuming the first element after sorting by id is the latest
-              } else {
-                // Handle a single object data format
-                setPlayer({
-                  id: newestUserId,
-                  ...data,
-                  ...data.status,
-                });
-              }
-            } else {
-              console.log("No data found for the newest user.");
-            }
+        if (data) {
+          if (Array.isArray(data)) {
+            const loadedPlayers = data.map((playerData, index) => ({
+              id: `player-${index}`,
+              ...playerData,
+              ...playerData.status,
+            }));
+            loadedPlayers.sort((a, b) => b.id.localeCompare(a.id));
+            setPlayer(loadedPlayers[0]);  // Assuming the first element after sorting by id is the latest
+          } else {
+            setPlayer({
+              id: localID,
+              ...data,
+              ...data.status,
+            });
           }
         } else {
-          console.log("No users found in the database.");
+          console.log("No data found for the current user.");
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -65,9 +50,12 @@ const EndgameScreen = ({ route }) => {
       }
     };
 
-    fetchNewestPlayerData();
-  }, []);
-
+    if (localID) {
+      fetchUserData();
+    } else {
+      console.log("No user ID provided.");
+    }
+  }, [localID]);  // Depend on localID to refetch when it changes
 
   if (loading) {
     return <ActivityIndicator size="large" />;
@@ -98,10 +86,10 @@ const EndgameScreen = ({ route }) => {
       <Text style={styles.playerInfor}>
   {`Location: ${player.location}\n`}
   {`Gender: ${player.gender}\n`}       
-  {`Relationship: ${player.relationship}%\n`}
-  {`Intelligence: ${player.intel}%\n`}
-  {`Health: ${player.health}%\n`}
-  {`Money: ${player.money}%`}
+  {`Relationship: ${player.relationship/5}%\n`}
+  {`Intelligence: ${player.intel/5}%\n`}
+  {`Health: ${player.health/5}%\n`}
+  {`Money: ${player.money/5}%`}
 </Text>
 
       
