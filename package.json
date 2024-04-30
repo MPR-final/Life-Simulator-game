@@ -13,6 +13,7 @@
     "@react-navigation/native-stack": "^6.9.22",
     "axios": "^1.6.8",
     "expo": "~50.0.14",
+    "expo-image": "~1.10.6",
     "expo-status-bar": "~1.11.1",
     "firebase": "^10.10.0",
     "lottie-react-native": "^6.5.1",

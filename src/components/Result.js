@@ -1,48 +1,63 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import Modal from 'react-native-modal';
 import { Ionicons } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
 import { FONT_PATHS } from '../constants/constants';
 
-const Result = ({ isVisible, onExit }) => {
+
+const Result = ({ isVisible, onExit, result, points }) => {
   const [fontsLoaded] = useFonts(FONT_PATHS);
+
 
   if (!fontsLoaded) {
     return null;
   }
+
 
   return (
     <Modal isVisible={isVisible} backdropOpacity={0.7} style={styles.modal}>
       <View style={styles.container}>
         <Text style={styles.resultText}>Result</Text>
         <Text style={styles.descriptionText}>
-          You are taking your first steps. You are wobbling and uncoordinated, but you are determined to get somewhere.
+          {result}
         </Text>
         <View style={styles.iconContainer}>
           {/* Health */}
           <View style={styles.iconItem}>
-            <Ionicons name="heart" size={24} color="#F8CA72" />
-            <Text style={[styles.iconValue, styles.plusValue]}>+5</Text>
+            <Image style={{height: 37, width: 37}} source={require("../assets/health.png")} />
+            <Text style={[styles.iconValue, points.health >= 0 ? styles.positiveValue : styles.negativeValue]}>
+              {points.health >= 0 ? `+${points.health}` : points.health}
+            </Text>
           </View>
+
 
           {/* Intelligence */}
           <View style={styles.iconItem}>
-            <Ionicons name="book" size={24} color="#F8CA72" />
-            <Text style={[styles.iconValue, styles.minusValue]}>-2</Text>
+            <Image style={{height: 37, width: 37}} source={require("../assets/intelligent.png")} />
+            <Text style={[styles.iconValue, points.intel >= 0 ? styles.positiveValue : styles.negativeValue]}>
+              {points.intel >= 0 ? `+${points.intel}` : points.intel}
+            </Text>
           </View>
 
-          {/* Relationship */}
-          <View style={styles.iconItem}>
-            <Ionicons name="people" size={24} color="#F8CA72" />
-            <Text style={[styles.iconValue, styles.plusValue]}>+3</Text>
-          </View>
 
           {/* Money */}
           <View style={styles.iconItem}>
-            <Ionicons name="cash" size={24} color="#F8CA72" />
-            <Text style={[styles.iconValue, styles.minusValue]}>-10</Text>
+            <Image style={{height: 37, width: 37}} source={require("../assets/salary.png")} />
+            <Text style={[styles.iconValue, points.money >= 0 ? styles.positiveValue : styles.negativeValue]}>
+              {points.money >= 0 ? `+${points.money}` : points.money}
+            </Text>
           </View>
+         
+          {/* Relationship */}
+          <View style={styles.iconItem}>
+            <Image style={{height: 37, width: 37}} source={require("../assets/Relationship.png")} />
+            <Text style={[styles.iconValue, points.relationship >= 0 ? styles.positiveValue : styles.negativeValue]}>
+              {points.relationship >= 0 ? `+${points.relationship}` : points.relationship}
+            </Text>
+          </View>
+
+
         </View>
         <TouchableOpacity style={styles.closeButton} onPress={onExit}>
           <View style={styles.closeButtonBackground}>
@@ -53,6 +68,7 @@ const Result = ({ isVisible, onExit }) => {
     </Modal>
   );
 };
+
 
 const styles = StyleSheet.create({
   modal: {
@@ -92,10 +108,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 5,
   },
-  plusValue: {
+  positiveValue: {
     color: 'green',
   },
-  minusValue: {
+  negativeValue: {
     color: 'red',
   },
   closeButton: {
@@ -119,4 +135,6 @@ const styles = StyleSheet.create({
   },
 });
 
+
 export default Result;
+
