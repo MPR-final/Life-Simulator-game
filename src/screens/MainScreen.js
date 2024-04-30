@@ -457,7 +457,7 @@ function MainScreen({ navigation }) {
             >
               <Image
                 style={styles.img}
-                source={require("../assets/baby.png")}
+                source={require("../assets/boy_child.png")}
               />
             </TouchableOpacity>
 
@@ -640,7 +640,7 @@ const styles = StyleSheet.create({
   characterBox: {
     // borderWidth: 0.5,
     width: "86%",
-    backgroundColor: "blue",
+    backgroundColor: "#ACF5EC",
     position: "relative",
     marginTop: 30,
   },
