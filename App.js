@@ -3,7 +3,6 @@ import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useFonts } from "expo-font";
-
 import HomeScreen from "./src/screens/HomeScreen.js";
 import EndgameScreen from "./src/screens/EndgameScreen.js";
 import FirstScreen from "./src/screens/FirstScreen.js";
